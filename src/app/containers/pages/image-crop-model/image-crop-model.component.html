@@ -1,0 +1,7 @@
+<ng-template #template>
+    <div class="col-12 text-center shadow">
+        <image-cropper class="my-2 border" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="aspectRatio" [resizeToWidth]="resizeToWidth" (imageCropped)="imageCropped($event)"></image-cropper>
+        <button (click)="onClose()" class="mb-3 btn btn-outline-primary mr-2">{{'button-title.close' | translate}}</button>
+        <button (click)="confirm()" class="mb-3 btn btn-primary">{{'button-title.confirm' | translate}}</button>
+    </div>
+</ng-template>

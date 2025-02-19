@@ -1,0 +1,14 @@
+.col-width {
+    min-width: 130px;
+    max-width: 150px;
+    white-space: normal;
+}
+
+.display-options-container a {
+    cursor: pointer;
+}
+
+tbody>tr>td {
+    cursor: pointer;
+    word-wrap: break-word;
+}

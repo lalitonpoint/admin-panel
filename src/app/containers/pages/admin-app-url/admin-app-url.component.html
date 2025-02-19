@@ -1,0 +1,71 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.app-url' | translate }}</h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showAppUrlSettingModal()">
+                    {{'button-title.edit' | translate }} </button>
+            </div>
+        </div>
+        <p class="text-muted text-small mb-2 text-primary font-weight-bold">
+            {{'heading-title.android-app-url' | translate | uppercase}}
+        </p>
+        <div class="">
+            <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.android-client-app-url' | translate }} <span
+                                class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;"
+                                    tooltip="{{'tooltip-title.android-client-app-url-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.android_client_app_url}}</p>
+                    </a>
+                </div>
+            </div>
+            <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.android-driver-app-url' | translate }} <span
+                                class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;"
+                                    tooltip="{{'tooltip-title.android-driver-app-url-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.android_driver_app_url}}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p class="text-muted text-small mb-2 text-primary font-weight-bold">
+            {{'heading-title.ios-app-url' | translate | uppercase}}
+        </p>
+        <div class="">
+            <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.ios-client-app-url' | translate }} <span
+                                class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;"
+                                    tooltip="{{'tooltip-title.ios-client-app-url-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.ios_client_app_url}}</p>
+                    </a>
+                </div>
+            </div>
+            <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.ios-driver-app-url' | translate }} <span
+                                class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;"
+                                    tooltip="{{'tooltip-title.ios-driver-app-url-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.ios_driver_app_url}}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-app-url-setting-modal #appUrlSettingModal (api_url_data)="getSettingData()"></app-app-url-setting-modal>

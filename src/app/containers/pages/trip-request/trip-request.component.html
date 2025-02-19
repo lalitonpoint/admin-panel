@@ -1,0 +1,314 @@
+<div class="row">
+  <div class="col-12">
+    <app-heading></app-heading>
+
+    <div class="top-right-button-container text-zero" *ngIf="_helper.has_permission(_helper.PERMISSION.EXPORT)">
+      <button id="request-export" type="button" class="btn btn-lg btn-outline-primary mr-2" (click)="export()">
+        {{'button-title.export' | translate | uppercase}}
+      </button>
+      <button id="request-export-history" type="button" class="btn btn-lg btn-outline-primary"
+        (click)="showExportHistoryModal()">
+        {{'button-title.export' | translate | uppercase}} {{'button-title.history' | translate | uppercase}}
+      </button>
+    </div>
+    <app-breadcrumb></app-breadcrumb>
+  </div>
+  <div class="col-12">
+    <div class="display-options-container">
+      <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex flex-wrap mr-2">
+          <div class="position-relative">
+            <div class="float-md-left mr-1 mb-2" dropdown>
+              <button id="search-by-btn" dropdownToggle type="button"
+                class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option"
+                aria-controls="dropdown-basic">
+                {{'button-title.search-by' | translate}} : {{itemSearch.label | translate}} <span class="caret"></span>
+              </button>
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu search-by-dropdown-menu" role="menu"
+                aria-labelledby="button-basic">
+                <li role="menuitem" *ngFor="let item of itemOptionsSearch">
+                  <a [ngClass]="item.value === itemSearch.value ? 'dropdown-item active' : 'dropdown-item'"
+                    (click)="onChangeSearchBy(item)">
+                    {{item.label | translate}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="">
+            <div class="search-sm d-inline-block float-md-left mr-1 mb-2 align-top">
+              <input class="form-control" (keypress)="_helper.space_validation($event)"
+                placeholder="{{'label-title.search' | translate }}" [(ngModel)]="search_value">
+            </div>
+          </div>
+          <div class="position-relative" *ngIf="requestMainType === RequestMainType.NORMAL">
+            <div class="mr-1 mb-2 float-md-left" dropdown>
+              <button id="button-basic" dropdownToggle type="button"
+                class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle"
+                aria-controls="dropdown-basic">
+                {{itemPayment.label | translate}} <span class="caret"></span>
+              </button>
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+                <li role="menuitem" *ngFor="let item of itemOptionsPayments"><a
+                    [ngClass]="item.value === itemPayment.value ? 'dropdown-item active' : 'dropdown-item'"
+                    (click)="onChangePayments(item)">{{item.label | translate}}</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="position-relative dateWidth" *ngIf="created_date">
+            <div class="date-sm float-md-left mr-1 mb-1">
+              <input [hidden]="direction=='rtl'" class="form-control theme_date_picker"
+                placeholder="{{'label-title.select-dates' | translate}}"
+                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetrans' }" #drp="bsDaterangepicker"
+                [(ngModel)]="item_bsRangeValue" bsDaterangepicker [container]="'html'" #dateValue [readOnly]="true"
+                [maxDate]="todayDate" [minDate]="created_date">
+              <input [hidden]="direction=='ltr'" class="form-control theme_date_picker"
+                placeholder="{{'label-title.select-dates' | translate}}"
+                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatetrans' }" #drp="bsDaterangepicker"
+                [(ngModel)]="item_bsRangeValue" bsDaterangepicker [container]="'html'" #dateValue [readOnly]="true"
+                [maxDate]="todayDate" [minDate]="created_date">
+            </div>
+          </div>
+          <div class="">
+            <div class="d-inline-block float-md-left mr-1 position-relative" dropdown>
+              <button id="button-basic5" type="button" class="btn btn-primary btn-xs mr-1 mb-2" (click)="apply()">
+                {{'button-title.apply' | translate}} <span class="caret"></span>
+              </button>
+              <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-2"
+                (click)="clear()" [disabled]="search_value == '' && is_clear_disabled"
+                [ngClass]="{'btn-disabled':(search_value == '' && is_clear_disabled)}">
+                {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="float-right request-per-page">
+          <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+          <span dropdown class="d-inline-block position-relative">
+            <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button"
+              id="request-per-page-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+              dropdownToggle>
+              {{itemsPerPage}}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+              <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                  [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                  (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+            </ul>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-12" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.RENTAL_RIDE">
+  <div class="separator-tabs tab-container">
+    <ul role="tablist" class="nav nav-tabs">
+      <li class="nav-item" *ngFor="let item of itemOptionsTabs"
+        [ngClass]="{'active' : booking_type == item.booking_type}">
+        <a href="javascript:void(0);" role="tab" class="nav-link"
+          [ngClass]="{'active' : booking_type == item.booking_type}" (click)="getRequestData(item.booking_type)">
+          <span>{{item.label | translate}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-container>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table aria-describedby="disc" class="table table-hover mb-0 tableScroll">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" *ngFor="let column of allColumns">
+                    <span [ngClass]="{'sortIcon c-pointer': column.isSort }"
+                      (click)="column.isSort ? onSort(column.key) : ''">
+                      <span class="sortIcon1" [ngClass]="sort_item == column.key &&  sort_order == -1 ?  'active' : ''"
+                        *ngIf="column.isSort"></span>
+                      <span class="sortIcon2" [ngClass]="sort_item == column.key &&  sort_order == 1 ?  'delative' : ''"
+                        *ngIf="column.isSort"></span>
+                      {{column.label | translate}}
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngIf="rows.length>0">
+                <tr
+                  *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}"
+                  (click)="showAddNewModal(row._id)">
+                  <td class="text-nowrap" *ngFor="let column of allColumns" [ngClass]="{'pl-4': column.isSort}">
+                    <span *ngIf="column.isDecimal">
+                      {{ getNestedValue(row, column.key)?.toFixed(_helper.to_fixed_number) }}
+                    </span>
+                    <span *ngIf="column.isDate">
+                      <span *ngIf="getNestedValue(row, column.key)">
+                        {{_helper.moment(getNestedValue(row,
+                        column.key)).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} -
+                        {{_helper.moment(getNestedValue(row,
+                        column.key)).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                      </span>
+                      <span *ngIf="!getNestedValue(row, column.key)">--</span>
+                    </span>
+                    <span *ngIf="column.key === 'provider_details'">
+                      {{ getProviderName(row) }}
+                    </span>
+                    <span *ngIf="column.key === 'status' && requestMainType === RequestMainType.RENTAL_RIDE">
+                      <span class="badge badge-pill badge-warning c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.CREATED">
+                        {{'label-title.pending' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-primary c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.ACCEPTED || row.status == RENTAL_TRIP_STATUS.PAYMENT">
+                        {{'label-title.accepted' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-secondary c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.DRIVER_HANDOVER || row.status == RENTAL_TRIP_STATUS.USER_HANDOVER || row.status == RENTAL_TRIP_STATUS.ADDITIONAL_PAYMENT">
+                        {{'label-title.started' | translate}}
+                      </span>
+                      <span class=" badge badge-pill badge-success  c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.COMPLETED">
+                        {{'label-title.completed' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.CANCELLED && row.cancelled_by == 1">
+                        {{'label-title.cancel-by-user' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.CANCELLED && row.cancelled_by == 2">
+                        {{'label-title.cancel-by-provider' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="row.status == RENTAL_TRIP_STATUS.CANCELLED && row.cancelled_by == 8">
+                        {{'button-title.cancel' | translate}} {{'label-title.by' | translate}} {{'label-title.admin' | translate}}
+                      </span>
+                    </span>
+                    <span *ngIf="column.key === 'is_provider_status'">
+                      <span class="badge badge-pill badge-secondary c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && ((row.is_provider_status == PROVIDER_STATUS.ACCEPT && row.is_provider_accepted == PROVIDER_ACCEPTED.ACCEPTED) || (requestMainType === RequestMainType.RENTAL_RIDE && row.is_provider_accepted == PROVIDER_STATUS.ACCEPT))">
+                        {{'label-title.accepted' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-warning c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && ((row.is_provider_status == PROVIDER_STATUS.WAITING && row.is_provider_accepted == PROVIDER_ACCEPTED.WAITING) || (requestMainType === RequestMainType.RENTAL_RIDE && row.is_provider_accepted == PROVIDER_STATUS.WAITING))">
+                        {{'label-title.waiting' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-warning c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && row.is_provider_status == PROVIDER_STATUS.COMING">
+                        {{'label-title.coming' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && row.is_provider_accepted == PROVIDER_ACCEPTED.AFTER_TIME_WAITING">
+                        {{'label-title.waiting' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-dark c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && row.is_provider_status == PROVIDER_STATUS.ARRIVED">
+                        {{'label-title.arrived' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-success c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && row.is_provider_status == PROVIDER_STATUS.STARTED">
+                        {{'label-title.started' | translate}}
+                      </span>
+                      <span class=" badge badge-pill badge-success  c-pointer w-fit-content"
+                        *ngIf="!row.is_trip_cancelled && row.is_provider_status == PROVIDER_STATUS.COMPLETED">
+                        {{'label-title.completed' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="row.is_trip_cancelled_by_user == 1 && (requestMainType !== RequestMainType.OPEN_RIDE || requestMainType === RequestMainType.OPEN_RIDE && row.user_details?.length > 0)">
+                        {{'label-title.cancel-by-user' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="row.is_trip_cancelled_by_provider == 1 && (requestMainType !== RequestMainType.OPEN_RIDE || requestMainType === RequestMainType.OPEN_RIDE && row.user_details?.length > 0)">
+                        {{'label-title.cancel-by-provider' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger c-pointer w-fit-content"
+                        *ngIf="row.is_trip_cancelled_by_user != 1 && row.is_trip_cancelled_by_provider != 1 && row.is_trip_cancelled == 1 && (requestMainType !== RequestMainType.OPEN_RIDE || requestMainType === RequestMainType.OPEN_RIDE && row.user_details?.length > 0)">
+                        {{'label-title.cancelled' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-warning c-pointer w-fit-content"
+                        *ngIf="requestMainType === RequestMainType.OPEN_RIDE && row.user_details?.length === 0">
+                        {{'label-title.no-user-found' | translate}}
+                      </span>
+                    </span>
+                    <span *ngIf="column.key === 'payment_mode'">
+                      <span class=" badge badge-pill badge-secondary w-fit-content" *ngIf="row.payment_mode == 0">
+                        {{'label-title.by-card' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-primary w-fit-content" *ngIf="row.payment_mode == 1">
+                        {{'label-title.by-cash' |translate}}
+                      </span>
+                      <span class=" d-none d-xl-block c-pointer "
+                        *ngIf="row.payment_mode != 0 && row.payment_mode != 1">
+                        --
+                      </span>
+                    </span>
+                    <span *ngIf="column.key === 'payment_status'">
+                      <span *ngIf="row.is_trip_cancelled == 1">
+                        <span *ngIf="row.is_trip_cancelled_by_user == 1">
+                          <span class="badge badge-pill badge-warning w-fit-content" *ngIf="row.payment_status == 0">
+                            {{'label-title.pending' | translate}}
+                          </span>
+                          <span class="badge badge-pill badge-success w-fit-content" *ngIf="row.payment_status == 1">
+                            {{'label-title.paid' |translate}}
+                          </span>
+                          <span *ngIf="row.payment_status != 0 && row.payment_status != 1">
+                            --
+                          </span>
+                        </span>
+                        <span *ngIf="row.is_trip_cancelled_by_user != 1">
+                          --
+                        </span>
+                      </span>
+                      <span *ngIf="row.is_trip_cancelled == 0">
+                        <span class="badge badge-pill badge-warning w-fit-content" *ngIf="row.payment_status == 0">
+                          {{'label-title.pending' | translate}}
+                        </span>
+                        <span class="badge badge-pill badge-success w-fit-content" *ngIf="row.payment_status == 1">
+                          {{'label-title.paid' |translate}}
+                        </span>
+                        <span *ngIf="row.payment_status != 0 && row.payment_status != 1">
+                          --
+                        </span>
+                      </span>
+                    </span>
+                    <span
+                      *ngIf="!column.isDecimal && !column.isDate && column.key !== 'provider_details' && column.key !== 'is_provider_status' && column.key !== 'status' && column.key !== 'payment_mode' && column.key !== 'payment_status'">
+                      {{ getNestedValue(row, column.key) }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="rows.length==0">
+                <tr>
+                  <th id="head" colspan="10" class="text-center">
+                    <span>{{ 'label-title.no-record-found' | translate }}</span>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="rows.length>0">
+    <div class="col-12">
+      <div class="border-top pt-4">
+        <div class="w-100 d-flex justify-content-center">
+          <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+            nextLabel="{{'wizard.next' | translate}}" [responsive]="true"
+            [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<app-export-history-model #ExportHistotyModel></app-export-history-model>
+<app-trip-details-modal #runningModal (trip_data)="getList()"></app-trip-details-modal>
+<app-open-ride-trip-details-modal #openRideTripDetailsModal (trip_data)="getList()"></app-open-ride-trip-details-modal>
+<app-rental-trip-detail-model #rentalTripDetailsModal (trip_data)="getList()"></app-rental-trip-detail-model>

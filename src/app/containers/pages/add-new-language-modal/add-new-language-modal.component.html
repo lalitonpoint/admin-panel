@@ -1,0 +1,71 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!is_edit" >{{'heading-title.add-new-language' | translate}}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="is_edit">{{'heading-title.edit-language' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form">
+                        <form [formGroup]="languageForm" class="form" appFocus>
+                            <div class="form-group">
+                                <label for="name" class="">{{'label-title.name' | translate}}</label>
+                                <input id="name" type="text" class="form-control" formControlName="name" required (keypress)="_helper.nospace_validation($event)" autocomplete="off">
+                                <div class="error"
+                                    *ngIf="languageForm.get('name').errors && languageForm.get('name').touched">
+                                    <span
+                                        *ngIf="languageForm.get('name').errors.required">{{'validation-title.name-is-required'
+                                        | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="code" class="">{{'label-title.code' | translate}}</label>
+                                <input id="code" type="text" class="form-control" formControlName="code" [readonly]="is_edit" required (keypress)="_helper.nospace_validation($event)">
+                                <div class="error"
+                                    *ngIf="languageForm.get('code').errors && languageForm.get('code').touched">
+                                    <span
+                                        *ngIf="languageForm.get('code').errors.required">{{'validation-title.code_is_required'
+                                        | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+                                    <span>{{ 'label-title.is-language-rtl' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.is-language-rtl-tooltip' | translate}}" placement="right"></i></span></span>
+                                    <input type="checkbox" id="is_lang_rtl" class="custom-control-input" formControlName="is_lang_rtl">
+                                    <label for="is_lang_rtl" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="!is_edit">
+                                <label for="">{{ 'label-title.file' | translate }}<span class="text-primary t-url ml-1" *ngIf="admin_url != ''">({{admin_url}})</span></label>
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                        <input type="file" (change)="onSelectImageFile($event)"
+                                            class="custom-file-input c-pointer" formControlName="files">
+                                        <label for="inputGroupFile02" class="custom-file-label">
+                                            {{'label-title.choose-a-file' | translate}}
+                                        </label>
+                                    </div>
+                                    <div class="input-group-append"></div>
+                                    <div class="error top-100"
+                                        *ngIf="show_file_error || (languageForm.get('files').errors && languageForm.get('files').touched)">
+                                        <span *ngIf="show_file_error || languageForm.get('files').errors.required">
+                                            {{'label-title.file' | translate}} {{'label-title.is-required' | translate}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary float-right" (click)="submit()">{{'button-title.submit'
+                        | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

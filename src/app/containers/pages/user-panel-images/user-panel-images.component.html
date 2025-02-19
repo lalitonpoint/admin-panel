@@ -1,0 +1,199 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'label-title.customer-panel-images' | translate }}</h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="onClickImagesSetting()">
+                    {{ !is_edit_images ? ('button-title.edit' | translate) : ('button-title.save' | translate)}}
+                </button>
+            </div>
+        </div>
+        <div class="row social-image-row gallery">
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="bg_image.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.bg_image)"
+                        class="d-none" #bg_image>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.bg_image ? upload_images.bg_image:(_helper.image_url+'user_panel_images/bg_image.jpg?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'label-title.header-bg-image' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.website-header-background-banner-image' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="map.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.map)"
+                        class="d-none" #map>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.map ? upload_images.map:(_helper.image_url+'user_panel_images/map.jpg?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'label-title.map' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.map-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="rentals.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.rentals)"
+                        class="d-none" #rentals>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.rentals ? upload_images.rentals:(_helper.image_url+'user_panel_images/rentals.png?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.rentals' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.rental-banner-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="taxi_hailing.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.taxi_hailing)"
+                        class="d-none" #taxi_hailing>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.taxi_hailing ? upload_images.taxi_hailing:(_helper.image_url+'user_panel_images/taxi_hailing.jpeg?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.taxi_hailing' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.taxi-hailing-banner-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="ride_share.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.ride_share)"
+                        class="d-none" #ride_share>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.ride_share ? upload_images.ride_share:(_helper.image_url+'user_panel_images/ride_share.jpg?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.ride_share' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.ride-share-banner-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="split_payment.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.split_payment)"
+                        class="d-none" #split_payment>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.split_payment ? upload_images.split_payment:(_helper.image_url+'user_panel_images/split_payment.jpg?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.split_payment' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.split-payment-banner-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="driver_going_home.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.driver_going_home)"
+                        class="d-none" #driver_going_home>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.driver_going_home ? upload_images.driver_going_home:(_helper.image_url+'user_panel_images/driver_going_home.jpg?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.driver_going_to_home' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.driver-going-to-home-banner-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="multiple_stop.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.multiple_stop)"
+                        class="d-none" #multiple_stop>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.multiple_stop ? upload_images.multiple_stop:(_helper.image_url+'user_panel_images/multiple_stop.png?'+randomQueryParam)" style="height: 400px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.multiple_stop' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.multi-stop-banner-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="extensive_range_of_cabs.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.extensive_range_of_cabs)"
+                        class="d-none" #extensive_range_of_cabs>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.extensive_range_of_cabs ? upload_images.extensive_range_of_cabs:(_helper.image_url+'user_panel_images/extensive_range_of_cabs.png?'+randomQueryParam)" style="height: 300px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.extensive_range_of_cabs' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.extensive-range-of-cabs-logo-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="secure_and_swift_ride.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.secure_and_swift_ride)"
+                        class="d-none" #secure_and_swift_ride>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.secure_and_swift_ride ? upload_images.secure_and_swift_ride:(_helper.image_url+'user_panel_images/secure_and_swift_ride.png?'+randomQueryParam)" style="height: 300px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.secure_and_swift_ride' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.secure-and-shift-ride-logo-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="licensed_drivers.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.licensed_drivers)"
+                        class="d-none" #licensed_drivers>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.licensed_drivers ? upload_images.licensed_drivers:(_helper.image_url+'user_panel_images/licensed_drivers.png?'+randomQueryParam)" style="height: 300px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.licensed_drivers' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.licensed-drivers-logo-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="cashless_rides.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.cashless_rides)"
+                        class="d-none" #cashless_rides>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.cashless_rides ? upload_images.cashless_rides:(_helper.image_url+'user_panel_images/cashless_rides.png?'+randomQueryParam)" style="height: 300px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.cashless_rides' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.cashless-ride-logo-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="airport_transfer.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.airport_transfer)"
+                        class="d-none" #airport_transfer>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.airport_transfer ? upload_images.airport_transfer:(_helper.image_url+'user_panel_images/airport_transfer.png?'+randomQueryParam)" style="height: 300px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.airport_transfer' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.airport-transfer-logo-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+            <div class="col-12 col-xl-6 text-center mb-4">
+                <div class="position-relative m-auto" style="width: fit-content;">
+                    <button class="btn btn-outline-primary icon-button position-absolute m-1"
+                        [ngClass]="is_edit_images?'d-block':'d-none'" (click)="flexible_bookings.click()" style="top: 4px;right: 4px;">
+                        <i class="simple-icon-pencil"></i>
+                    </button>
+                    <input type="file" accept="image/*" (change)="onSelectImageFile($event,user_panel_images.flexible_bookings)"
+                        class="d-none" #flexible_bookings>
+                    <img class="img-fluid border-radius mb-2 border"
+                        alt="upload_images" [src]="upload_images.flexible_bookings ? upload_images.flexible_bookings:(_helper.image_url+'user_panel_images/flexible_booking.png?'+randomQueryParam)" style="height: 300px;">
+                </div>
+                <h6 class="text-center mb-0">{{'home-page.flexible_bookings' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.flexible-bookings-logo-image-for-website' | translate}}" placement="right"></i></span></h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-image-crop-model (updateImage)="imageCropped($event)" #cropModel></app-image-crop-model>

@@ -1,0 +1,105 @@
+<div class="row">
+    <div class="col-12">
+        <div>
+            <app-heading></app-heading>
+            <app-breadcrumb></app-breadcrumb>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <tabset class="separator-tabs">
+            <tab heading="{{'label-title.admin-setting' | translate | uppercase}}">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                        <ng-container *ngIf="setting_detail">
+                            <admin-basic-settings [setting_detail]="setting_detail" (basic_setting_data)="getSettingData()"></admin-basic-settings>
+                        </ng-container>
+                    </div>
+                    <div class="col-12 col-sm-12 col-lg-8 col-xl-8">
+                        <ng-container *ngIf="setting_detail">
+                            <app-admin-notification-trip-settings [setting_detail]="setting_detail" (notification_setting_data)="getSettingData()"></app-admin-notification-trip-settings>
+                        </ng-container>
+                    </div>
+                    <div class="col-12">
+                        <ng-container *ngIf="setting_detail">
+                            <app-trip-settings [setting_detail]="setting_detail" (basic_setting_data)="getSettingData()"></app-trip-settings>
+                        </ng-container>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'label-title.trip_feature_settings' | translate | uppercase}}">
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <ng-container *ngIf="setting_detail">
+                            <app-trip-feature [setting_detail]="setting_detail" (trip_data)="getSettingData()"></app-trip-feature>
+                        </ng-container>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'label-title.app-setting' | translate | uppercase}}">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+                        <ng-container *ngIf="setting_detail">
+                            <app-admin-app-url [setting_detail]="setting_detail" (api_url_data)="getSettingData()"></app-admin-app-url>
+                        </ng-container>
+                        <ng-container *ngIf="setting_detail">
+                            <app-app-force-update-settings [setting_detail]="setting_detail" (force_update_event)="getSettingData()"></app-app-force-update-settings>
+                        </ng-container>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+                        <ng-container *ngIf="setting_detail">
+                            <app-admin-app-version-setting [setting_detail]="setting_detail" (app_version_data)="getSettingData()"></app-admin-app-version-setting>
+                        </ng-container>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'heading-title.google_key_settings' | translate | uppercase}}">
+                <ng-container *ngIf="setting_detail">
+                    <app-admin-google-key-settings [setting_detail]="setting_detail" (google_key_data)="getSettingData()"></app-admin-google-key-settings>
+                </ng-container>
+            </tab>
+            <tab heading="{{'heading-title.firebase_and_gcm_key' | translate | uppercase}}">
+                <div class="row">
+                    <div class=" col-12 mb-4">
+                        <ng-container *ngIf="setting_detail">
+                            <app-admin-firebase-gcm-key-settings [setting_detail]="setting_detail" (firebase_GCM_data)="getSettingData()"></app-admin-firebase-gcm-key-settings>
+                        </ng-container>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'label-title.configuration_settings' | translate | uppercase}}">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 col-12 mb-4">
+                        <ng-container *ngIf="setting_detail">
+                            <app-sms-configuration [setting_detail]="setting_detail" (SMS_data)="getSettingData()"></app-sms-configuration>
+                            <app-email-configuration [setting_detail]="setting_detail" (email_data)="getSettingData()"></app-email-configuration>
+                            <app-base-url [setting_detail]="setting_detail" (url_data)="getSettingData()"></app-base-url>
+                            <app-google-captcha-configuration [setting_detail]="setting_detail" (google_captcha_change_event)="getSettingData()"></app-google-captcha-configuration>
+                            <app-wsal-configurations [setting_detail]="setting_detail" (WSAL_data)="getSettingData()"></app-wsal-configurations>
+                        </ng-container>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 col-12 mb-4">
+                        <ng-container *ngIf="setting_detail">
+                            <app-payment-configurations [setting_detail]="setting_detail" (payment_data)="getSettingData()"></app-payment-configurations>
+                            <app-whatsapp-configuration [setting_detail]="setting_detail"></app-whatsapp-configuration>
+                        </ng-container>
+                        <ng-container *ngIf="setting_detail && (admin_detail.email == 'payment@elluminatiinc.com' && admin_detail.username == 'payment_subscription')">
+                            <app-rental-payment-configuration [setting_detail]="setting_detail" (rental_payment_data)="getSettingData()"></app-rental-payment-configuration>
+                        </ng-container>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'label-title.customer-panel-images' | translate | uppercase}}">
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <app-user-panel-images></app-user-panel-images>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'heading-title.admin-logo-settings' | translate | uppercase}}">
+                <app-admin-logo-settings></app-admin-logo-settings>
+            </tab>
+        </tabset>
+    </div>
+</div>

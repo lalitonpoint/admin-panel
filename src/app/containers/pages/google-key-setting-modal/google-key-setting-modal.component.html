@@ -1,0 +1,96 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{modal_heading | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" *ngIf="key_type != GOOGLE_KEY_TYPE.WEB_APP_KEYS && key_type != GOOGLE_KEY_TYPE.FLUTTER_USER_APP_KEYS && key_type != GOOGLE_KEY_TYPE.FLUTTER_DRIVER_APP_KEYS">
+                    <form [formGroup]="googleApiForm" class="tooltip-label-center">
+                        <div class="form-group">
+                            <label for="a-userkey">{{'label-title.google-map-key' | translate }}</label>
+                            <input type="text" name="" id="a-userkey" class="form-control"
+                                formControlName="google_map_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="a-providerkey">{{'label-title.google-place-autocomplete-key' | translate
+                                }}</label>
+                            <input type="text" name="" id="a-providerkey" class="form-control"
+                                formControlName="google_placeautocomplate_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="i-userkey">{{'label-title.google-geocoding-key' | translate }}</label>
+                            <input type="text" name="" id="i-userkey" class="form-control"
+                                formControlName="google_geocoding_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="i-providerkey">{{'label-title.google-distance-matrix-key' | translate }}</label>
+                            <input type="text" name="" id="i-providerkey" class="form-control"
+                                formControlName="google_distance_matrix_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="webappkey">{{'label-title.google-direction-matrix-key' | translate }}</label>
+                            <input type="text" name="" id="webappkey" class="form-control"
+                                formControlName="google_direction_matrix_key">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-body" *ngIf="key_type == GOOGLE_KEY_TYPE.WEB_APP_KEYS">
+                    <form [formGroup]="webGoogleApiForm" class="tooltip-label-center">
+                        <div class="form-group">
+                            <label for="admin_panel_google_key">{{'label-title.admin-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="admin_panel_google_key" class="form-control"
+                                formControlName="admin_panel_google_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_panel_google_key">{{'label-title.user-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="user_panel_google_key" class="form-control"
+                                formControlName="user_panel_google_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="driver_panel_google_key">{{'label-title.driver-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="driver_panel_google_key" class="form-control"
+                                formControlName="driver_panel_google_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="dispatcher_panel_google_key">{{'label-title.dispatcher-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="dispatcher_panel_google_key" class="form-control"
+                                formControlName="dispatcher_panel_google_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="corporate_panel_google_key">{{'label-title.corporate-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="corporate_panel_google_key" class="form-control"
+                                formControlName="corporate_panel_google_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="hotel_panel_google_key">{{'label-title.hotel-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="hotel_panel_google_key" class="form-control"
+                                formControlName="hotel_panel_google_key">
+                        </div>
+                        <div class="form-group">
+                            <label for="partner_panel_google_key">{{'label-title.partner-panel-google-key' | translate }}</label>
+                            <input type="text" name="" id="partner_panel_google_key" class="form-control"
+                                formControlName="partner_panel_google_key">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-body" *ngIf="key_type == GOOGLE_KEY_TYPE.FLUTTER_USER_APP_KEYS || key_type == GOOGLE_KEY_TYPE.FLUTTER_DRIVER_APP_KEYS">
+                    <form [formGroup]="flutterGoogleApiForm" class="tooltip-label-center">
+                        <div class="form-group">
+                            <label for="google_placeautocomplate_key">{{'label-title.google-place-autocomplete-key' | translate }}</label>
+                            <input type="text" name="" id="google_placeautocomplate_key" class="form-control"
+                                formControlName="google_placeautocomplate_key">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary float-right" (click)="update()">
+                        {{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

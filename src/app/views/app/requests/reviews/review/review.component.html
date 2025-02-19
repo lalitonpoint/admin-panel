@@ -1,0 +1,167 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <app-breadcrumb></app-breadcrumb>
+        <div class="display-options-container">
+            <div class="d-flex justify-content-between mb-2">
+                <div class="d-flex flex-wrap mr-2">
+                    <div class="position-relative">
+                        <div class="float-md-left mr-1 mb-2" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option"
+                                aria-controls="dropdown-basic">
+                                {{'button-title.search-by' | translate}} : {{itemSearch.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsSearch"><a
+                                        [ngClass]="item.value === itemSearch.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeSearchBy(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="search-sm d-inline-block float-md-left mr-1 mb-2 align-top">
+                            <input class="form-control" placeholder="{{'label-title.search' | translate }}"
+                                [(ngModel)]="search_value">
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="d-inline-block float-md-left mr-1 position-relative" dropdown>
+                            <button id="button-basic5" type="button" class="btn btn-primary btn-xs mr-1 mb-2"
+                                (click)="apply()">
+                                {{'button-title.apply' | translate}} <span class="caret"></span>
+                            </button>
+                            <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-2"
+                                (click)="clear()" [disabled]="search_value == '' && is_clear_disabled" [ngClass]="{'btn-disabled':(search_value == '' && is_clear_disabled)}">
+                                {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                                    [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="separator mb-4"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-sm-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-row flex-wrap">
+                    <p class="card-title h5">{{'label-title.user-review' | translate}}</p>
+                    <p class="card-title h5">{{total_user_count}}/{{all_user_count}}</p>
+                </div>
+                <div class="mb-4" *ngFor="let review of user_count_array">
+                    <p class="mb-2">
+                        <rating class="rating" [readonly]="true" [max]="5" [(ngModel)]="review.id" [max]="this.user_count_array.length" [customTemplate]="ttt"></rating>
+                        <ng-template #ttt let-index="index" let-value="value">{{index < value ? '' : '' }}</ng-template>
+                                <span class="float-right text-muted"> {{review.userCount}} ({{review.percent.toFixed(_helper.to_fixed_number)}}%) </span>
+                    </p>
+                    <div class="progress">
+
+                        <progressbar [value]="review.percent"></progressbar>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-row flex-wrap">
+                    <p class="card-title h5">{{'label-title.driver-review' | translate}}</p>
+                    <p class="card-title h5">{{total_provider_count}}/{{all_provider_count}}</p>
+                </div>
+                <div class="mb-4" *ngFor="let review of provider_count_array">
+                    <p class="mb-2">
+                        <rating class="rating" [readonly]="true" [max]="5" [(ngModel)]="review.id" [max]="this.user_count_array.length" [customTemplate]="ttt"></rating>
+                        <ng-template #ttt let-index="index" let-value="value">{{index < value ? '' : '' }}</ng-template>
+                                <span class="float-right text-muted"> {{review.providerCount}} ({{review.percent.toFixed(_helper.to_fixed_number)}}%) </span>
+                    </p>
+                    <div class="progress">
+
+                        <progressbar [value]="review.percent"></progressbar>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-2 row">
+    <div class="col-lg-12 col-md-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body" style="overflow-x:auto;">
+                <table aria-describedby="disc" class="table table-hover">
+                    <thead class="thead-light">
+                        <tr class="truncate">
+                            <th scope="col">{{'heading-title.trip_id' | translate}}</th>
+                            <th scope="col">{{'heading-title.user' | translate}}</th>
+                            <th scope="col">{{'heading-title.driver' | translate}}</th>
+                            <th scope="col">{{'heading-title.user-rate' | translate}}</th>
+                            <th scope="col">{{'heading-title.driver-rate' | translate}}</th>
+                            <th scope="col">{{'heading-title.completed' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="review_list.length>0">
+                        <tr (click)="showReviewModal(review)" *ngFor="let review of review_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}" class="truncate c-pointer">
+                            <th scope="row">{{review.trip_unique_id}}</th>
+                            <td>
+                                <span *ngIf="review.user_details">
+                                    {{review.user_details.first_name}} {{review.user_details.last_name}}
+                                </span>
+                                <span *ngIf="!review.user_details">--</span>
+                            </td>
+                            <td>
+                                <span *ngIf="review.provider_details">
+                                    {{review.provider_details.first_name}} {{review.provider_details.last_name}}
+                                </span>
+                                <span *ngIf="!review.provider_details">--</span>
+                            </td>
+                            <td>{{review.userRating}}</td>
+                            <td>{{review.providerRating}}</td>
+                            <td>
+                                <span *ngIf="review.created_at && timezone_for_display_date">
+                                    {{_helper.moment(review.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(review.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                </span>
+                                <span *ngIf="!review.created_at">--</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody *ngIf="review_list.length==0">
+                        <tr>
+                            <th id="head" colspan="10" class="text-center">
+                                <span>{{ 'label-title.no-record-found' | translate }}</span>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12" *ngIf="review_list.length > 0">
+        <div class="d-flex justify-content-center">
+            <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+            nextLabel="{{'wizard.next' | translate}}" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+<app-review-details-modal #reviewDetails></app-review-details-modal>

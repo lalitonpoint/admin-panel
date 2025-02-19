@@ -1,0 +1,8 @@
+.areamaxHeight {
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    @media (max-width: 992px) {
+        max-height: 216px;
+    }
+    
+}

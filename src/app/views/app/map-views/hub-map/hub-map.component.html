@@ -1,0 +1,79 @@
+<div class="row app-row app-menu-sm">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <app-breadcrumb></app-breadcrumb>
+        <br>
+        <div class="separator mb-4"></div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row flex-wrap align-items-center pb-2">
+                    <div class="col-sm-6 col-12 form-group mb-2">
+                        <label class="font-weight-semibold mb-2">{{'label-title.country' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="countryvalid" [searchable]="true"
+                            [clearable]="false" placeholder="{{'label-title.select-country' | translate}}"
+                            (change)="onChangeCountry($event)" [(ngModel)]="country_id">
+                            <ng-option [value]="country._id"
+                                *ngFor="let country of all_countries">{{country.countryname}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div class="col-sm-6 col-12 form-group mb-2 search-address">
+                        <label class="font-weight-semibold mb-2">{{'label-title.city' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select-city' | translate }}" [(ngModel)]="city_id"
+                            (change)="onChangeCity($event)"
+                            notFoundText="{{'validation-title.city-not-available' | translate}}">
+                            <ng-option value="all" *ngIf="city_list.length > 0">{{'label-title.all' | translate}}</ng-option>
+                            <ng-option [value]="city._id" *ngFor="let city of city_list">
+                                <span *ngIf="city">{{city.cityname}}</span>
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                </div>
+                <div id="hub_map" style="width: 100%; min-height: 550px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-application-menu class="app-menu-sm">
+    <div class="h-100 pr-3">
+        <div class="card-body">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control w-100 rounded-pill"
+                    placeholder="{{'label-title.search' | translate}}" [(ngModel)]="SearchText">
+            </div>
+            <div class="chat-app-tab-pane-contacts">
+                <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
+                    <ng-container *ngIf="searchKeyword===''">
+                        <div class="d-flex flex-row mb-3 border-bottom pb-3"
+                            *ngFor="let hub of hub_list | searchpipe:SearchText:['name'];let i=index"
+                            (click)="onSelecHub(hub)">
+                            <div class="d-flex flex-grow-1 min-width-zero">
+                                <div
+                                    class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
+                                    <div class="min-width-zero">
+                                        <a href="javascript:;">
+                                            <p class="mb-0 truncate">{{hub.name}}</p>
+                                            <p class="mb-0 text-small">
+                                                {{hub.city_detail?.full_cityname ? hub.city_detail?.full_cityname :
+                                                hub.city_detail?.cityname}}
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center"
+                            *ngIf="(!hub_list || hub_list?.length == 0) || (hub_list)?.length === 0">
+                            {{ 'label-title.no-record-found' | translate }}
+                        </div>
+                    </ng-container>
+                </perfect-scrollbar>
+            </div>
+        </div>
+    </div>
+</app-application-menu>

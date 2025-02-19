@@ -1,0 +1,71 @@
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left" *ngIf="!promo_data">{{'heading-title.add-new-token' | translate}}</h4>
+        <h4 class="modal-title pull-left" *ngIf="promo_data">{{'heading-title.edit_promo' | translate}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="commonForm" class="tooltip-label-center">
+            <div class="mb-4">
+                <div class="form-group">
+                    <label for="token_name">{{'label-title.token_name' | translate }}</label>
+                    <input type="text" id="token_name" class="form-control" formControlName="id"
+                        placeholder="{{'label-title.token_name' | translate }}">
+                    <div *ngIf="commonForm.get('id').errors?.required && commonForm.get('id').touched"
+                        class="invalid-tooltip">
+                        {{'label-title.token_name' | translate }} {{'label-title.is-required' | translate }}
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" id="customSwitch_promo" formControlName="state" class="custom-control-input">
+                    <label for="customSwitch_promo" class="custom-control-label">{{'label-title.is_guest_token_active' |
+                        translate
+                        }}</label>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="form-group">
+                    <label for="expdate">{{'label-title.start_date' | translate }}</label>
+                    <input *ngIf="!token" id="expdate" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker
+                        placeholder="{{'label-title.start_date' | translate }}" [bsConfig]="{ adaptivePosition: true }"
+                        formControlName="start_date" [readOnly]="true" [minDate]="todayDate">
+                    <input *ngIf="token" id="expdate" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker
+                        placeholder="{{'label-title.start_date' | translate }}" [bsConfig]="{ adaptivePosition: true }"
+                        formControlName="start_date" [readOnly]="true" [minDate]="commonForm.value.start_date">
+
+                    <div *ngIf="commonForm.get('start_date')?.errors?.required && commonForm.get('start_date').touched"
+                        class="invalid-tooltip">{{'label-title.start_date' | translate }} {{'label-title.is-required' |
+                        translate }}
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="form-group">
+                    <label for="expdate">{{'label-title.expiry_date' | translate }}</label>
+                    <input *ngIf="!token" id="expdate" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker
+                        placeholder="{{'label-title.expiry_date' | translate }}" [bsConfig]="{ adaptivePosition: true }"
+                        formControlName="code_expiry" [readOnly]="true" [minDate]="commonForm.value.start_date ? commonForm.value.start_date : todayDate">
+                    <input *ngIf="token" id="expdate" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker
+                        placeholder="{{'label-title.expiry_date' | translate }}" [bsConfig]="{ adaptivePosition: true }"
+                        formControlName="code_expiry" [readOnly]="true" [minDate]="commonForm.value.start_date">
+                    <div *ngIf="commonForm.get('code_expiry')?.errors?.required && commonForm.get('code_expiry').touched"
+                        class="invalid-tooltip">{{'label-title.expiry_date' | translate }} {{'label-title.is-required' |
+                        translate
+                        }}</div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button id="button-split" type="button" class="btn btn-outline-primary mb-2"
+            (click)="closeModal()">{{'button-title.cancel' | translate }}</button>
+        <button type="submit" *ngIf="!token?._id" (click)="submit(false)" class="btn btn-primary mb-2">{{'button-title.submit' |
+            translate }}</button>
+            <button type="button" *ngIf="token?._id" (click)="submit(true)" class="btn btn-primary mb-2">{{'button-title.update' |
+                translate }}</button>
+    </div>
+</ng-template>

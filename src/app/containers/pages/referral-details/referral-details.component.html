@@ -1,0 +1,44 @@
+
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="userReferral">{{userReferral.first_name}} {{userReferral.last_name}} ({{userReferral.unique_id}})</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div *ngFor="let list of referralDetails" >
+                        <div class="">
+                            <div class="d-flex flex-row border-bottom mb-4">
+                                <div class="d-flex flex-grow-1 w-100">
+                                    <div
+                                        class="pl-0 card-body align-self-center d-flex flex-column flex-sm-row justify-content-between w-100">
+                                        <div class="min-width-zero w-60">
+                                            <a href="javascript:;">
+                                                <p class="list-item-heading mb-1 truncate">{{list.first_name}} {{list.last_name}}</p>
+                                            </a>
+                                            <p class="mb-1 list-item-heading">{{list.country_phone_code}} {{list.phone}}</p>
+                                            <p class="mb-2 text-muted text-small">{{list.email}}</p>
+                                        </div>
+                                        <div class="min-width-zero w-40">
+                                            <p class="mb-2 text-sm-right " *ngIf="timezone_for_display_date">
+                                                {{_helper.moment(list.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(list.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>
+
+
+
+

@@ -1,0 +1,231 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <app-breadcrumb></app-breadcrumb>
+    </div>
+    <div class="col-12">
+        <div class="display-options-container mb-3">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex flex-wrap">
+                    <ng-container>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                (change)="this.is_clear_disabled = false ;"
+                                placeholder="{{'label-title.name' | translate}}" [(ngModel)]="admin_name">
+                                <ng-option value="all">{{'label-title.all' | translate}}</ng-option>
+                                <ng-option [value]="admin._id"
+                                    *ngFor="let admin of admin_list">{{admin.username}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                placeholder="{{'label-title.type' | translate}}" [(ngModel)]="log_type"
+                                (change)="this.is_clear_disabled = false ;">
+                                <ng-option value="all">{{'label-title.all' | translate}}</ng-option>
+                                <ng-option [value]="value" *ngFor="let value of UPDATE_LOG_TYPE_ARRAY">
+                                    {{UPDATE_LOG_STRING[value] | translate}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                (change)="this.is_clear_disabled = false ;"
+                                placeholder="{{'label-title.action' | translate}}" [(ngModel)]="info_detail">
+                                <ng-option value="all">{{'label-title.all' | translate}}</ng-option>
+                                <ng-option [value]="LOG_TYPE_VALUE.ADD">
+                                    {{LOG_TYPE_STRING.ADDED | translate}}
+                                </ng-option>
+                                <ng-option [value]="LOG_TYPE_VALUE.UPDATE">
+                                    {{LOG_TYPE_STRING.UPDATED | translate}}
+                                </ng-option>
+                                <ng-option [value]="LOG_TYPE_VALUE.DELETE">
+                                    {{LOG_TYPE_STRING.DELETED | translate}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="position-relative dateWidth">
+                            <div class="date-sm float-md-left mr-1 mb-1">
+                                <input [hidden]="direction=='rtl'" class="form-control theme_date_picker"
+                                    placeholder="{{'label-title.select-dates' | translate}}"
+                                    [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetrans' }"
+                                    #drp="bsDaterangepicker" [(ngModel)]="filter_date_range" bsDaterangepicker
+                                    [container]="'html'" [readOnly]="true" [maxDate]="todayDate"
+                                    [minDate]="created_date" (ngModelChange)="this.is_clear_disabled = false ;">
+                                <input [hidden]="direction=='ltr'" class="form-control theme_date_picker"
+                                    placeholder="{{'label-title.select-dates' | translate}}"
+                                    [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatetrans' }"
+                                    #drp="bsDaterangepicker" [(ngModel)]="filter_date_range" bsDaterangepicker
+                                    [container]="'html'" [readOnly]="true" [maxDate]="todayDate"
+                                    [minDate]="created_date" (ngModelChange)="this.is_clear_disabled = false ;">
+                            </div>
+                        </div>
+
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic3" type="button" class="btn btn-primary btn-xs mr-1 mb-1"
+                                    (click)="apply()">
+                                    {{'button-title.apply' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic4" type="button"
+                                    class="btn btn-outline-primary btn-xs mr-1 mb-1" (click)="clear()"
+                                    [disabled]="is_clear_disabled">
+                                    {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="d-flex justify-content-end mb-2">
+                    <div class="float-right">
+                        <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                        <span dropdown class="d-inline-block position-relative">
+                            <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option"
+                                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                dropdownToggle>
+                                {{itemsPerPage}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                                <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                                        [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="separator mb-4"></div>
+<ng-container>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table aria-describedby="disc" class="table table-hover mb-0 tableScroll">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">
+                                        {{'label-title.at' | translate | titlecase}}
+                                    </th>
+                                    <th scope="col">
+                                        {{'label-title.name' | translate}}
+                                    </th>
+                                    <th scope="col">
+                                        {{'label-title.type' | translate}}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="logs_list?.length>0">
+                                <tr *ngFor="let log of logs_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}"
+                                    (click)="logChangesModal(changelogs,log)">
+                                    <td class="text-nowrap" *ngIf="timezone_for_display_date">
+                                        <span>{{_helper.moment(log.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}
+                                            -
+                                            {{_helper.moment(log.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}</span>
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <span *ngIf="log.user_detail">{{log.user_detail[0]?.username}}
+                                            ({{log.user_detail[0]?.email}})</span>
+                                        <span *ngIf="!log.user_detail">{{log.username}} ({{log.email}})</span>
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <span>{{UPDATE_LOG_STRING[log.setting_type] | translate}}</span>
+                                        <span *ngIf="log.info?.length > 0"> : {{ log?.info }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="!logs_list || logs_list?.length==0">
+                                <tr>
+                                    <th id="head" colspan="10" class="text-center">
+                                        <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="logs_list?.length>0">
+        <div class="col-12">
+            <div class="border-top pt-4">
+                <div class="w-100 d-flex justify-content-center">
+                    <pagination-controls (pageChange)="pageChanged($event)"
+                        previousLabel="{{'wizard.previous' | translate}}" nextLabel="{{'wizard.next' | translate}}"
+                        [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #changelogs>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">
+            {{UPDATE_LOG_STRING[selected_log?.setting_type] | translate}}
+            <span *ngIf="selected_log?.info && selected_log?.info != ''"> : {{selected_log?.info}}</span>
+
+        </h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closelogChangesModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row ">
+            <div class="col-12" style="max-height: 400px; overflow: auto;">
+
+                <ul *ngIf="selected_log?.info_detail && selected_log?.info_detail != ''">
+                    <li> <span style="text-transform:uppercase">{{LOG_TYPE_STRING[selected_log?.info_detail] |
+                            translate}}</span>
+                        <span *ngIf="selected_log?.meta_data?.info_detail"> : {{ selected_log?.meta_data?.info_detail }}
+                        </span>
+                    </li>
+                </ul>
+
+                <table aria-describedby="disc" class="table table-bordered " *ngIf="selected_log?.changes.length > 0">
+                    <thead class="thead-light" style="position: sticky; top: -1px;">
+                        <tr>
+                            <th scope="col">
+                                {{'label-title.name' | translate}}
+                            </th>
+                            <th scope="col">
+                                {{'label-title.previous-value' | translate}}
+                            </th>
+                            <th scope="col">
+                                {{'label-title.new-value' | translate}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="body-tr" *ngFor="let change of selected_log?.changes">
+                            <td>
+                                {{change.field}}
+                            </td>
+                            <td class="col-width">
+                                {{change.oldValue}}
+                            </td>
+                            <td class="col-width">
+                                {{change.newValue}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-template>

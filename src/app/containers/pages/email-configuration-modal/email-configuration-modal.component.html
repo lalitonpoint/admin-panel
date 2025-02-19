@@ -1,0 +1,60 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.email_configuration' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="emailConfigurationForm" class="tooltip-label-center">
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="domain">{{'label-title.domain' | translate}}</label>
+                                <ng-select appearance="outline" formControlName="domain"
+                                    [searchable]="true" [clearable]="false" notFoundText="{{'validation-title.no-data-found' | translate}}">
+                                    <ng-option [value]="1">{{ 'label-title.gmail' | translate}}</ng-option>
+                                    <ng-option [value]="2">{{ 'label-title.other' | translate | lowercase}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="domain_email_address">{{'label-title.domain_email_address' | translate}}</label>
+                                <input type="text" id="domain_email_address" class="form-control"
+                                    name="domain_email_address" formControlName="email">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="password">{{'label-title.password' | translate}}</label>
+                                <input type="text" id="password" class="form-control"
+                                    name="password" formControlName="password">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="smtp_host">{{'label-title.smtp_host' | translate}}</label>
+                                <input type="text" id="smtp_host" class="form-control"
+                                    name="smtp_host" formControlName="smtp_host">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="smtp_port">{{'label-title.smtp_port' | translate}}</label>
+                                <input type="number" id="smtp_port" class="form-control"
+                                    name="smtp_port" formControlName="smtp_port" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" (click)="update()"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

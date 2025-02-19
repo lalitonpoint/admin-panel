@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-lg-4 col-md-12 col-12 mb-4">
+        <div class="card pt-4 pb-2">
+            <div class="">
+                <div class="d-flex justify-content-between px-4">
+                    <h5 class="mb-4 card-title font-weight-semibold">{{'label-title.zone-to-zone' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.zone-to-zone-price-tooltip' | translate}}" placement="right"></i></span></h5>
+                    <div class="d-block" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button class="btn btn-xs ml-2 btn-outline-primary"
+                            (click)="openZoneModal(zone_data,1)">{{'button-title.edit' | translate}}</button>
+                    </div>
+                </div>
+                <div *ngIf="zone_data.zone_value" class="px-4 zonemaxHeight">
+                    <div *ngFor="let data of zone_data.zone_value"
+                        class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                        <div class="flex-fill">
+                            <p class="font-weight-medium mb-0">{{data.form_details.title | translate}}
+                                {{'label-title.to' | translate}}
+                                {{data.to_details.title | translate}}</p>
+                        </div>
+                        <div>
+                            <span>{{currencysign}} {{data.amount.toFixed(_helper.to_fixed_number)}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="zoneLength == 0">
+                    <div class="text-center py-3 font-weight-bold text-capitalize">{{'validation-title.no-data-found' |
+                        translate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12 col-12 mb-4">
+        <div class="card pt-4 pb-2">
+            <div class="">
+                <div class="d-flex justify-content-between px-4">
+                    <h5 class="mb-4 card-title font-weight-semibold">{{'label-title.city-to-city-price' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.city-to-city-price-tooltip' | translate}}" placement="right"></i></span>
+                    </h5>
+                    <div class="d-block">
+                        <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="btn btn-xs ml-2 btn-outline-primary" (click)="openZoneModal(city_data,2)"
+                            [disabled]="city_data.length == 0">{{'button-title.edit' | translate}}</button>
+                    </div>
+                </div>
+                <div *ngIf="city_data" class="px-4 zonemaxHeight">
+                    <div *ngFor="let data of city_data"
+                        class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                        <div class="flex-fill">
+                            <p class="font-weight-medium mb-0">
+                                <span *ngIf="data.city_name">{{data.city_name.cityname | translate}}</span>
+                                <span *ngIf="!data.city_name">{{data.cityname | translate}}</span>
+                                {{'label-title.to' | translate}}
+                                {{data.destination_name.cityname | translate}}
+                            </p>
+                        </div>
+                        <div>
+                            <span *ngIf="data.price">{{currencysign}} {{data.price.toFixed(_helper.to_fixed_number)}}</span>
+                            <span *ngIf="!data.price" class="text-nowrap">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="city_data.length == 0">
+                    <div class="text-center py-3 font-weight-bold text-capitalize">{{'validation-title.no-data-found' |
+                        translate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12 col-12 mb-4">
+        <div class="card pt-4 pb-2">
+            <div class="">
+                <div class="d-flex justify-content-between px-4">
+                    <h5 class="mb-4 card-title font-weight-semibold">{{'label-title.airport-to-city-price' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.airport-to-city-price-tooltip' | translate}}" placement="right"></i></span>
+                    </h5>
+                    <div class="d-block">
+                        <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="btn btn-xs ml-2 btn-outline-primary" (click)="openZoneModal(airport_data,3)"
+                            [disabled]="airport_data.length == 0 ">{{'button-title.edit' | translate}}</button>
+                    </div>
+                </div>
+                <div *ngIf="airport_data" class="px-4 zonemaxHeight">
+                    <div *ngFor="let data of airport_data"
+                        class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                        <div class="flex-fill">
+                            <p class="font-weight-medium mb-0" *ngIf="data.airport_details">
+                                {{data.airport_details.title | translate}}
+                            </p>
+                            <p class="font-weight-medium mb-0" *ngIf="!data.airport_details">{{data.title |
+                                translate}}
+                            </p>
+                        </div>
+                        <div>
+                            <span *ngIf="data.price" class="truncate">{{currencysign}} {{data.price.toFixed(_helper.to_fixed_number)}}</span>
+                            <span *ngIf="!data.price" class="text-nowrap">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="airport_data.length == 0 ">
+                    <div class="text-center py-3 font-weight-bold text-capitalize">{{'validation-title.no-data-found' |
+                        translate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-add-new-zone-modal #zoneSettingModal (parentHandler)="handlerCall($event)"></app-add-new-zone-modal>

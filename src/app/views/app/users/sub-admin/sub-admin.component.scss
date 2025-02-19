@@ -1,0 +1,35 @@
+.info-button{
+    padding: 0;
+    vertical-align: bottom;
+}
+
+.sub-admin-scroll{
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.w-50{
+    width: 50%;
+}
+.fontSize{
+    font-size: 18px;
+}
+@media screen and (max-width:1442px) {
+    .fontSize{
+        font-size: 16px;
+    }
+}
+@media screen and (max-width:768px) {
+    .sub-admin-scroll{
+        max-height: 450px;
+    }
+}
+
+@media screen and (max-width:414px) {
+    .sub-admin-scroll{
+        max-height: 350px;
+    }
+    .w-50{
+        width: 100% !important;
+    }
+}

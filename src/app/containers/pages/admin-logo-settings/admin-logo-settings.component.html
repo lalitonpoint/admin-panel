@@ -1,0 +1,86 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-6 col-xl-6 mb-4">
+        <div class="light-logos-card card mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                        <h5 class="card-title mb-3">{{'heading-title.admin-logo-settings' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3" (click)="onClickLogoSetting()"> {{ !is_edit_logo_settings ? ('button-title.edit' | translate) : ('button-title.save' | translate) }} </button>
+                    </div>
+                </div>
+                <div class="row social-image-row gallery">
+                    <div class="col-6 text-center mb-4">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_logo_settings?'d-block':'d-none'" (click)="logo.click()">
+                        <i class="simple-icon-pencil"></i>
+                      </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.logo)" class="d-none" #logo>
+                        <img class="mb-2" [src]="upload_images.logo_image ? upload_images.logo_image:(_helper.image_url+'web_images/logo.png?'+_helper.randomQueryParam)" alt="logo_image">
+                        <h6 class="text-center mb-0">{{'heading-title.header-logo' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.set-logo-for-all-panel-headers' | translate}}" placement="right"></i></span></h6>
+                    </div>
+                    <div class="col-6 text-center mb-4">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_logo_settings?'d-block':'d-none'" (click)="title_icon.click()">
+                        <i class="simple-icon-pencil"></i>
+                      </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.title_icon)" class="d-none" #title_icon>
+                        <img class="mb-2" [src]="upload_images.title_image ? upload_images.title_image:(_helper.image_url+'web_images/title_image.png?'+_helper.randomQueryParam)" alt="title_image">
+                        <h6 class="text-center mb-0">{{'heading-title.title-icon' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.set-title-icon-for-all-panels' | translate}}" placement="right"></i></span></h6>
+                    </div>
+                    <div class="col-6 text-center mb-4">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_logo_settings?'d-block':'d-none'" (click)="mail_title_logo.click()">
+                    <i class="simple-icon-pencil"></i>
+                  </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.mail_title_logo)" class="d-none" #mail_title_logo>
+                        <img class="mb-2" [src]="upload_images.mail_title_image ? upload_images.mail_title_image:(_helper.image_url+'web_images/mail_title_image.png?'+_helper.randomQueryParam)" alt="mail_title_image">
+                        <h6 class="text-center mb-0">{{'heading-title.mail-title-image' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.set-title-image-for-emails' | translate}}" placement="right"></i></span></h6>
+                    </div>
+                    <div class="col-6 text-center mb-4">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_logo_settings?'d-block':'d-none'" (click)="authorised_logo.click()">
+                    <i class="simple-icon-pencil"></i>
+                  </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.authorised_logo)" class="d-none" #authorised_logo>
+                        <img class="mb-2" [src]="upload_images.authorised_image ? upload_images.authorised_image:(_helper.image_url+'web_images/authorised_image.png?'+_helper.randomQueryParam)" alt="authorised_image" >
+                        <h6 class="text-center mb-0">{{'heading-title.authorized-signature' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.set-authorized-signature' | translate}}" placement="right"></i></span></h6>
+                    </div>
+                    <div class="col-6 text-center">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_logo_settings?'d-block':'d-none'" (click)="user_logo.click()">
+                            <i class="simple-icon-pencil"></i>
+                        </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.user_logo)" class="d-none" #user_logo>
+                        <img class="mb-2" [src]="upload_images.user_logo ? upload_images.user_logo:(_helper.image_url+'web_images/user_logo.png?'+_helper.randomQueryParam)" alt="user_logo">
+                        <h6 class="text-center mb-0">{{'heading-title.website-main-logo' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.set-logo-website-main-logo' | translate}}" placement="right"></i></span></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-lg-6 col-xl-6 mb-4">
+        <div class="dark-logos-card card mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3">{{'heading-title.dark-theme-logo-settings' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.logo-images-for-dark-mode' | translate}}" placement="right"></i></span></h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3" (click)="onClickDarkLogoSetting()"> {{ !is_edit_dark_logo_settings ? ('button-title.edit' | translate) : ('button-title.save' | translate) }} </button>
+                    </div>
+                </div>
+                <div class="row social-image-row gallery">
+                    <div class="col-6 text-center mb-4">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_dark_logo_settings?'d-block':'d-none'" (click)="dark_header_logo.click()">
+                        <i class="simple-icon-pencil"></i>
+                      </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.dark_header_logo)" class="d-none" #dark_header_logo>
+                        <img class="mb-2" [src]="upload_images.dark_header_logo ? upload_images.dark_header_logo:(_helper.image_url+'web_images/dark_header_logo.png?'+_helper.randomQueryParam)" alt="dark_header_logo" >
+                        <h6 class="text-center mb-0">{{'heading-title.header-logo' | translate }}</h6>
+                    </div>
+                    <div class="col-6 text-center">
+                        <button class="btn btn-outline-primary icon-button position-absolute m-1" [ngClass]="is_edit_dark_logo_settings?'d-block':'d-none'" (click)="dark_website_logo.click()">
+                            <i class="simple-icon-pencil"></i>
+                        </button>
+                        <input type="file" accept="image/*" (change)="onSelectImageFile($event,admin_logo.dark_website_logo)" class="d-none" #dark_website_logo>
+                        <img class="mb-2" [src]="upload_images.dark_website_logo ? upload_images.dark_website_logo:(_helper.image_url+'web_images/dark_website_logo.png?'+_helper.randomQueryParam)" alt="dark_website_logo" >
+                        <h6 class="text-center mb-0">{{'heading-title.website-main-logo' | translate }}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

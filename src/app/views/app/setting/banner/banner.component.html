@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container mb-2 "  *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)">
+            <button  type="button" (click)="onAdd(false , '')" class="top-right-button btn btn-primary btn-lg mr-1">{{
+                'button-title.add-new' |
+                translate | uppercase}}</button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <div class="separator mb-4"></div>
+    </div>
+</div>
+<div class="card ">
+    <div class="card-body">
+            <h5 class="mb-4">{{ 'heading-title.banner-list' | translate }}</h5>
+            <table class="table" aria-describedby=" ">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{{ 'heading-title.title' | translate}}</th>
+                        <th scope="col">{{ 'heading-title.redirect_url' | translate}}</th>
+                        <th scope="col">{{ 'heading-title.action_link' | translate}}</th>
+                        <th scope="col">{{ 'heading-title.action_text' | translate}}</th>
+                        <th scope="col">{{ 'heading-title.is_visible' | translate}}</th>
+                        <th scope="col">{{ 'heading-title.action' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr *ngFor="let banner of banner_list; let i = index">
+                        <td>{{ i + 1}}</td>
+                        <td class="address-width">{{ banner.banner_title }}</td>
+                        <td class="address-width">{{ banner.redirect_url }}</td>
+                        <td>{{ banner.action_link }}</td>
+                        <td>{{ banner.action_text }}</td>
+                        <td class="">
+                            <span class="badge badge-xs badge-pill badge-info">
+                                {{ banner.is_visible ? 'Visible' : 'Hidden'}}
+                            </span>
+                        </td>
+
+                        <td class="">
+                            <div class="btn-group langDropdown" dropdown
+                            *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) || _helper.has_permission(_helper.PERMISSION.DELETE)"
+                            [ngStyle]="{ 'cursor': !_helper.has_permission(_helper.PERMISSION.EDIT) && !_helper.has_permission(_helper.PERMISSION.EXPORT) && (!_helper.has_permission(_helper.PERMISSION.DELETE)|| language.code == 'en') ? 'not-allowed' : 'auto' }">
+                                <button id="button-basic{{banner.id}}" dropdownToggle type="button" class="btn btn-xs btn-outline-primary dropdown-toggle"
+                                  aria-controls="dropdown-basic{{banner.id}}" data-toggle="dropdown" data-boundary="window">
+                                  {{ 'button-title.action' | translate}} <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-basic{{banner.id}}" *dropdownMenu class="dropdown-menu dropdown-menu-sm" role="menu" aria-labelledby="button-basic">
+                                    <li role="menuitem" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"><a class="dropdown-item" href="javascript:;" (click)="onAdd(true , banner)" >{{ 'button-title.edit' | translate}}</a></li>
+                                    <li role="menuitem" *ngIf="_helper.has_permission(_helper.PERMISSION.DELETE)" ><a class="dropdown-item" href="javascript:;" (click)="onDeleteBanner(banner)" >{{ 'button-title.delete' | translate}}</a></li>
+                                </ul>
+                            </div>
+                            <div *ngIf="!_helper.has_permission(_helper.PERMISSION.EDIT) && !_helper.has_permission(_helper.PERMISSION.DELETE)">
+                                <h6>{{'label-title.no-action' | translate }}</h6>
+                            </div>
+                        </td>
+                      </tr>
+                      <tr class="text-center" *ngIf="banner_list?.length === 0">
+                        <th colspan="12" scope="col"> <div class="mt-2">{{'heading-title.no-banner' | translate }}  </div></th>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+
+<app-add-banner-modal #AddBannerModal></app-add-banner-modal>

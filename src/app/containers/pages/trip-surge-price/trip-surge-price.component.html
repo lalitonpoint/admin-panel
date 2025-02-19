@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-12 mb-4">
+        <div class="card pt-4">
+            <div class="px-4">
+                <div class="d-flex justify-content-between">
+                    <h5 class="mb-4 card-title font-weight-semibold">{{'label-title.surge-hours' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.surge-hour-tooltip' | translate}}" placement="right"></i></span></h5>
+                    <div class="d-block" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button class="btn btn-xs btn-outline-primary" (click)="opensSurgeTimeModal()">
+                            {{'button-title.edit' | translate}}
+                        </button>
+                    </div>
+                </div>
+                <div class="pb-4 d-flex flex-row justify-content-between align-items-top" *ngIf="!is_surge_hours">
+                    <div class="flex-fill">
+                        <p class="font-weight-medium mb-0">{{'label-title.is-surge-hours' | translate}}</p>
+                    </div>
+                    <div class="float-right">
+                        <span class="badge badge-danger rounded">{{'label-title.off' | translate}}</span>
+                    </div>
+                </div>
+                <div class="" *ngIf="is_surge_hours">
+                    <div *ngFor="let days of surge_hours; let i=index"
+                        class="d-flex flex-row pb-4 justify-content-between align-items-top">
+                        <div class="flex-fill">
+                            <h5 class="font-weight-medium mb-0">{{ 'week-days.'+days.day | translate }}</h5>
+                        </div>
+                        <div>
+                            <span *ngIf="!days.is_surge" class="badge badge-danger rounded">{{'label-title.off' |
+                                translate}}</span>
+                            <span *ngIf="days.is_surge" class="badge badge-success rounded">{{'label-title.on' |
+                                translate}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-12 mb-4">
+        <div class="card pt-4 pb-2">
+            <div class="">
+                <div class="px-4 d-flex justify-content-between">
+                    <h5 class="mb-4 card-title font-weight-semibold">{{'label-title.rich-area-surge' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.rich-area-surge-tooltip' | translate}}" placement="right"></i></span></h5>
+                    <div class="d-block">
+                        <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="btn btn-xs ml-2 btn-outline-primary" (click)="openRichAreaSurgeModal()"
+                            [disabled]="rich_area_surge && rich_area_surge.length == 0">{{'button-title.edit' | translate}}</button>
+                    </div>
+                </div>
+                <div *ngIf="rich_area_surge" class="px-4 areamaxHeight">
+                    <div *ngFor="let surge of rich_area_surge"
+                        class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                        <div class="flex-fill">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-0">{{surge.title | translate}}
+                                    {{'label-title.surge-multiplier' | translate}}</p>
+                            </a>
+                        </div>
+                        <div class="ml-3">
+                            <span *ngIf="surge.surge_multiplier">{{surge.surge_multiplier}}</span>
+                            <span class="text-nowrap" *ngIf="!surge.surge_multiplier">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="rich_area_surge.length == 0 ">
+                    <div class="card-body py-3 text-center font-weight-bold text-capitalize">
+                        {{'validation-title.no-data-found' | translate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-add-new-place-modal #richAreaSurgeModal [rich_area_surge_list]="rich_area_surge"></app-add-new-place-modal>
+<app-add-new-surge-time-modal #daysSurgeModal ></app-add-new-surge-time-modal>

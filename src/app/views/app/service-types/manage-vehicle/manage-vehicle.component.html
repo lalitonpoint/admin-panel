@@ -1,0 +1,358 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero w-fit-content"
+            *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && tab_number == 1" type="button"
+                (click)="openAddVehicleModal('')" class="top-right-button btn btn-primary btn-lg mr-1">{{
+                'pages.add-new' | translate}}</button>
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && tab_number == 2" type="button"
+                (click)="openbrandModal(null)" class="top-right-button btn btn-primary btn-lg mr-1">{{ 'pages.add-new' |
+                translate}}</button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <br>
+    </div>
+
+    <div class="col-12" *ngIf="tab_number == 1">
+        <div class="display-options-container">
+            <div class="d-flex">
+                <div class="d-flex flex-wrap">
+                    <ng-container>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect
+                                labelForId="yesno" [searchable]="true"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" [clearable]="false" (keypress)="_helper.special_char_validation($event)" maxlength="50"
+                                placeholder="{{'label-title.country' | translate}}" (change)="onChangeCountry()" [(ngModel)]="country">
+                                <ng-option *ngFor="let country of country_list" [value]="country._id">
+                                    {{country.countryname | titlecase}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                (change)="changeVehicleType($event)"
+                                placeholder="{{'label-title.vehicle-type' | translate}}" [(ngModel)]="vehicle_type" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                <ng-option [value]="_helper.VEHICLE_TYPE.NORMAL">{{'label-title.normal' |
+                                    translate}}</ng-option>
+                                    <ng-option [value]="_helper.VEHICLE_TYPE.EV">{{'label-title.ev' |
+                                        translate}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                placeholder="{{'label-title.type' | translate}}" [(ngModel)]="type" (change)="onChangeType()" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                <ng-option [value]="type._id" *ngFor="let type of filteredvehicleType">
+                                    {{type.typename | titlecase}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                (change)="onCHangeBrandName($event)" placeholder="{{'label-title.name' | translate}}"
+                                [(ngModel)]="brand_name" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                <ng-option [value]="brand._id" *ngFor="let brand of brand_list">
+                                    {{brand.name | titlecase}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                placeholder="{{'label-title.modal' | translate}}" [(ngModel)]="brand_modal" (change)="onChangeModel()">
+                                <ng-option [value]="brand_modal._id" *ngFor="let brand_modal of brand_modal_list" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                    {{brand_modal.name | titlecase}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-inline-block" id="displayOptions">
+                            <div class="search-sm d-inline-block mr-1 mb-1 align-top">
+                                <input class="form-control" placeholder="{{'label-title.plate-no' | translate }}"
+                                    [(ngModel)]="plate_no" (keypress)="_helper.spaceEventPreventValidation($event);plateNoSearch()"
+                                    (keyup.enter)="apply(search_value)" maxlength="50">
+                            </div>
+                        </div>
+
+                        <div class="d-inline-block" id="displayOptions">
+                            <div class="search-sm d-inline-block mr-1 mb-1 align-top">
+                                <input class="form-control" type="text" placeholder="{{'label-title.year' | translate }}"
+                                    [(ngModel)]="year" (keypress)="_helper.phone_number_validation($event);" (input)="yearChange()"
+                                    (keyup.enter)="apply(search_value)" maxlength="50">
+                            </div>
+                        </div>
+
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic3" type="button" class="btn btn-primary btn-xs mr-1 mb-1"
+                                    (click)="apply()">
+                                    {{'button-title.apply' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic4" type="button"
+                                    class="btn btn-outline-primary btn-xs mr-1 mb-1" (click)="clear()"
+                                    [disabled]="is_clear_filter_disabled">
+                                    {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="mb-2 d-flex justify-content-end">
+                    <div class="" id="displayOptions">
+                        <span class="text-muted text-small text-nowrap">{{'label-title.per-page' | translate}} </span>
+                        <span dropdown class="d-inline-block position-relative">
+                            <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                                {{itemsPerPage}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                                <li role="menuitem" *ngFor="let item of itemOptionsPerPage">
+                                    <a [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeItemsPerPage(item)">{{item | translate}}</a>
+                                </li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<tabset class="card-tabs separator-tabs w-100">
+    <tab heading="{{'label-title.vehicle' | translate }}" (selectTab)="onSelectTab(1)">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4"
+                        *ngFor="let vehicle of vehicle_detail | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}; let i=index"
+                        id="vehicle{{i}}" [ngClass]="{'order-first': vehicle.is_selected}">
+                        <div class="sortable-survey mb-4">
+                            <div class="card question d-flex">
+                                <span class="badge badge-pill badge-success position-absolute badge-top-left"
+                                    *ngIf="vehicle.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                    {{'label-title.ev' | translate}}
+                                </span>
+                                <div class="d-flex flex-grow-1 min-width-zero">
+                                    <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center c-pointer"
+                                        (click)="openAddVehicleModal(vehicle)">
+                                        <div class="list-item-heading mb-0 mb-1 mt-1">
+                                            <span class=" d-inline-block">
+                                                <div class=" flex-fill">
+                                                    <a class="position-relative">
+                                                        <p class="list-item-heading m-0">
+                                                            {{vehicle.name}} ({{vehicle.model}}) ({{vehicle.unique_id}})
+                                                        </p>
+                                                        <p class="text-muted mb-0 text-medium">
+                                                            <span>{{vehicle.plate_no}}</span>
+                                                        </p>
+                                                        <p class="text-muted mb-0 text-medium">
+                                                            <span *ngIf="vehicle.hub_detail">
+                                                                {{vehicle.hub_detail?.name}}
+                                                                ({{vehicle.hub_detail?.unique_id}})</span>
+                                                            <span *ngIf="!vehicle.hub_detail">&nbsp;</span>
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="custom-control custom-checkbox pl-2 align-self-center pr-4 text-nowrap d-flex">
+                                        <div>
+                                            <button
+                                                class="btn text-primary btn-outline-theme-3 icon-button mr-2 ng-star-inserted check"
+                                                (click)="openAddVehicleModal(vehicle,true)"
+                                                aria-controls="collapseAnimated" style="font-size: 95%;"
+                                                title="{{'button-title.history' | translate}}">
+                                                <i class="simple-icon-notebook"></i>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                            <button
+                                                class="btn text-primary btn-outline-theme-3 icon-button mr-2 ng-star-inserted check"
+                                                (click)="openAddVehicleModal(vehicle)" aria-controls="collapseAnimated"
+                                                style="font-size: 95%;">
+                                                <i class="simple-icon-pencil"></i>
+                                            </button>
+                                        </div>
+                                        <button class="btn btn-outline-theme-3 icon-button rotate-icon-click rotate"
+                                            (click)="vehicle.open = !vehicle.open" [attr.aria-expanded]="!vehicle.open"
+                                            aria-controls="collapseAnimated1" [isAnimated]="true">
+                                            <i class="with-rotate-icon simple-icon-arrow-down"
+                                                *ngIf="!vehicle.open"></i>
+                                            <i class="with-rotate-icon simple-icon-arrow-up" *ngIf="vehicle.open"></i>
+                                        </button>
+
+                                    </div>
+                                </div>
+                                <div id="collapseAnimated" [collapse]="!vehicle.open" [isAnimated]="true">
+                                    <div class="card-body pt-0">
+                                        <div class="row mb-2 ">
+                                            <div class="col-md-6 col-6  mb-2">
+                                                <div class="form-group"><label
+                                                        for="exampleInputname">{{'label-title.type' |
+                                                        translate }}</label>
+                                                    <input *ngIf="vehicle.type_detail?.typename != null" type="text"
+                                                        id="exampleInputname" class="form-control"
+                                                        placeholder="{{'label-title.type' | translate }}"
+                                                        value="{{vehicle.type_detail?.typename}}" disabled>
+                                                    <input *ngIf="vehicle.type_detail?.typename == null" type="text"
+                                                        id="exampleInputname" class="form-control"
+                                                        value="{{'label-title.not-approved' | translate }}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6  mb-2">
+                                                <div class="form-group"><label
+                                                        for="exampleInputname">{{'label-title.name' |
+                                                        translate }}</label>
+                                                    <input type="text" id="exampleInputname" class="form-control"
+                                                        placeholder="{{'label-title.name' | translate }}"
+                                                        value="{{vehicle.name}}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2">
+                                                <div class="form-group"><label
+                                                        for="exampleInputname">{{'label-title.plate-no' | translate
+                                                        }}</label>
+                                                    <input type="text" id="exampleInputname" class="form-control"
+                                                        placeholder="{{'label-title.plate-no' |  translate }}"
+                                                        value="{{vehicle.plate_no}}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2">
+                                                <div class="form-group"><label
+                                                        for="exampleInputname">{{'label-title.modal'
+                                                        | translate }}</label>
+                                                    <input type="text" id="exampleInputname" class="form-control"
+                                                        placeholder="{{'label-title.modal' | translate }}"
+                                                        value="{{vehicle.model}}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2">
+                                                <div class="form-group"><label
+                                                        for="exampleInputname">{{'label-title.year' |
+                                                        translate }}</label>
+                                                    <input type="text" id="exampleInputname" class="form-control"
+                                                        placeholder="{{'label-title.year' |  translate }}"
+                                                        value="{{vehicle.passing_year}}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2">
+                                                <div class="form-group"><label
+                                                        for="exampleInputname">{{'label-title.color'
+                                                        | translate }}</label>
+                                                    <input type="text" id="exampleInputname" class="form-control"
+                                                        placeholder="{{'label-title.color' |  translate }}"
+                                                        value="{{vehicle.color | titlecase}}" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-0 accessbox">
+                                                <div class="form-group mb-0">
+                                                    <label for="exampleInputname">{{'label-title.accessibility'
+                                                        | translate }}</label>
+                                                    <div class="vehicle" *ngIf="vehicle.accessibility?.length > 0">
+                                                        <span *ngFor="let access of vehicle.accessibility">
+                                                            <span *ngIf="access=='baby_seat'">{{'label-title.baby-seat'
+                                                                |
+                                                                translate }}</span>
+                                                            <span *ngIf="access!='baby_seat'">{{access |
+                                                                titlecase}}</span>
+                                                            <br>
+                                                        </span>
+                                                    </div>
+                                                    <input
+                                                        *ngIf="!vehicle.accessibility || vehicle.accessibility?.length == 0"
+                                                        type="text" class="form-control"
+                                                        value="{{'label-title.not-selected' | translate }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12" *ngIf="vehicle_detail?.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="vehicle_detail?.length > 0">
+            <div class="col-12">
+                <div class=" mb-4">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <pagination-controls [ngClass]="darkMode ? 'dark' : ''"
+                                previousLabel="{{'wizard.previous' | translate}}"
+                                nextLabel="{{'wizard.next' | translate}}" (pageChange)="pageChanged($event)"
+                                responsive="true" (pageBoundsCorrection)="pageChanged($event)"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading="{{'heading-title.vehicle-brand-and-model' | translate }}" (selectTab)="onSelectTab(2)">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4"
+                        *ngFor="let brand of brand_list; let i=index" id="brand{{i}}">
+                        <div class="sortable-survey mb-4">
+                            <div class="card question d-flex">
+                                <div class="d-flex flex-grow-1 min-width-zero">
+                                    <div
+                                        class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                                        <div class="list-item-heading mb-0 mb-1 mt-1">
+                                            <span class=" d-inline-block">
+                                                <div class=" flex-fill">
+                                                    <a class="position-relative c-pointer"
+                                                        (click)="openbrandModal(brand)">
+                                                        <p class="list-item-heading m-0">
+                                                            {{brand.name}}
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="custom-control custom-checkbox pl-2 align-self-center pr-4 text-nowrap d-flex">
+                                        <div *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                            <button
+                                                class="btn text-primary btn-outline-theme-3 icon-button mr-2 ng-star-inserted check"
+                                                (click)="openbrandModal(brand)" style="font-size: 95%;">
+                                                <i class="simple-icon-pencil"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12" *ngIf="brand_list?.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+</tabset>
+
+<app-vehicle-modal #addNewVehicleModal (vehicle_emit_event)="getAdminVehicleList()"></app-vehicle-modal>
+<app-brand-modal #brandModal (brand_save_event)="getVehicleBrandModel()"></app-brand-modal>

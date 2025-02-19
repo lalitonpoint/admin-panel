@@ -1,0 +1,69 @@
+
+.dashboard-list-with-user .col-3:nth-child(1) {
+    padding-right: 3px ;
+}
+
+.dashboard-list-with-user {
+    height: 320px !important;
+    .col-6,
+    .col-5,
+    .col-4,
+    .col-3:nth-child(2) {
+        padding-left: 0px ;
+    }
+}
+
+.earning-chart {
+    padding: 0;
+}
+
+i {
+    font-size: 250%;
+}
+
+p,.redirect-a-tag {
+    font-size: 140%
+}
+
+.f-1 {
+    flex: 2;
+}
+
+.f-3 {
+    flex: 3;
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+.text-end {
+    text-align: end;
+}
+@media only screen and (max-width: 912px) {
+    i {
+        font-size: 220%;
+    }
+    
+    p,.redirect-a-tag {
+        font-size: 130%
+    }
+    .dashboard-list-with-user {
+        height: auto !important;
+    }
+    .paymentDetails{
+        margin-bottom: 0 !important;
+    }
+}
+@media only screen and (max-width: 414px) {
+    i {
+        font-size: 180%;
+    }
+    p,.redirect-a-tag {
+        font-size: 115%
+    }
+}
+
+.info-tooltip{
+    font-size: inherit;
+}

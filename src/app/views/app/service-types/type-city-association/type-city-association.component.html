@@ -1,0 +1,115 @@
+<div class="row app-row">
+    <div class="col-12">
+        <h1>{{'heading-title.type-city-association' | translate }}</h1>
+        <app-breadcrumb></app-breadcrumb>
+    </div>
+    <div class="col-12">
+        <div>
+            <tabset class="card-tabs separator-tabs" #staticTabs>
+                <tab heading="{{'heading-title.trip-charge' | translate | uppercase }}" (selectTab)="tabType=0">
+                    <app-trip-price (tripchargeHandler)="fetchDataTypeCity()"></app-trip-price>
+                </tab>
+                <tab heading="{{!selected_cityType ? '' :'heading-title.surge-price' | translate | uppercase }}" (selectTab)="tabType=1">
+                    <app-trip-surge-price [tabType]="tabType"></app-trip-surge-price>
+                </tab>
+                <tab heading="{{!selected_cityType ? '' : 'heading-title.zone-city-airport-price' | translate | uppercase }}"
+                    (selectTab)="fetchIds(2)">
+                    <ng-container *ngIf="cityid && (tabType==2)">
+                        <app-trip-zone-price [cityid]="cityid" [service_type_id]="service_type_id"
+                            [currencysign]="currencysign"></app-trip-zone-price>
+                    </ng-container>
+                </tab>
+                <tab heading="{{selected_cityType != null  && (is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL) ? ('heading-title.zone-for-queue' | translate | uppercase) : ''}}" (selectTab)="fetchIds(4)">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card p-4">
+                                <div class="row justify-content-between px-3" *ngIf="zone_data?.zone_list?.length > 0">
+                                    <div class="mb-4 d-flex p-0">
+                                        <h5 class="mb-0 card-title font-weight-semibold">{{'heading-title.zone-for-queue' | translate}}</h5>
+                                    </div>
+                                    <div class="mb-4 d-flex justify-content-end p-0" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                        <button class="btn btn-outline-primary btn-xs" style="height: fit-content;"
+                                            (click)="saveZoneForQueue()">{{'button-title.save' | translate}}</button>
+                                    </div>
+                                </div>
+                                <div class="row px-3">
+                                    <div class="custom-control custom-checkbox col-12 col-md-6 col-lg-6 col-xl-6 mb-2"
+                                        *ngFor="let data of zone_data?.zone_list;let i=index">
+                                        <input type="checkbox" [id]="'zone_queue'+i" class="custom-control-input"
+                                            *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" (change)="zoneForQueueCheck(data)"
+                                            [checked]="data.is_checked">
+                                        <input type="checkbox" [id]="'zone_queue'+i" class="custom-control-input" disabled
+                                            *ngIf="!_helper.has_permission(_helper.PERMISSION.EDIT)" (change)="zoneForQueueCheck(data)"
+                                            [checked]="data.is_checked">
+                                        <label [for]="'zone_queue'+i" class="custom-control-label">
+                                            <h6 class="mb-0" style="line-height: normal;">{{data.title}}</h6>
+                                        </label>
+                                    </div>
+                                    <div class="col-12 text-center font-weight-bold"
+                                        *ngIf="!zone_data || zone_data?.zone_list.length == 0">
+                                        {{'label-title.no-record-found' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="{{(((selected_cityType != null) && (is_ride_share == _helper.SERVICE_PRICE_TYPE.CAR_POOL)) || (is_ride_share == _helper.SERVICE_PRICE_TYPE.OPEN_RIDE) )? '' :'heading-title.rental-car' | translate | uppercase }}"
+                    (selectTab)="fetchIds(3)">
+                    <ng-container *ngIf="cityid && (tabType==3)">
+                        <app-trip-rental [cityid]="cityid" [service_type_id]="service_type_id" [unit]="unit"
+                            [currencysign]="currencysign"></app-trip-rental>
+                    </ng-container>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>
+<app-application-menu>
+    <div class="card-body h-100">
+        <div class="chat-app-tab-pane-contacts">
+            <div class="pt-2 pb-3 border-bottom">
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group d-flex">
+                            <input type="text" class="form-control rounded-100"
+                                placeholder="{{'label-title.search' | translate}}" [(ngModel)]="search_text"
+                                id="search-box1" (keypress)="_helper.special_char_validation($event)"  maxlength="50"/>
+                            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" type="button" class="btn btn-primary w-30 ml-3 text-uppercase text-center"
+                                (click)="showTripChargeSettingModal()">{{'button-title.add' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}"
+                *ngIf="typeCity_list && typeCity_list.length>0 && (typeCity_list | searchpipe:search_text:['cityname','countryname','type_detail.typename'])?.length > 0">
+                <div (click)="onSelectCityType(typeCity)" class="card-body row border-bottom c-pointer"  [class.ev-tag-list]="typeCity.type_detail.vehicle_type == _helper.VEHICLE_TYPE.EV"
+                    *ngFor="let typeCity of typeCity_list | searchpipe:search_text:['cityname','countryname','type_detail.typename']"
+                    [ngClass]="selected_cityType?(selected_cityType._id == typeCity._id ? 'text-primary': ''):''">
+                    <div class="col-sm-1 col-1 mt-2">
+                        <span class="align-middle border-success log-indicator" *ngIf="typeCity.is_business"></span>
+                        <span class="align-middle border-danger log-indicator" *ngIf="!typeCity.is_business"></span>
+                    </div>
+                    <div class="col-sm-7 col-7">
+                        <p class="font-weight-bold mb-0">{{typeCity.city_detail.cityname | titlecase}}</p>
+                        <p class="text-muted mb-0 text-small d-flex">
+                            {{typeCity.country_detail.countryname | titlecase}}  
+                        </p>
+                    </div>
+                    <div class="col-sm-2 col-2">
+                        <h6 class="mb-0" style="width: fit-content;">{{typeCity.type_detail.typename | titlecase}}</h6>
+                        <span class="font-weight-bold" *ngIf="typeCity.is_ride_share == _helper.SERVICE_PRICE_TYPE.CAR_POOL"> ({{'label-title.ride-share' | translate}})</span>
+                        <span class="font-weight-bold" *ngIf="typeCity.is_ride_share == _helper.SERVICE_PRICE_TYPE.OPEN_RIDE" style="white-space: nowrap;word-wrap: break-word;"> ({{'label-title.open-ride' | translate}})</span>
+                    </div>
+                </div>
+            </perfect-scrollbar>
+            <div class="row justify-content-center align-items-center data-center" *ngIf="(!typeCity_list || (typeCity_list && typeCity_list.length==0)) || (typeCity_list | searchpipe:search_text:['cityname','countryname','type_detail.typename'])?.length === 0">
+                <p class="clr-primary">{{'label-title.no-record-found' | translate}}</p>
+            </div>
+        </div>
+    </div>
+</app-application-menu>
+
+<app-trip-charge-settingmodal #tripChargeSettingModal></app-trip-charge-settingmodal>

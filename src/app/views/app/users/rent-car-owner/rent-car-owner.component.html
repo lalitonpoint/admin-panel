@@ -1,0 +1,197 @@
+<div class="row mb-4">
+    <div class="col-12">
+
+        <app-heading></app-heading>
+
+        <div class="top-right-button-container text-zero">
+            <div class="btn-group">
+                <button *ngIf="_helper.has_permission(_helper.PERMISSION.EXPORT)" id="button-basic" type="button"
+                    class="btn btn-lg btn-outline-primary" (click)="export()">
+                    {{'button-title.export' | translate | uppercase}} <span class="caret"></span>
+                </button>
+            </div>
+        </div>
+
+        <app-breadcrumb></app-breadcrumb>
+
+        <div class="display-options-container">
+
+            <div class="mb-2 d-flex justify-content-between">
+                <div class="d-flex flex-wrap">
+                    <div class="d-inline-block mt-1" id="displayOptions">
+                        <div class="d-inline-block mr-3 view-class c-pointer"
+                            [ngClass]="viewType===1? 'text-primary': ''" title="Grid View" (click)="onViewChange(1)">
+                            <i class="simple-icon-grid"></i>
+                        </div>
+                        <div class="d-inline-block mr-3 view-class c-pointer"
+                            [ngClass]="viewType===2? 'text-primary': ''" title="List View" (click)="onViewChange(2)">
+                            <i class="simple-icon-list"></i>
+                        </div>
+                    </div>
+                    <div class="d-block d-md-inline-block position-relative" id="displayOptions">
+                        <div class="mr-1 mb-1" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-dark btn-xs dropdown-toggle" aria-controls="dropdown-basic">
+                                {{'button-title.search-by' | translate}} : {{itemOrder.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsOrders"
+                                    [ngClass]="item.isShow == false ? 'd-none' : ''">
+                                    <a [ngClass]="item.value === itemOrder.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeOrderBy(item)">{{item.label | translate}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-inline-block" id="displayOptions">
+                        <div class="search-sm d-inline-block mr-1 mb-1 align-top">
+                            <input class="form-control" (keypress)="_helper.space_validation($event)"
+                                [(ngModel)]="search_value" (keyup.enter)="apply(search_value)"
+                                placeholder="{{'label-title.search' | translate }}">
+                        </div>
+                    </div>
+
+                    <div class="position-relative dateWidth" *ngIf="created_date">
+                        <div class="date-sm float-md-left mr-1 mb-2">
+                            <input [hidden]="direction=='rtl'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetrans1' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date"
+                                [maxDate]="todayDate">
+                            <input [hidden]="direction=='ltr'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatetrans1246' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date"
+                                [maxDate]="todayDate">
+                        </div>
+                    </div>
+
+                    <div class=" d-inline-block float-left mr-1 mb-1 align-top">
+                        <div class="float-md-left" dropdown>
+                            <button id="button-basic3" type="button" class="btn btn-primary btn-xs mr-1 mb-1"
+                                (click)="apply(search_value)">
+                                {{'button-title.apply' | translate}} <span class="caret"></span>
+                            </button>
+                            <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-1"
+                                [disabled]="search_value == '' && !isFilterApply" (click)="clear()">
+                                {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="" id="displayOptions">
+                    <span class="text-muted text-small text-nowrap">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage">
+                                <a [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="separator mb-4"></div>
+<div class="row">
+    <div class="col-12">
+        <div class="row" *ngIf="viewType === 1">
+            <div *ngFor="let driver of ownerList | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}" class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted mb-4">
+                <div class="card d-flex flex-row" style="height: 100%;">
+                    <div class="card-body align-self-center d-flex flex-row justify-content-between min-width-zero">
+                        <div class="min-width-zero">
+                            <a href="javascript:void(0);" (click)="showDriverModal($event,driver._id)">
+                                <div class="d-flex">
+                                    <p class="mb-1 list-item-heading truncate">
+                                        {{driver.first_name}}{{driver.last_name}} ({{driver.unique_id}})
+                                    </p>
+                                </div>
+                                <p class=" list-item-heading mb-1 truncate ">
+                                    {{driver.country_phone_code}}{{driver.phone}}
+                                </p>
+                                <p class="mb-2 text-muted text-small truncate">{{driver.email}}</p>
+                            </a>
+                        </div>
+                        <div class="float-right textRight" >
+                            <div>
+                                <p class="mb-1 truncate text-sm-right">{{driver.country}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100" *ngIf="ownerList.length == 0">
+                <div class="text-center text-capitalize">
+                    {{'label-title.no-record-found' | translate}}</div>
+            </div>
+        </div>
+        <div class="col-12 list" *ngIf="viewType === 2">
+            <div [ngClass]="{'card d-flex flex-row mb-3': true}" *ngFor="let driver of ownerList | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}; let i=index"
+                [contextMenu]="basicMenu" [contextMenuSubject]="user">
+
+                <a class="d-flex c-pointer" (click)="showDriverModal($event,driver._id)">
+                    <img alt="Profile" (error)="$event.target.src = _helper.DEFAULT_IMAGE.USER_PROFILE"
+                        class="img-thumbnail border-0 list-thumbnail align-self-center"
+                        [src]="_helper.image_url + driver.picture"
+                        [src]="driver.picture ? _helper.image_url + driver.picture : _helper.DEFAULT_IMAGE.USER_SQUARE"
+                        [alt]="driver.title" style="min-width: 140px;">
+                </a>
+                <div class="pl-2 d-flex flex-grow-1 min-width-zero c-pointer"
+                    (click)="showDriverModal($event,driver._id)">
+                    <div
+                        class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center" [class.ev-tag-list]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                        <a class="w-20 w-sm-100">
+                            <p class="list-item-heading mb-0 truncate">
+                                {{driver.first_name}}{{driver.last_name}} ({{driver.unique_id}})
+                            </p>
+                        </a>
+                        <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                            {{driver.country_phone_code}} {{driver.phone}}
+                        </p>
+                        <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">{{driver.email}}</p>
+                        <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">{{driver.city}}</p>
+                        <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">{{driver.country}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100" *ngIf="ownerList.length == 0">
+                <div class="text-center text-capitalize">
+                    {{'label-title.no-record-found' | translate}}</div>
+            </div>
+        </div>
+        <div class="row" *ngIf="ownerList.length != 0"> 
+            <div class="col-12">
+                <div class=" mb-4">
+                    <div class="card-body">
+                        <div class="col-12 d-flex justify-content-center">
+                            <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                            nextLabel="{{'wizard.next' | translate}}" [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+            <i class='simple-icon-arrow-right'></i>
+        </ng-template>
+        <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+            <i class='simple-icon-arrow-left'></i>
+        </ng-template>
+    </div>
+</div>
+
+<app-edit-driver-modal (driverHandler)="getOwnerList(filterData)" #DriverUserModal></app-edit-driver-modal>

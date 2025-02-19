@@ -1,0 +1,125 @@
+<div class="row mb-4">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero w-fit-content">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" type="button" (click)="showAddNewModal()" class="top-right-button btn btn-primary btn-lg mr-1">
+                {{ 'pages.send-mass-notification' | translate | uppercase }}
+            </button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <div class="display-options-container">
+            <div class="">
+                <div class="d-inline-block position-relative">
+                    <div class="float-md-left mr-1 mb-1" dropdown>
+                        <button id="button-basic" dropdownToggle type="button"
+                            class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle" aria-controls="dropdown-basic">
+                            {{'button-title.filter-by' | translate}} : {{itemOrder.label | translate}} <span
+                                class="caret"></span>
+                        </button>
+                        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                            aria-labelledby="button-basic">
+                            <li role="menuitem" *ngFor="let item of itemOptionsOrders" class="c-pointer"><a
+                                    [ngClass]="item.value === itemOrder.value ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeOrderBy(item)">{{item.label | translate}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="float-right">
+                    <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage" class="c-pointer"><a
+                                    [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="separator mb-4"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-5">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table aria-describedby="disc" class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">{{ 'heading-title.id' | translate}}</th>
+                                <th scope="col">{{ 'heading-title.sender' | translate}}</th>
+                                <th scope="col">{{ 'heading-title.user' | translate}}</th>
+                                <th scope="col">{{ 'heading-title.device-type' | translate}}</th>
+                                <th scope="col">{{ 'heading-title.country' | translate}}</th>
+                                <th scope="col">{{ 'heading-title.message' | translate}}</th>
+                                <th scope="col">{{ 'heading-title.date' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let notification of notification_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}">
+                                <th scope="row">{{notification.unique_id}}</th>
+                                <th scope="row"> 
+                                    <span *ngIf="notification.username">
+                                        {{notification.username}} ({{notification.email}})
+                                    </span>
+                                <td>
+                                    <span *ngIf="notification.user_type == 1">
+                                        {{'label-title.user' | translate}}
+                                    </span>
+                                    <span *ngIf="notification.user_type == 2">
+                                        {{'label-title.driver' | translate}}
+                                    </span>
+                                </td>
+                                <td>{{notification.device_type}}</td>
+                                <td>
+                                    <span *ngIf="notification.country == null">{{'label-title.all' | translate}}</span>
+                                    <span *ngIf="notification.country != null">
+                                        <span *ngFor="let country of all_countries">
+                                            <span *ngIf="country._id == notification.country">
+                                                {{country.countryname}}
+                                            </span>
+                                        </span>
+                                    </span>
+                                </td>
+                                <td class="msg-col-width" [ngClass]="{'msg-col-min-width-150':notification.message.length > 10,'msg-col-min-width-300':notification.message.length > 20,'msg-col-min-width-400':notification.message.length > 100}">
+                                    {{notification.message}}
+                                </td>
+                                <td *ngIf="timezone_for_display_date">
+                                    {{_helper.moment(notification.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(notification.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="notification_list && notification_list.length==0">
+                            <tr>
+                                <th id="head" colspan="10" class="text-center">
+                                    <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12" *ngIf="notification_list && notification_list.length>0">
+        <div class="w-100 d-flex justify-content-center">
+            <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+            nextLabel="{{'wizard.next' | translate}}" [ngClass]="darkMode ? 'dark' : ''" ></pagination-controls>
+        </div>
+    </div>
+</div>
+
+<ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+    <i class='simple-icon-arrow-right'></i>
+</ng-template>
+<ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+    <i class='simple-icon-arrow-left'></i>
+</ng-template>
+
+<app-mass-notification-modal #addNewModalRef (mass_notofication_data)="getMassNotificationData()"></app-mass-notification-modal>

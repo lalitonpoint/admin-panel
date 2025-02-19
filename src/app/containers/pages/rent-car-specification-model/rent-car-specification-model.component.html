@@ -1,0 +1,77 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!is_edit">{{'heading-title.add-rent-car-specification' |
+                        translate }}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="is_edit">{{'heading-title.edit-rent-car-specification' |
+                        translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="specificationForm" class="tooltip-label-center" appFocus>
+                        <div class="form-group d-flex align-items-center justify-content-between flex-wrap">
+                            <label for="exampleInputEmail1 col-sm-6 col-12">{{'label-title.title' | translate }}</label>
+                            <div class="position-relative col-sm-6 col-12">
+                                <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    class="form-control" formControlName="title"
+                                    (keypress)="helper.space_validation($event)">
+                                <div *ngIf="specificationForm.get('title').errors?.required && specificationForm.get('title').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.title' | translate}} {{'label-title.is-required' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="mt-4" *ngIf="is_edit">
+                            <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+                                <span>{{'label-title.business' | translate}}</span>
+                                <input type="checkbox" id="businessSwitch" formControlName="is_active"
+                                    class="custom-control-input">
+                                <label for="businessSwitch" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 mt-4" *ngFor="let specification_option of specificationOptions; let option_index = index">
+                                <button type="button" class="btn text-primary p-0 mr-3"
+                                    (click)="onRemove(option_index)">
+                                    <span aria-hidden="true" class="simple-icon-close h4"></span>
+                                </button>
+                                &nbsp; &nbsp;
+                                <span class="font-weight-bold">{{specification_option}}</span>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="addOption">
+                            <div class="form-group d-flex align-items-center justify-content-between flex-wrap mt-4">
+                                <label for="exampleInputEmail1 col-sm-6 col-12">{{'label-title.specification-option' | translate }}</label>
+                                <div class="position-relative col-sm-6 col-12">
+                                    <input type="text" onDrop="return false" (wheel)="(false)" class="form-control" placeholder="" formControlName="newOption" (keypress)="helper.space_validation($event)" (keyup)="onMultipler()">
+                                    <div *ngIf="specificationForm.get('newOption').errors?.required && specificationForm.get('newOption').touched" class="invalid-tooltip">
+                                    {{'label-title.specification-option' | translate}} {{'label-title.is-required' | translate }}</div>
+                                    <div *ngIf="errorOption" class="error top-100">
+                                        {{'validation-title.option-already-exists' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="row">
+                            <div class="col-12 my-2 mt-4">
+                                <span class="btn btn-outline-primary btn-xs c-pointer" *ngIf="!addOption"
+                                    (click)="addNewOption()">{{ 'button-title.add-option' | translate}}</span>
+                                <span class="btn btn-outline-primary btn-xs c-pointer" *ngIf="addOption"
+                                    (click)="saveOption()">{{'button-title.save-option' | translate}}</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button *ngIf="!is_edit" type="submit" (click)="onSave()"
+                        class="btn btn-primary float-right">{{'button-title.submit' | translate}}</button>
+                    <button *ngIf="is_edit" type="submit" class="btn btn-primary"
+                        (click)="onSave()">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

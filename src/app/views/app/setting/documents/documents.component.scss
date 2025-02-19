@@ -1,0 +1,46 @@
+.star {
+    width: 34px;
+    color: red;
+    font-size: 34px;
+}
+
+.check {
+    font-size: 30px;
+}
+
+.simple-icon-ban {
+    color: #145388;
+    font-size: 240%;
+}
+
+.btn-outline-dark {
+    border-color: #8f8f8f;
+    color: #8f8f8f;
+}
+
+.btn_display_option {
+    border-color: #8f8f8f;
+    color: #8f8f8f;
+}
+
+.btn_display_option:active,
+.btn_display_option:hover {
+    color: #fff !important;
+}
+
+
+@media screen and (max-width:991px) {
+    .star.w-20 {
+        width: 7% !important;
+    }
+}
+
+@media screen and (max-width:575px) {
+    .star.w-20 {
+        width: 15% !important;
+    }
+}
+
+.display-options-container a {
+    cursor: pointer;
+}

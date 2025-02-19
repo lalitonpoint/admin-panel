@@ -1,0 +1,79 @@
+.spanwidth {
+    width: 100%;
+}
+
+.text-align {
+    text-align: end;
+}
+
+.country_flag{
+  width: 100px;
+}
+
+.loyality-row {
+    .input-group{
+        .input-group-prepend{
+            width: 70%;
+            .input-group-text{
+                white-space: normal;
+                text-align: left;
+            }
+        }
+        input{
+            width: 30%;
+        }
+    } 
+}
+
+.bidding {
+    .input-group{
+        .input-group-prepend{
+            width: 70%;
+            .input-group-text{
+                white-space: normal;
+                text-align: left;
+            }
+        }
+        .bidding-last{
+            width: 30%;
+        }
+    } 
+}
+
+.bidding-row {
+    .input-group{
+        .input-group-prepend{
+            .input-group-text{
+                white-space: normal;
+                text-align: left;
+            }
+        }
+    }
+}
+
+@media screen and (max-width :1199px) {
+    .search-sm {
+        width: 125px;
+    }
+    .businessLabel{
+        float: left !important;
+        margin-bottom: 4px;
+    }
+}
+@media (max-width: 991px) {
+    .border-0.list-thumbnail {
+        height: 100px;
+        max-width: 100px;
+        min-width: 100px;
+        width: 100%;
+  }
+
+}
+
+.position-saveBtn{
+    top: 50px !important;
+}
+
+.position-saveBtn2{
+    top: 70px !important;
+}

@@ -1,0 +1,165 @@
+    <div class="row app-row app-menu-sm">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <app-breadcrumb></app-breadcrumb>
+        <br>
+        <div class="separator mb-4"></div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row flex-wrap align-items-center pb-2">
+                    <div class="col-sm-4 col-12 form-group mb-2">
+                        <label class="font-weight-semibold mb-2">{{'label-title.country' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="countryvalid" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select-country' | translate}}"
+                            (change)="onChangeCountry($event)" [(ngModel)]="country_id">
+                            <ng-option [value]="country._id"
+                                *ngFor="let country of all_countries">{{country.countryname}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div class="col-sm-4 col-12 form-group mb-2 search-address">
+                        <label class="font-weight-semibold mb-2">{{'label-title.city' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select-city' | translate }}" [(ngModel)]="address"
+                            (change)="onChangeCity($event)" notFoundText="{{'validation-title.city-not-available' | translate}}">
+                                <ng-option value="all" *ngIf="city_list.length > 0">{{'label-title.all' | translate}}</ng-option>
+                                <ng-option [value]="city" *ngFor="let city of city_list">
+                                    <span *ngIf="city">{{city.cityname}}</span>
+                                </ng-option>
+                        </ng-select>
+                    </div>
+                    
+                    <div class="col-sm-4 col-12 form-group mb-2">
+                        <label class="font-weight-semibold mb-2">{{'label-title.service_type' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select_vehicle' | translate }}" [(ngModel)]="type_name"
+                            (change)="onChangeVehicleType($event)" notFoundText="{{'validation-title.service-type-not-available' | translate}}">
+                            <ng-option value="all" *ngIf="vehicle_list.length > 0">{{'label-title.all' | translate}}</ng-option>
+                            <ng-option [value]="vehicle" *ngFor="let vehicle of vehicle_list">
+                                <span *ngIf="vehicle">{{vehicle.typename}}</span>
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                </div>
+                <div id="driver_map" style="width: 100%; min-height: 550px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-application-menu class="app-menu-sm">
+    <div class="h-100 pr-3">
+        <div>
+            <tabset class="card-tabs mb-0" [justified]="true">
+                <tab heading="{{ 'label-title.active' | translate}}" class="h-100 pt-3 ml-4" (selectTab)="filter(1);">
+                    <div class="input-group mb-3 pr-3">
+                        <input type="text" class="form-control w-100 rounded-pill" placeholder="{{'label-title.search' | translate}}" [(ngModel)]="SearchText">
+                    </div>
+                    <div class="chat-app-tab-pane-contacts">
+                        <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
+                            <ng-container *ngIf="searchKeyword===''">
+                                <div class="d-flex flex-row mb-3 border-bottom pb-3"
+                                    *ngFor="let provider of filtered_provider_list | searchpipe:SearchText:['name'];let i=index" (click)="onSelecProvider(provider)">
+                                    <a class="d-flex" href="javascript:;">
+                                        <img [alt]="provider.name"
+                                            [src]="provider.picture ? (IMAGE_URL + provider.picture) : DEFAULT_USER_PROFILE" (error)="$event.target.src = DEFAULT_USER_PROFILE"
+                                            class="img-thumbnail border-0 rounded-circle mr-2 list-thumbnail align-self-center xsmall w-40px">
+                                    </a>
+                                    <div class="d-flex flex-grow-1 min-width-zero">
+                                        <div
+                                            class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
+                                            <div class="min-width-zero">
+                                                <a href="javascript:;">
+                                                    <p class="mb-0 truncate">{{provider.name}}</p>
+                                                    <p class="mb-0 text-small">{{provider.phone}}</p>
+                                                    <p class="mb-0 text-small">{{provider.typename}}</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-primary height-fit" style="padding: 0.3rem 0.6rem;" (click)="send_request(i)" *ngIf="provider_type">{{'button-title.assign' | translate}}</button>
+                                    </div>
+                                </div>
+                                <div class="text-center" *ngIf="(!filtered_provider_list || filtered_provider_list?.length == 0) || (filtered_provider_list)?.length === 0">
+                                    {{ 'label-title.no-record-found' | translate }}
+                                </div>
+                            </ng-container>
+                        </perfect-scrollbar>
+                    </div>
+                </tab>
+                <tab heading="{{ 'label-title.inactive' | translate}}" class="pt-3 ml-4 h-100" (selectTab)="filter(2);">
+                    <div class="input-group mb-3 pr-3">
+                        <input type="text" class="form-control w-100 rounded-pill" placeholder="{{'label-title.search' | translate}}" [(ngModel)]="SearchText">
+                    </div>
+                    <div class="chat-app-tab-pane-contacts">
+                        <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
+                            <ng-container *ngIf="searchKeyword===''">
+                                <div class="d-flex flex-row mb-3 border-bottom pb-3"
+                                    *ngFor="let provider of filtered_provider_list | searchpipe:SearchText:['name']; let i=index;" (click)="onSelecProvider(provider)">
+                                    <a class="d-flex" href="javascript:;">
+                                        <img [alt]="provider.name"
+                                            [src]="provider.picture ? (IMAGE_URL + provider.picture) : DEFAULT_USER_PROFILE" (error)="$event.target.src = DEFAULT_USER_PROFILE"
+                                            class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall w-40px">
+                                    </a>
+                                    <div class="d-flex flex-grow-1 min-width-zero">
+                                        <div
+                                            class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
+                                            <div class="min-width-zero">
+                                                <a href="javascript:;">
+                                                    <p class="mb-0 truncate">{{provider.name}}</p>
+                                                    <p class="mb-0 text-small">{{provider.phone}}</p>
+                                                    <p class="mb-0 text-small">{{provider.typename}}</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center" *ngIf="(!filtered_provider_list || filtered_provider_list?.length == 0) || (filtered_provider_list)?.length === 0">
+                                    {{ 'label-title.no-record-found' | translate }}
+                                </div>
+                            </ng-container>
+                        </perfect-scrollbar>
+                    </div>
+                </tab>
+                <tab heading="{{ 'label-title.in_trip' | translate}}" class="pt-3 ml-4 h-100" (selectTab)="filter(3);">
+                    <div class="input-group mb-3 pr-3">
+                        <input type="text" class="form-control w-100 rounded-pill" placeholder="{{'label-title.search' | translate}}" [(ngModel)]="SearchText">
+                    </div>
+                    <div class="chat-app-tab-pane-contacts">
+                        <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}">
+                            <ng-container *ngIf="searchKeyword===''">
+                                <div class="d-flex flex-row mb-3 border-bottom pb-3"
+                                    *ngFor="let provider of filtered_provider_list | searchpipe:SearchText:['name'];let i=index" (click)="onSelecProvider(provider)">
+                                    <a class="d-flex" href="javascript:;">
+                                        <img [alt]="provider.name"
+                                            [src]="provider.picture ? (IMAGE_URL + provider.picture) : DEFAULT_USER_PROFILE" (error)="$event.target.src = DEFAULT_USER_PROFILE"
+                                            class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall w-40px">
+                                    </a>
+                                    <div class="d-flex flex-grow-1 min-width-zero">
+                                        <div
+                                            class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
+                                            <div class="min-width-zero">
+                                                <a href="javascript:;">
+                                                    <p class="mb-0 truncate">{{provider.name}}</p>
+                                                    <p class="mb-0 text-small">{{provider.phone}}</p>
+                                                    <p class="mb-0 text-small">{{provider.typename}}</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center" *ngIf="(!filtered_provider_list || filtered_provider_list?.length == 0) || (filtered_provider_list)?.length === 0">
+                                    {{ 'label-title.no-record-found' | translate }}
+                                </div>
+                            </ng-container>
+                        </perfect-scrollbar>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</app-application-menu>

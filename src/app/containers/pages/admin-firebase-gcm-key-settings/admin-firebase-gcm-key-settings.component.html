@@ -1,0 +1,103 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.firebase_and_gcm_key' | translate }}</h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showFirebaseKeyModal()">
+                    {{'button-title.edit' | translate}}</button>
+            </div>
+        </div>
+        <div class="mb-4">
+            <p class="text-muted text-small mb-2 text-primary font-weight-bold">{{'heading-title.firebase-key' |
+                translate | uppercase}} </p>
+            <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.firebase-api-key' | translate }} <span
+                                class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;" containerClass="tooltip-lg"
+                                    tooltip="{{'tooltip-title.firebase-api-key-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.firebase_apiKey}}</p>
+                    </a>
+                </div>
+            </div>
+            <div
+                class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.firebase-auth-domain' | translate }}</p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.firebase_authDomain}}</p>
+                    </a>
+                </div>
+            </div>
+            <div
+                class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.firebase-database-url' | translate }}</p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.firebase_databaseURL}}</p>
+                    </a>
+                </div>
+            </div>
+            <div
+                class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.firebase-project-id' | translate }}</p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.firebase_projectId}}</p>
+                    </a>
+                </div>
+            </div>
+            <div
+                class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.firebase-storage-bucket' | translate }}</p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.firebase_storageBucket}}</p>
+                    </a>
+                </div>
+            </div>
+            <div
+                class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.firebase-messaging-sender-id' | translate }}
+                        </p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.firebase_messagingSenderId}}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4">
+            <p class="text-muted text-small mb-2 text-primary font-weight-bold">{{'heading-title.gcm-api-key' |
+                translate | uppercase}} </p>
+            <div class="mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.android-user-app-gcm-key' | translate }} <span
+                                class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;"
+                                    tooltip="{{'tooltip-title.android-user-app-gcm-key-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.android_user_app_gcm_key}} </p>
+                    </a>
+                </div>
+            </div>
+            <div class="mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                <div class="flex-fill">
+                    <a href="javascript:;">
+                        <p class="font-weight-medium mb-0">{{'label-title.android-driver-app-gcm-key' | translate }}
+                            <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1"
+                                    style="top: 2px;"
+                                    tooltip="{{'tooltip-title.android-driver-app-gcm-key-tooltip' | translate}}"
+                                    placement="right"></i></span></p>
+                        <p class="text-muted mb-0 text-small">{{setting_detail.android_provider_app_gcm_key}} </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-firebase-key-modal #firebaseKeyModal (firebase_GCM_data)="getSettingData()"></app-firebase-key-modal>

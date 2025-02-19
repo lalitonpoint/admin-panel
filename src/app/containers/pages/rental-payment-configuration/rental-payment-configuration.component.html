@@ -1,0 +1,183 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.rental-payment-configuration' | translate }}</h5>
+            <div class="" *ngIf="admin_detail.email == 'payment@elluminatiinc.com' && admin_detail.username == 'payment_subscription'">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showRentalPaymentConfigurationModal()">
+                    {{'button-title.edit' | translate }} </button>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.subscription-payment-type' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">
+                        <span *ngIf="setting_detail.rental_subscription_type == 0">{{ 'label-title.stripe' | translate}}</span>
+                        <span *ngIf="setting_detail.rental_subscription_type == 1">{{ 'label-title.memo-payments' | translate}}</span>
+                    </p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 0">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.subscription-price-id' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.sub_price_id}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 1">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.title' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.rental_title}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 1">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.discription' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.rental_description}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 1">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.amount' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.rental_amount}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 1">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.processing-fee' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.rental_processing_fee}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 1">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.currency' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.rental_amount_currency}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3" *ngIf="setting_detail.rental_subscription_type == 1">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.subscription-frequency' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.rental_subscription_frequency}}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.rental-payment-configuration' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="rentalPaymentConfigurationForm" class="tooltip-label-center" style="margin-bottom: 100px;">
+                        <div class="d-flex flex-row justify-content-between mb-2">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.is-rental-enable' | translate }}</p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="is_rental"
+                                        formControlName="is_rental" class="custom-control-input">
+                                    <label for="is_rental" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="wsal_client_id">{{'label-title.subscription-payment-type' | translate}}</label>
+                                <ng-select appearance="outline" formControlName="rental_subscription_type"
+                                    [searchable]="true" [clearable]="false" notFoundText="{{'validation-title.no-data-found' | translate}}">
+                                    <ng-option [value]="0">{{ 'label-title.stripe' | translate}}</ng-option>
+                                    <ng-option [value]="1">{{ 'label-title.memo-payments' | translate}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 0">
+                            <div class="form-group">
+                                <label for="sub_price_id">{{'label-title.subscription-price-id' | translate}}</label>
+                                <input type="text" id="sub_price_id" class="form-control"
+                                    name="sub_price_id" formControlName="sub_price_id">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 1">
+                            <div class="form-group">
+                                <label for="rental_title">{{'label-title.title' | translate}}</label>
+                                <input type="text" id="rental_title" class="form-control"
+                                    name="rental_title" formControlName="rental_title">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 1">
+                            <div class="form-group">
+                                <label for="rental_description">{{'label-title.discription' | translate}}</label>
+                                <input type="text" id="rental_description" class="form-control"
+                                    name="rental_description" formControlName="rental_description">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 1">
+                            <div class="form-group">
+                                <label for="rental_amount">{{'label-title.amount' | translate}}</label>
+                                <input type="text" id="rental_amount" class="form-control"
+                                    name="rental_amount" formControlName="rental_amount">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 1">
+                            <div class="form-group">
+                                <label for="rental_processing_fee">{{'label-title.processing-fee' | translate}}</label>
+                                <input type="text" id="rental_processing_fee" class="form-control"
+                                    name="rental_processing_fee" formControlName="rental_processing_fee">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 1">
+                            <div class="form-group">
+                                <label for="wsal_client_id">{{'label-title.currency' | translate}}</label>
+                                <ng-select appearance="outline" formControlName="rental_amount_currency"
+                                    [searchable]="true" [clearable]="false" notFoundText="{{'validation-title.no-data-found' | translate}}">
+                                    <ng-option value="AED">AED</ng-option>
+                                    <ng-option value="USD">USD</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="rentalPaymentConfigurationForm.value.rental_subscription_type == 1">
+                            <div class="form-group">
+                                <label for="rental_subscription_frequency">{{'label-title.subscription-frequency' | translate}}</label>
+                                <ng-select appearance="outline" formControlName="rental_subscription_frequency"
+                                    [searchable]="true" [clearable]="false" notFoundText="{{'validation-title.no-data-found' | translate}}">
+                                    <ng-option value="weekly">Weekly</ng-option>
+                                    <ng-option value="monthly">Monthly</ng-option>
+                                    <ng-option value="annually">Annually</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" (click)="update()"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

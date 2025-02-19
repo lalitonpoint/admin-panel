@@ -1,0 +1,33 @@
+<ng-template #template>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">{{'heading-title.sms-connection' | translate}}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="commonForm"  class="tooltip-label-center">
+        <h6 class="m-0">{{ 'heading-title.twilio' | translate }}</h6>
+      <div class="mt-4 form-group">
+        <label for="authid">{{ 'label-title.auth-id' | translate }}</label>
+        <input id="authid" type="text"  class="form-control ng-untouched ng-pristine ng-valid" formControlName="sms_auth_id">
+        <div *ngIf="commonForm.get('sms_auth_id').errors?.required && commonForm.get('sms_auth_id').touched" class="invalid-tooltip">{{'label-title.auth-id-is-required' | translate}}</div>
+      </div>
+      <div class="mt-4 form-group">
+        <label for="token">{{ 'label-title.auth-token' | translate }}</label>
+        <input id="token" type="text"  class="form-control ng-untouched ng-pristine ng-valid" formControlName="sms_auth_token">
+        <div *ngIf="commonForm.get('sms_auth_token').errors?.required && commonForm.get('sms_auth_token').touched" class="invalid-tooltip">{{ 'label-title.auth-token-is-required' | translate }} </div>
+      </div>
+      <div class="mt-4 form-group">
+        <label for="no">{{ 'label-title.number' | translate }}</label>
+        <input id="no" type="number"  class="form-control ng-untouched ng-pristine ng-valid" formControlName="sms_number">
+        <div *ngIf="commonForm.get('sms_number').errors?.required && commonForm.get('sms_number').touched" class="invalid-tooltip">{{ 'label-title.number-is-required' | translate }} </div>
+        <div *ngIf="commonForm.get('sms_number').errors?.minlength && commonForm.get('sms_number').touched" class="invalid-tooltip">{{ 'label-title.number-must-be-of-at-least-8-characters' | translate }}</div>
+        <div *ngIf="commonForm.get('sms_number').errors?.maxlength && commonForm.get('sms_number').touched" class="invalid-tooltip">{{ 'label-title.number-must-not-be-of-more-than-10-characters' | translate }}</div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" [disabled]="commonForm.invalid" class="btn btn-primary">{{'button-title.update' | translate }}</button>
+  </div>
+</ng-template>

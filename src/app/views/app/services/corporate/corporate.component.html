@@ -1,0 +1,278 @@
+<div class="row mb-4">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero">
+            <div class="btn-group">
+                <button *ngIf="_helper.has_permission(_helper.PERMISSION.EXPORT)" type="button"
+                    class="btn btn-outline-primary btn-lg flex-grow-1" (click)="export()">
+                    {{ 'button-title.export' | translate | uppercase }} <span class="caret"></span>
+                </button>
+            </div>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <div class="display-options-container">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex flex-wrap">
+                    <div class="d-inline-block mt-1" id="displayOptions">
+                        <div class="d-inline-block mr-3 view-class c-pointer"
+                            [ngClass]="viewType===1? 'text-primary': ''" title="Grid View" (click)="onViewChange(1)">
+                            <i class="simple-icon-grid"></i>
+                        </div>
+                        <div class="d-inline-block mr-3 view-class c-pointer"
+                            [ngClass]="viewType===2? 'text-primary': ''" title="List View" (click)="onViewChange(2)">
+                            <i class="simple-icon-list"></i>
+                        </div>
+                    </div>
+                    <div class="d-block d-md-inline-block position-relative" id="displayOptions">
+                        <div class="float-md-left mr-1 mb-1" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-dark btn-xs dropdown-toggle" aria-controls="dropdown-basic">
+                                {{'button-title.search-by' | translate}} : {{itemOrder.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsOrders"
+                                    [ngClass]="item.isShow == false ? 'd-none' : ''"><a
+                                        [ngClass]="item.value === itemOrder.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeOrderBy(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="d-inline-block" id="displayOptions">
+                        <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                            <input class="form-control" [(ngModel)]="search_value"
+                                (keypress)="_helper.space_validation($event)" (keyup.enter)="apply(search_value)"
+                                placeholder="{{'label-title.search' | translate }}">
+                        </div>
+                    </div>
+                    <div class=" d-inline-block float-left float-sm-none mr-1 mb-1 align-top">
+                        <div class="float-md-left" dropdown>
+                            <button id="button-basic3" type="button" class="btn btn-primary btn-xs mr-1 mb-1"
+                                (click)="apply(search_value)">
+                                {{'button-title.apply' | translate}} <span class="caret"></span>
+                            </button>
+                            <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-1"
+                                (click)="clear()" [disabled]="search_value == '' && !isFilterApply">
+                                {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="float-right" id="displayOptions">
+                    <span class="text-muted text-small text-nowrap">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage">
+                                <a [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <tabset class="separator-tabs" #staticTabs>
+            <tab heading="{{'label-title.approved' | translate | uppercase}}"
+                (selectTab)="changeUserType(user_page_type.approved)">
+                <div class="row" *ngIf="viewType === 1">
+                    <div *ngFor="let data of corporate_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}"
+                        class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted">
+                        <div class="card d-flex flex-row mb-4">
+                            <div class="d-flex flex-grow-1 min-width-zero">
+                                <div
+                                    class="card-body align-self-center d-flex flex-sm-row justify-content-between min-width-zero">
+                                    <div class="min-width-zero c-pointer" (click)="showCorporateSettingModal(data._id)">
+                                        <a href="javascript:;">
+                                            <p class="list-item-heading mb-1 truncate">{{data.name | translate}}
+                                                ({{data.unique_id}})</p>
+                                        </a>
+                                        <p class="mb-1 list-item-heading">{{data.country_phone_code}} {{data.phone}}</p>
+                                        <p class="mb-2 text-muted text-small">{{data.email | lowercase}}</p>
+                                    </div>
+                                    <div class="min-width-zero text-sm-right">
+                                        <p class="mb-1 truncate text-sm-right font-weight-bold">
+                                            {{data.wallet.toFixed(_helper.to_fixed_number)}}
+                                            {{data.wallet_currency_code}}</p>
+                                        <p class="mb-1 truncate text-sm-right ">{{data.country_name | translate}}</p>
+                                        <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" type="button"
+                                            class="btn btn-xs btn-outline-primary"
+                                            (click)="approveDeclineCorporate(user_page_type.blocked , data)">{{'button-title.decline'
+                                            | translate}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="corporate_list.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 list" *ngIf="viewType === 2">
+                    <div [ngClass]="{'card d-flex flex-row mb-3': true}"
+                        *ngFor="let data of corporate_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}; let i=index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="user">
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero">
+                            <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center w-sm-100 c-pointer"
+                                (click)="showCorporateSettingModal(data._id)">
+                                <a class="w-30 w-sm-100">
+                                    <p class="list-item-heading mb-0 truncate">{{data.name}} ({{data.unique_id}})</p>
+                                </a>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                                    {{data.country_phone_code}} {{data.phone}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">{{data.email}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">
+                                    {{data.wallet.toFixed(_helper.to_fixed_number)}} {{data.wallet_currency_code}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100"> Country :
+                                    {{data.country_name | translate}}</p>
+
+                            </div>
+                            <div class="w-sm-100 align-self-center"
+                                *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                <div class="d-flex justify-content-end p-4"><button type="button"
+                                        class="btn btn-xs btn-outline-primary"
+                                        (click)="approveDeclineCorporate(user_page_type.blocked , data)">{{'button-title.decline'
+                                        | translate}}</button></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="w-100" *ngIf="corporate_list.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="corporate_list.length != 0">
+                    <div class="col-12">
+                        <div class=" mb-4">
+                            <div class="card-body d-flex justify-content-center">
+                                <pagination-controls (pageChange)="pageChanged($event)"
+                                    previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" [responsive]="true"
+                                    [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'label-title.unapproved' | translate | uppercase}}"
+                (selectTab)="changeUserType(user_page_type.blocked)">
+                <div class="row" *ngIf="viewType === 1">
+                    <div *ngFor="let data of corporate_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}"
+                        class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted">
+                        <div class="card d-flex flex-row mb-4">
+                            <div class="d-flex flex-grow-1 min-width-zero">
+                                <div
+                                    class="card-body align-self-center d-flex flex-sm-row justify-content-between min-width-zero">
+                                    <div class="min-width-zero c-pointer" (click)="showCorporateSettingModal(data._id)">
+                                        <a href="javascript:;">
+                                            <p class="list-item-heading mb-1 truncate">{{data.name | translate}}
+                                                ({{data.unique_id}})</p>
+                                        </a>
+                                        <p class="mb-1 list-item-heading">{{data.country_phone_code}} {{data.phone}}</p>
+                                        <p class="mb-2 text-muted text-small">{{data.email | lowercase}}</p>
+                                    </div>
+                                    <div class="min-width-zero text-sm-right">
+                                        <p class="mb-1 truncate text-sm-right font-weight-bold">
+                                            {{data.wallet.toFixed(_helper.to_fixed_number)}}
+                                            {{data.wallet_currency_code}}</p>
+                                        <p class="mb-1 truncate text-sm-right ">{{data.country_name | translate}}</p>
+                                        <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" type="button"
+                                            class="btn btn-xs btn-outline-primary"
+                                            (click)="approveDeclineCorporate(user_page_type.approved , data)">{{'button-title.approve'
+                                            | translate}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="corporate_list.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 list" *ngIf="viewType === 2">
+                    <div [ngClass]="{'card d-flex flex-row mb-3': true}"
+                        *ngFor="let data of corporate_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}; let i=index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="user">
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero">
+                            <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center w-sm-100 c-pointer"
+                                (click)="showCorporateSettingModal(data._id)">
+                                <a class="w-30 w-sm-100">
+                                    <p class="list-item-heading mb-0 truncate">{{data.name}} ({{data.unique_id}})</p>
+                                </a>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                                    {{data.country_phone_code}} {{data.phone}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">{{data.email}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">
+                                    {{data.wallet.toFixed(_helper.to_fixed_number)}} {{data.wallet_currency_code}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100"> Country :
+                                    {{data.country_name | translate}}</p>
+
+                            </div>
+                            <div class="w-sm-100 align-self-center"
+                                *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                <div class="d-flex justify-content-end p-4"><button type="button"
+                                        class="btn btn-xs btn-outline-primary"
+                                        (click)="approveDeclineCorporate(user_page_type.approved , data)">{{'button-title.approve'
+                                        | translate}}</button></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="w-100" *ngIf="corporate_list.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="corporate_list.length != 0">
+                    <div class="col-12">
+                        <div class=" mb-4">
+                            <div class="card-body d-flex justify-content-center">
+                                <pagination-controls (pageChange)="pageChanged($event)"
+                                    previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" [responsive]="true"
+                                    [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>
+
+<ng-template #approveTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{selectedCorporate.name}} ({{selectedCorporate.unique_id}})</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-0">
+        <div class="p-4">
+            <p *ngIf="!approvalStatus">
+                {{'label-title.are-you-sure-you-want-to-decline-this' | translate}} {{'menu.corporate' | translate}}
+            </p>
+            <p *ngIf="approvalStatus">
+                {{'label-title.are-you-sure-you-want-to-approve-this' | translate}} {{'menu.corporate' | translate}}
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="approve()" class="btn btn-primary float-right">{{'button-title.confirm' |
+            translate}}</button>
+    </div>
+</ng-template>
+<app-corporate-modal #corporateSettingModal></app-corporate-modal>

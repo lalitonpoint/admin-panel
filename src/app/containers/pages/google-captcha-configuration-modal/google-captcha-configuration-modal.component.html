@@ -1,0 +1,64 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.google-captcha-configuration' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="googleCaptchaConfigurationForm" class="tooltip-label-center">
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="recaptcha_secret_key_for_web">{{'label-title.web-app-google-captcha-secret-key' | translate}}</label>
+                                <input type="text" id="recaptcha_secret_key_for_web" class="form-control"
+                                    name="recaptcha_secret_key_for_web" formControlName="recaptcha_secret_key_for_web">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="recaptcha_site_key_for_web">{{'label-title.web-app-google-captcha-site-key' | translate}}</label>
+                                <input type="text" id="recaptcha_site_key_for_web" class="form-control"
+                                    name="recaptcha_site_key_for_web" formControlName="recaptcha_site_key_for_web">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="recaptcha_secret_key_for_android">{{'label-title.android-google-captcha-secret-key' | translate}}</label>
+                                <input type="text" id="recaptcha_secret_key_for_android" class="form-control"
+                                    name="recaptcha_secret_key_for_android" formControlName="recaptcha_secret_key_for_android">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="recaptcha_site_key_for_android">{{'label-title.android-google-captcha-site-key' | translate}}</label>
+                                <input type="text" id="recaptcha_site_key_for_android" class="form-control"
+                                    name="recaptcha_site_key_for_android" formControlName="recaptcha_site_key_for_android">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="recaptcha_secret_key_for_ios">{{'label-title.ios-google-captcha-secret-key' | translate}}</label>
+                                <input type="text" id="recaptcha_secret_key_for_ios" class="form-control"
+                                    name="recaptcha_secret_key_for_ios" formControlName="recaptcha_secret_key_for_ios">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="recaptcha_site_key_for_ios">{{'label-title.ios-google-captcha-site-key' | translate}}</label>
+                                <input type="text" id="recaptcha_site_key_for_ios" class="form-control"
+                                    name="recaptcha_site_key_for_ios" formControlName="recaptcha_site_key_for_ios">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" (click)="update()"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

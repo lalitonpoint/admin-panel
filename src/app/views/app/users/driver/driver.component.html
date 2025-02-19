@@ -1,0 +1,921 @@
+<div class="row mb-4">
+    <div class="col-12">    
+
+        <app-heading></app-heading>
+
+        <div class="top-right-button-container text-zero" *ngIf="!is_zone_queue && !is_wsal_status">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" id="button-basic" type="button" class="btn btn-lg btn-primary mr-2" (click)="addNewDriver()">
+                {{'pages.add-new' | translate }} <span class="caret"></span>
+            </button>
+            <div class="btn-group">
+                <button *ngIf="_helper.has_permission(_helper.PERMISSION.EXPORT)" id="button-basic" type="button" class="btn btn-lg btn-outline-primary" (click)="export()">
+                    {{'button-title.export' | translate | uppercase}} <span class="caret"></span>
+                </button>
+            </div>
+        </div>
+        
+        <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb" *ngIf="selectedId == ''">
+            <ol class="breadcrumb pt-0">
+                <li class="breadcrumb-item">
+                    <a>{{'menu.home' | translate}}</a>
+                </li>
+                <li class="breadcrumb-item" aria-current="page">{{ 'menu.users' | translate }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ 'menu.driver' | translate }}</li>
+            </ol>
+        </nav>
+        
+        <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" *ngIf="selectedId != ''" aria-label="breadcrumb">
+            <ol class="breadcrumb pt-0">
+                <li class="breadcrumb-item">
+                    <a>{{'menu.partner' | translate}}</a>
+                </li>
+                <li class="breadcrumb-item" aria-current="page">{{ 'label-title.drivers' | translate }}</li>
+                <li class="breadcrumb-item " aria-current="page">{{ partnerData.name | titlecase }}</li>
+            </ol>
+        </nav>
+
+        <div class="display-options-container">
+
+            <div  class="d-flex justify-content-between">
+                <div class="d-flex flex-wrap">
+                    <div class="d-inline-block mt-1" id="displayOptions">
+                        <div class="d-inline-block mr-3 c-pointer view-class"
+                            [ngClass]="viewType===1? 'text-primary': ''" title="Grid View" (click)="onViewChange(1)">
+                            <i class="simple-icon-grid"></i>
+                        </div>
+                        <div class="d-inline-block mr-3 c-pointer view-class"
+                            [ngClass]="viewType===2? 'text-primary': ''" title="List View" (click)="onViewChange(2)">
+                            <i class="simple-icon-list"></i>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="!is_zone_queue">
+                        <div class="d-block d-md-inline-block position-relative" id="displayOptions">
+                            <div class="mr-1 mb-1" dropdown>
+                                <button id="button-basic" dropdownToggle type="button"
+                                    class="btn btn-outline-dark btn-xs dropdown-toggle" aria-controls="dropdown-basic">
+                                    {{'button-title.search-by' | translate}} : {{itemOrder.label | translate}} <span
+                                        class="caret"></span>
+                                </button>
+                                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                    aria-labelledby="button-basic">
+                                    <li role="menuitem" *ngFor="let item of itemOptionsOrders" [ngClass]="(item.isShow == false ? 'd-none' : '')">
+                                        <a [ngClass]="item.value === itemOrder.value ? 'dropdown-item active' : 'dropdown-item'"
+                                            [checked]="item.value" (click)="onChangeOrderBy(item)">{{item.label |
+                                            translate}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="d-block d-md-inline-block position-relative" id="displayOptions">
+                            <div class="mr-1 mb-1" dropdown>
+                                <button id="button-basic" dropdownToggle type="button"
+                                    class="btn btn-outline-dark btn-xs dropdown-toggle" aria-controls="dropdown-basic">
+                                    {{'button-title.type' | translate}} : {{OptionDriverType.label | translate}} <span
+                                        class="caret"></span>
+                                </button>
+                                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                    aria-labelledby="button-basic">
+                                    <li role="menuitem" *ngFor="let item of driverTypeOption" [ngClass]="(item.isShow == false ? 'd-none' : '')">
+                                        <a [ngClass]="item.value === OptionDriverType.value ? 'dropdown-item active' : 'dropdown-item'"
+                                            [checked]="item.value" (click)="onChangeType(item)">{{item.label |
+                                            translate}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="d-inline-block" id="displayOptions">
+                            <div class="search-sm d-inline-block mr-1 mb-1 align-top">
+                                <input class="form-control" placeholder="{{'label-title.search' | translate }}"
+                                    [(ngModel)]="search_value" (keypress)="_helper.space_validation($event)" (keyup.enter)="apply(search_value)">
+                            </div>
+                        </div>
+
+
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic3" type="button" class="btn btn-primary btn-xs"
+                                    (click)="apply(search_value)">
+                                    {{'button-title.apply' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs"
+                                    (click)="clear()" [disabled]="search_value == '' && !isFilterApply">
+                                    {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="is_zone_queue">
+
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno"
+                                [searchable]="true" notFoundText="{{'validation-title.no-data-found' | translate}}"
+                                [clearable]="false" (change)="getCityList($event)"
+                                placeholder="{{'label-title.country' | translate}}" [(ngModel)]="country">
+                                <ng-option *ngFor="let country of country_list" [value]="country._id">
+                                    {{country.countryname | titlecase}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                (change)="getCityZoneList($event)" placeholder="{{'label-title.city' | translate}}"
+                                [(ngModel)]="city">
+                                <ng-option [value]="city._id" *ngFor="let city of city_list">
+                                    {{city.cityname | titlecase}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="d-block mr-1 mb-2" style="width: 200px;">
+                            <ng-select appearance="outline" class="custom country-dropdown"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                labelForId="yesno" [searchable]="true" [clearable]="false"
+                                (change)="getZoneProviderId($event)" placeholder="{{'label-title.zone' | translate}}"
+                                [(ngModel)]="selected_zone_id" [(ngModel)]="zone">
+                                <ng-option [value]="zone._id" *ngFor="let zone of city_zone_list">
+                                    {{zone.title | titlecase}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic3" type="button" class="btn btn-primary btn-xs"
+                                    (click)="queueApply()">
+                                    {{'button-title.apply' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class=" d-inline-block mr-1 mb-1 align-top">
+                            <div class="">
+                                <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs"
+                                    (click)="queueClear()" [disabled]="is_clear_filter_disabled">
+                                    {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="float-right" *ngIf="!is_zone_queue" id="displayOptions">
+                    <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage">
+                                <a [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <tabset class="separator-tabs" #staticTabs>
+            <tab heading="{{'label-title.online' | translate | uppercase}}"
+                (selectTab)="changeDriverType(user_page_type.approved, user_active_type.active)">
+                <div class="row" *ngIf="viewType === 1">
+                    <div *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}" class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted mb-4">
+                        <div class="card d-flex flex-row" style="height: 100%;">
+                            <div class="d-flex position-absolute div-position">
+                                <span *ngIf="driver.is_available==0"
+                                    class="badge badge-pill badge-theme-1 mr-1">{{'label-title.in-trip'
+                                    | translate}} </span>
+                                <span *ngIf="driver.provider_type == 1"
+                                    class="badge badge-pill badge-theme-2 mr-1">{{'menu.partner'
+                                    | translate}} </span>
+                                <span *ngIf="driver.provider_type == 2"
+                                    class="badge badge-pill badge-theme-3 mr-1">{{'menu.admin'
+                                    | translate}} </span>
+                                <span *ngIf="driver.is_approved && driver.is_active && driver.providerLocation[0] == 0" class="badge badge-pill badge-danger mr-1">
+                                    {{'label-title.location-issue' | translate}}
+                                </span>
+                                <span *ngIf="driver.is_go_home == 1" class="badge badge-pill badge-info">
+                                    {{'label-title.going-home' | translate}}
+                                </span>
+                            </div>
+
+                            <div
+                                class="card-body align-self-center d-flex flex-row justify-content-between min-width-zero" [class.ev-tag]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                <div class="min-width-zero">
+                                    <a href="javascript:void(0);" (click)="showDriverModal($event,driver._id)">
+                                        <div class="d-flex">
+                                            <p class="mb-1 list-item-heading truncate">{{driver.first_name}}
+                                                {{driver.last_name}} ({{driver.unique_id}})</p>
+                                        </div>
+                                        <p class=" list-item-heading mb-1 truncate ">{{driver.country_phone_code}}
+                                            {{driver.phone}}</p>
+                                        <p class="mb-2 text-muted text-small truncate">{{driver.email}}</p>
+                                        <p class="mb-0 text-muted truncate" *ngIf="driver?.service_detail?.typename">
+                                            {{'menu.type' | translate}} : {{driver?.service_detail?.typename}}
+                                        </p>
+                                    </a>
+
+                                </div>
+                                <div class="float-right textRight" >
+                                    <div>
+                                        <p *ngIf="driver.provider_type != 1" class="font-weight-bold mb-1 text-nowrap textRight">{{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                            {{driver.wallet_currency_code}}</p>
+                                        <p class="mb-1 truncate text-sm-right">{{driver.city}}</p>
+                                    </div>
+                                    <div *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                    <button id="button-basic" type="button" class="mt-1 btn btn-outline-primary btn-xs"
+                                        (click)="approveDecline(driver, user_page_type.blocked)">
+                                        {{'button-title.decline' | translate }} </button>
+                                    <button id="button-basic" type="button" *ngIf="driver.is_available==0"
+                                        class="mt-1 ml-2 btn btn-outline-secondary btn-xs" (click)="openUnfreezeModel(driver)">
+                                        {{'button-title.unfreeze' | translate }} </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="driver_list.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 list" *ngIf="viewType === 2">
+                    <div [ngClass]="{'card d-flex flex-row mb-3': true}" *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}; let i=index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="user">
+
+                        <div class="d-flex position-absolute div-position">
+                            <span *ngIf="driver.is_available==0"
+                            class="badge badge-pill badge-theme-1 badge-top-left mr-1">{{'label-title.in-trip'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.provider_type == 1"
+                            class="badge badge-pill badge-theme-2 badge-top-left mr-1">{{'menu.partner'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.provider_type == 2"
+                            class="badge badge-pill badge-theme-3 badge-top-left mr-1">{{'menu.admin'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.is_approved && driver.is_active && driver.providerLocation[0] == 0"
+                            class="badge badge-pill badge-danger badge-top-left mr-1">{{'label-title.location-issue'
+                            | translate}} </span>
+
+                            <span *ngIf="driver.is_go_home == 1"
+                            class="badge badge-pill badge-info badge-top-left">{{'label-title.going-home'
+                            | translate}} </span>
+
+                        </div>
+                        
+                        <a class="d-flex c-pointer" (click)="showDriverModal($event,driver._id)">
+                            <img alt="Profile" (error)="$event.target.src = _helper.DEFAULT_IMAGE.USER_PROFILE"
+                                class="img-thumbnail border-0 list-thumbnail align-self-center"
+                                [src]="_helper.image_url + driver.picture"
+                                [src]="driver.picture ? _helper.image_url + driver.picture : _helper.DEFAULT_IMAGE.USER_SQUARE"
+                                [alt]="driver.title" style="min-width: 140px;">
+                        </a>
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero c-pointer"
+                            (click)="showDriverModal($event,driver._id)">
+                            <div
+                                class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center" [class.ev-tag-list]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                <a class="w-30 w-sm-100">
+                                    <p class="list-item-heading mb-0 truncate">{{driver.first_name}}
+                                        {{driver.last_name}} ({{driver.unique_id}})</p>
+                                </a>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                                    {{driver.country_phone_code}} {{driver.phone}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">{{driver.email}}</p>
+                                <p *ngIf="driver.provider_type != 1" class="mb-0 pl-1 pr-3 text-muted text-small w-10 w-sm-100">{{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                    {{driver.wallet_currency_code}}
+                                </p>
+                                <p *ngIf="driver.provider_type == 1" class="mb-0 pl-1 pr-1 text-muted text-small w-10 w-sm-100">
+                                </p>
+                                <div class="w-20 w-sm-100 d-flex align-items-center flex-wrap" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                    <button id="button-basic" type="button" class="ml-2 btn btn-outline-primary btn-xs mb-1 "
+                                        (click)="approveDecline(driver, user_page_type.blocked)">
+                                        {{'button-title.decline'| translate }} </button>
+                                    <button id="button-basic" type="button" class="ml-2 btn btn-outline-secondary btn-xs mb-1"
+                                        (click)="openUnfreezeModel(driver)" *ngIf="driver.is_available==0"> {{'button-title.unfreeze' | translate }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="driver_list.length != 0"> 
+                    <div class="col-12">
+                        <div class=" mb-4">
+                            <div class="card-body">
+                                <div class="col-12 d-flex justify-content-center">
+                                    <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+                    <i class='simple-icon-arrow-right'></i>
+                </ng-template>
+                <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+                    <i class='simple-icon-arrow-left'></i>
+                </ng-template>
+            </tab>
+            <tab heading="{{'label-title.approved' | translate | uppercase}}"
+                (selectTab)="changeDriverType(user_page_type.approved , user_active_type.inactive)">
+                <div class="row" *ngIf="viewType === 1">
+                    <div *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}" class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted mb-4">
+                        <div class="card d-flex flex-row" style="height: 100%;">
+                            <div class="d-flex position-absolute div-position">
+                                <span *ngIf="driver.is_available==0"
+                                    class="badge badge-pill badge-theme-1 mr-1">{{'label-title.in-trip'
+                                    | translate}} </span>
+                                <span *ngIf="driver.provider_type == 1"
+                                    class="badge badge-pill badge-theme-2 mr-1">{{'menu.partner'
+                                    | translate}} </span>
+                                <span *ngIf="driver.provider_type == 2"
+                                    class="badge badge-pill badge-theme-3 mr-1">{{'menu.admin'
+                                    | translate}} </span>
+                                <span *ngIf="driver.is_go_home == 1" class="badge badge-pill badge-info">
+                                    {{'label-title.going-home' | translate}}
+                                </span>
+                            </div>
+                            <div
+                                class="card-body align-self-center d-flex flex-row justify-content-between min-width-zero" [class.ev-tag]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+        
+                                <div class="min-width-zero">
+                                    <a href="javascript:void(0);" (click)="showDriverModal($event,driver._id)">
+                                        <div class="d-flex">
+                                            <p class="mb-1 list-item-heading truncate">{{driver.first_name}}
+                                                {{driver.last_name}} ({{driver.unique_id}})</p>
+                                        </div>
+                                        <p class=" list-item-heading mb-1 truncate ">{{driver.country_phone_code}}
+                                            {{driver.phone}}</p>
+                                        <p class="mb-1 text-muted text-small truncate">{{driver.email}}</p>
+                                        <p class="mb-0 text-muted truncate" *ngIf="driver?.service_detail?.typename">
+                                            {{'menu.type' | translate}} : {{driver?.service_detail?.typename}}
+                                        </p>
+                                    </a>
+
+                                </div>
+                                <div class="float-right textRight" >
+                                    <div>
+                                        <p *ngIf="driver.provider_type != 1" class="font-weight-bold mb-1 text-nowrap textRight">{{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                            {{driver.wallet_currency_code}}</p>
+                                        <p class="mb-1 truncate text-sm-right">{{driver.city}}</p>
+                                    </div>
+                                    <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" id="button-basic" type="button" class="btn btn-outline-primary btn-xs "
+                                        (click)="approveDecline(driver, user_page_type.blocked)">
+                                        {{'button-title.decline' | translate }} </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="driver_list.length == 0">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 list" *ngIf="viewType === 2">
+                    <div [ngClass]="{'card d-flex flex-row mb-3': true}" *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}; let i=index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="user">
+
+                        <div class="d-flex position-absolute div-position">
+                            <span *ngIf="driver.is_available==0"
+                            class="badge badge-pill badge-theme-1 badge-top-left mr-1">{{'label-title.in-trip'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.provider_type == 1"
+                            class="badge badge-pill badge-theme-2 badge-top-left mr-1">{{'menu.partner'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.provider_type == 2"
+                            class="badge badge-pill badge-theme-3 badge-top-left mr-1">{{'menu.admin'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.is_go_home == 1"
+                            class="badge badge-pill badge-info badge-top-left">{{'label-title.going-home'
+                            | translate}} </span>
+                        </div>
+
+                        <a class="d-flex c-pointer" (click)="showDriverModal($event,driver._id)">
+                            <img alt="Profile" (error)="$event.target.src = _helper.DEFAULT_IMAGE.USER_PROFILE"
+                                class="img-thumbnail border-0 list-thumbnail align-self-center"
+                                [src]="_helper.image_url + driver.picture"
+                                [src]="driver.picture ? _helper.image_url + driver.picture : _helper.DEFAULT_IMAGE.USER_SQUARE"
+                                [alt]="driver.title" style="min-width: 140px;">
+                        </a>
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero c-pointer"
+                            (click)="showDriverModal($event,driver._id)" [class.ev-tag-list]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                            <div
+                                class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
+                                <a class="w-30 w-sm-100">
+                                    <p class="list-item-heading mb-0 truncate">{{driver.first_name}}
+                                        {{driver.last_name}} ({{driver.unique_id}})</p>
+                                </a>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                                    {{driver.country_phone_code}} {{driver.phone}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">{{driver.email}}</p>
+                                <p *ngIf="driver.provider_type != 1" class="mb-0 pl-1 pr-1 text-muted text-small w-10 w-sm-100">{{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                    {{driver.wallet_currency_code}}
+                                </p>
+                                <p *ngIf="driver.provider_type == 1" class="mb-0 pl-1 pr-1 text-muted text-small w-10 w-sm-100">
+                                </p>
+                                <div class="w-10 w-sm-100 d-flex align-items-center" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                    <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs "
+                                        (click)="approveDecline(driver, user_page_type.blocked)">
+                                        {{'button-title.decline' |
+                                        translate }} </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="driver_list.length != 0">
+                    <div class="col-12">
+                        <div class=" mb-4">
+                            <div class="card-body">
+                                <div class="col-12 d-flex justify-content-center">
+                                    <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+                    <i class='simple-icon-arrow-right'></i>
+                </ng-template>
+                <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+                    <i class='simple-icon-arrow-left'></i>
+                </ng-template>
+            </tab>
+            <tab heading="{{'label-title.unapproved' | translate | uppercase}}"
+                (selectTab)="changeDriverType(user_page_type.unapproved , user_active_type.inactive)">
+                <div class="row" *ngIf="viewType === 1">
+                    <div *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}" class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted mb-4">
+                        <div class="card d-flex flex-row" style="height: 100%;">
+                            <span *ngIf="driver.provider_type_id != null"
+                                class="badge badge-pill badge-theme-2 position-absolute badge-top-left">{{'menu.partner'
+                                | translate}} </span>
+                            <span *ngIf="driver.provider_type == 2"
+                                class="badge badge-pill badge-theme-3 position-absolute badge-top-left">{{'menu.admin'
+                                | translate}} </span>
+                            <div
+                                class="card-body align-self-center d-flex flex-row justify-content-between min-width-zero" [class.ev-tag]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                <div class="min-width-zero">
+                                    <a href="javascript:void(0);" (click)="showDriverModal($event,driver._id)">
+                                        <div class="d-flex">
+                                            <p class="mb-1 list-item-heading truncate">{{driver.first_name}}
+                                                {{driver.last_name}} ({{driver.unique_id}})</p>
+                                        </div>
+                                        <p class=" list-item-heading mb-1 truncate ">{{driver.country_phone_code}}
+                                            {{driver.phone}}</p>
+                                        <p class="mb-2 text-muted text-small truncate">{{driver.email}}</p>
+                                        <p class="mb-0 text-muted truncate" *ngIf="driver?.service_detail?.typename">
+                                            {{'menu.type' | translate}} : {{driver?.service_detail?.typename}}
+                                        </p>
+                                    </a>
+
+                                </div>
+                                <div class="float-right textRight" >
+                                    <div>
+                                        <p *ngIf="driver.provider_type != 1" class="font-weight-bold mb-1 text-nowrap textRight">{{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                            {{driver.wallet_currency_code}}</p>
+                                        <p class="mb-1 truncate text-sm-right">{{driver.city}}</p>
+                                    </div>
+                                    <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" id="button-basic" type="button" class="btn btn-outline-primary btn-xs "
+                                        (click)="openModalTypeSelect(driver,user_page_type.approved)">
+                                        {{'button-title.approve' | translate }} </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="driver_list.length == 0">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 list" *ngIf="viewType === 2">
+                    <div [ngClass]="{'card d-flex flex-row mb-3': true}" *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}; let i=index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="user">
+                        <div class="d-flex position-absolute div-position">
+                            <span *ngIf="driver.is_available==0"
+                            class="badge badge-pill badge-theme-1 badge-top-left mr-1">{{'label-title.in-trip'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.provider_type == 1"
+                            class="badge badge-pill badge-theme-2 badge-top-left mr-1">{{'menu.partner'
+                            | translate}} </span>
+    
+                            <span *ngIf="driver.provider_type == 2"
+                            class="badge badge-pill badge-theme-3 badge-top-left mr-1">{{'menu.admin'
+                            | translate}} </span>
+                            
+                        </div>
+                        <a class="d-flex c-pointer" (click)="showDriverModal($event,driver._id)">
+                            <img alt="Profile" (error)="$event.target.src = _helper.DEFAULT_IMAGE.USER_PROFILE"
+                                class="img-thumbnail border-0 list-thumbnail align-self-center"
+                                [src]="_helper.image_url + driver.picture"
+                                [src]="driver.picture ? _helper.image_url + driver.picture : _helper.DEFAULT_IMAGE.USER_SQUARE"
+                                [alt]="driver.title" style="min-width: 140px;">
+                        </a>
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero c-pointer"
+                            (click)="showDriverModal($event,driver._id)">
+                            <div
+                                class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center" [class.ev-tag-list]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                <a class="w-30 w-sm-100">
+                                    <p class="list-item-heading mb-0 truncate">{{driver.first_name}}
+                                        {{driver.last_name}} ({{driver.unique_id}})</p>
+                                </a>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                                    {{driver.country_phone_code}} {{driver.phone}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">{{driver.email}}</p>
+                                <p *ngIf="driver.provider_type != 1" class="mb-0 pl-1 pr-1 text-muted text-small w-10 w-sm-100">{{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                    {{driver.wallet_currency_code}}
+                                </p>
+                                <p *ngIf="driver.provider_type == 1" class="mb-0 pl-1 pr-1 text-muted text-small w-10 w-sm-100">
+                                </p>
+                                <div class="w-10 w-sm-100 d-flex align-items-center" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                    <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs "
+                                        (click)="openModalTypeSelect(driver,user_page_type.approved)">
+                                        {{'button-title.approve'
+                                        | translate }} </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="driver_list.length == 0">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="driver_list.length != 0">
+                    <div class="col-12">
+                        <div class=" mb-4">
+                            <div class="card-body">
+                                <div class="col-12 d-flex justify-content-center">
+                                    <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+                    <i class='simple-icon-arrow-right'></i>
+                </ng-template>
+                <ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+                    <i class='simple-icon-arrow-left'></i>
+                </ng-template>
+            </tab>
+            <tab heading="{{'menu.queue-driver' | translate | uppercase}}"
+                (selectTab)="queueDriver()">
+                <div class="row" *ngIf="viewType === 1">
+                    <div *ngFor="let driver of queue_driver_list;let i=index"
+                        class="col-12 col-sm-12 col-lg-6 col-xl-4 ng-star-inserted mb-4">
+                        <div class="card d-flex flex-row" style="height: 100%;">
+                            <span class="badge badge-pill badge-danger position-absolute badge-top-right">{{i + 1}}</span>
+                            <div class="card-body align-self-center d-flex flex-row justify-content-between min-width-zero"
+                                [class.ev-tag]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                <div class="min-width-zero">
+                                    <a href="javascript:void(0);">
+                                        <div class="d-flex">
+                                            <p class="mb-1 list-item-heading truncate">{{driver.first_name}}
+                                                {{driver.last_name}} ({{driver.unique_id}})</p>
+                                        </div>
+                                        <p class=" list-item-heading mb-1 truncate ">{{driver.country_phone_code}}
+                                            {{driver.phone}}</p>
+                                        <p class="mb-2 text-muted text-small truncate">{{driver.email}}</p>
+                                        <p class="mb-0 text-muted truncate" *ngIf="driver?.service_detail?.typename">
+                                            {{'menu.type' | translate}} : {{driver?.service_detail?.typename}}
+                                        </p>
+                                    </a>
+        
+                                </div>
+                                <div class="float-right textRight">
+                                    <div>
+                                        <p *ngIf="driver.provider_type != 1"
+                                            class="font-weight-bold mb-1 text-nowrap textRight">
+                                            {{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                            {{driver.wallet_currency_code}}</p>
+                                        <p class="mb-1 truncate text-sm-right">{{driver.city}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country == null">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.please-select-country-first' | translate}}</div>
+                    </div>
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country != null && city == null">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.please-select-city' | translate}}</div>
+                    </div>
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country != null && city != null && zone == null">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.please-select-zone' | translate}}</div>
+                    </div> 
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country != null && city != null && zone != null">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="col-12 list" *ngIf="viewType === 2">
+                    <div [ngClass]="{'card d-flex flex-row mb-3': true}" *ngFor="let driver of queue_driver_list; let i=index"
+                        [contextMenu]="basicMenu" [contextMenuSubject]="user">
+                        <span class="badge badge-pill badge-danger position-absolute badge-top-right">{{i + 1}}</span>
+                        <a class="d-flex c-pointer">
+                            <img alt="Profile" (error)="$event.target.src = _helper.DEFAULT_IMAGE.USER_PROFILE"
+                                class="img-thumbnail border-0 list-thumbnail align-self-center"
+                                [src]="_helper.image_url + driver.picture"
+                                [src]="driver.picture ? _helper.image_url + driver.picture : _helper.DEFAULT_IMAGE.USER_SQUARE"
+                                [alt]="driver.title" style="min-width: 140px;">
+                        </a>
+                        <div class="pl-2 d-flex flex-grow-1 min-width-zero c-pointer">
+                            <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center"
+                                [class.ev-tag-list]="driver.vehicle_type == _helper.VEHICLE_TYPE.EV">
+                                <a class="w-30 w-sm-100">
+                                    <p class="list-item-heading mb-0 truncate">{{driver.first_name}}
+                                        {{driver.last_name}} ({{driver.unique_id}})</p>
+                                </a>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-20 w-sm-100">
+                                    {{driver.country_phone_code}} {{driver.phone}}</p>
+                                <p class="mb-0 pl-1 pr-1 text-muted text-small w-30 w-sm-100">{{driver.email}}</p>
+                                <p *ngIf="driver.provider_type != 1" class="mb-0 pl-1 pr-3 text-muted text-small w-10 w-sm-100">
+                                    {{driver.wallet.toFixed(_helper.to_fixed_number)}}
+                                    {{driver.wallet_currency_code}}
+                                </p>
+                                <p *ngIf="driver.provider_type == 1" class="mb-0 pl-1 pr-1 text-muted text-small w-10 w-sm-100">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country == null">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.please-select-country-first' | translate}}</div>
+                    </div>
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country != null && city == null">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.please-select-city' | translate}}</div>
+                    </div>
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country != null && city != null && zone == null">
+                        <div class="text-center text-capitalize">
+                            {{'label-title.please-select-zone' | translate}}</div>
+                    </div> 
+                    <div class="w-100" *ngIf="queue_driver_list.length == 0 && country != null && city != null && zone != null">
+                        <div class=" text-center text-capitalize">
+                            {{'label-title.no-record-found' | translate}}</div>
+                    </div>
+                </div>
+            </tab>
+            <tab *ngIf="is_use_wsal_service" heading="{{'label-title.wsal-status' | translate | uppercase}}"
+            (selectTab)="changeDriverType(user_page_type.all , user_active_type.all)">
+            <div class="row" *ngIf="driver_list.length != 0">
+                <div class="col-12">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-2 d-flex justify-content-start">
+                                <button id="button-basic" type="button" class="btn btn-sm btn-primary mr-2" [disabled]="buttonDisabled" (click)="checkWsalStatus()">
+                                    {{'label-title.check-provider' | translate }} <span class="caret"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>                
+            
+            <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table aria-describedby="disc" class="table table-hover mb-0 tableScroll">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col"><input type="checkbox" [checked]="all_checkbox_selected" id="myCheckbox" (change)="onCheckboxChange($event, 'All')"></th>
+                                <th scope="col">{{'label-title.id' | translate}}</th>
+                                <th scope="col">{{'label-title.country' | translate}}</th>
+                                <th scope="col">{{'label-title.wsal-tran-date' | translate}}</th>
+                                <th scope="col">{{'label-title.national-id' | translate}}</th>
+                                <th scope="col">{{'label-title.mobile-number' | translate}}</th>
+                                <th scope="col">{{'label-title.status' | translate}}</th>
+                                <th scope="col">{{'label-title.driver-eligibility' | translate}}</th>
+                                <th scope="col">{{'label-title.driver-eligibility-expiry' | translate}}</th>
+                                <th scope="col">{{'label-title.vehicle-eligibility' | translate}}</th>
+                                <th scope="col">{{'label-title.vehicle-eligibility-expiry' | translate}}</th>
+                                <th scope="col">{{'label-title.vehicle-licence-expiry' | translate}}</th>
+                                <th scope="col">{{'label-title.result/rejection' | translate}}</th>
+                                <th scope="col">{{'label-title.driver-status' | translate}}</th>
+                                <th scope="col">{{'label-title.wsal-req-res' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="driver_list.length>0">
+                            <tr *ngFor="let driver of driver_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}">
+                                <td class="text-nowrap"><input [checked]="all_checkbox_selected" type="checkbox" id="myCheckbox" (change)="onCheckboxChange($event, driver._id)"></td>
+                                <td class="text-nowrap">{{driver.unique_id}}</td>
+                                <td class="text-nowrap">{{driver.country}}</td>
+                                <td class="text-nowrap"> 
+                                    <span *ngIf="driver.wsal_transc_date && timezone_for_display_date ">{{_helper.moment(driver.wsal_transc_date).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(driver.wsal_transc_date).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}</span>
+                                    <span *ngIf="!driver.wsal_transc_date"> -- </span>
+                                </td>
+                                <td class="text-nowrap">{{driver.national_id}}</td>
+                                <td class="text-nowrap">{{driver.country_phone_code}} {{driver.phone}}</td>
+                                <td class="text-nowrap">
+                                    <span *ngIf="driver.is_driver_approved_from_wsal">{{'label-title.success' | translate}}</span>
+                                    <span *ngIf="!driver.is_driver_approved_from_wsal">{{'label-title.failed' | translate}}</span>
+                                </td>
+                                <td class="text-nowrap">{{driver.wsal_eligibility}}</td>
+                                <td class="text-nowrap">
+                                    <span *ngIf="driver.wsal_eligibility_expiry_date != '' && timezone_for_display_date ">{{_helper.moment(driver.wsal_eligibility_expiry_date).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}</span>
+                                    <span *ngIf="driver.wsal_eligibility_expiry_date == ' '"> -- </span>
+                                </td>
+                                <td class="text-nowrap">{{driver?.selected_vehicle?.wsal_eligibility}}</td>
+                                <td class="text-nowrap">
+                                    <span *ngIf="driver?.selected_vehicle?.wsal_vehicle_eligibility_expiry_date != '' ">{{driver?.selected_vehicle?.wsal_vehicle_eligibility_expiry_date}}</span>
+                                    <span *ngIf="driver?.selected_vehicle?.wsal_vehicle_eligibility_expiry_date == '' "> -- </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    <span *ngIf="driver?.selected_vehicle?.wsal_vehicle_license_eligibility_expiry_date != ''">{{driver?.selected_vehicle?.wsal_vehicle_license_eligibility_expiry_date}}</span>
+                                    <span *ngIf="driver?.selected_vehicle?.wsal_vehicle_license_eligibility_expiry_date == ''"> -- </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    <span *ngIf="driver.wsal_criminal_record_status != undefined && driver.wsal_criminal_record_status != '' ">{{driver.wsal_criminal_record_status}}</span>
+                                    <span *ngIf="(driver.wsal_criminal_record_status == undefined || driver.wsal_criminal_record_status == '') && driver.wsal_rejection_reason && driver.wsal_rejection_reason.length > 0">{{driver.wsal_rejection_reason[0]}}</span> 
+                                    <span *ngIf="driver.wsal_criminal_record_status != undefined && driver.wsal_criminal_record_status == '' && driver.wsal_rejection_reason && driver.wsal_rejection_reason.length <= 0 "> No Response From WSAL </span>
+                                </td>
+                                <td class="text-nowrap">
+                                    <span *ngIf="driver.is_approved == 1">{{'label-title.approved' | translate}}</span>
+                                    <span *ngIf="driver.is_approved == 0">{{'label-title.unapproved' | translate}}</span>
+                                </td>
+                                <td class="">
+                                    <button id="button-basic" type="button" class="btn btn-xs" (click)="showWsalResponse(driver)" >
+                                        <span class="d-flex justify-content-center align-items-center" > 
+                                            <i class="simple-icon-eye"> </i> 
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="driver_list.length==0">
+                          <tr>
+                            <th id="head" colspan="10" class="text-center">
+                              <span>{{ 'label-title.no-record-found' | translate }}</span>
+                            </th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="driver_list.length != 0">
+                <div class="col-12">
+                    <div class="mb-4">
+                        <div class="card-body">
+                            <div class="col-12 d-flex justify-content-center">
+                                <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                                nextLabel="{{'wizard.next' | translate}}" [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tab>
+        </tabset>
+    </div>
+</div>
+
+<app-edit-driver-modal (driverHandler)="getProviderFilterList(filterData)" #DriverUserModal></app-edit-driver-modal>
+
+<!-- Approve Driver model -->
+
+<ng-template #approveTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{'label-title.approve' | translate}} {{'label-title.driver' | translate}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-4">
+        <div class="row" *ngIf="assignVehicleData.provider_type != _helper.DRIVER_APPROVE_TYPE.PARTNER">
+            <div class="col-sm-12 col-12">
+                <div class="form-group">
+                    <label for="type">
+                        <span>{{'label-title.type' | translate}}</span>
+                    </label>
+                    <ng-select id="type" notFoundText="{{'label-title.no-data-found' | translate}}" appearance="outline" labelForId="serviceType" [searchable]="true"
+                        [clearable]="false" [(ngModel)]="selected_type">
+                        <ng-option [value]="_helper.DRIVER_APPROVE_TYPE.NORMAL">{{'label-title.normal' | translate}}</ng-option>
+                        <ng-option [value]="_helper.DRIVER_APPROVE_TYPE.ADMIN">{{'label-title.admin' | translate}}</ng-option>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="selected_type != _helper.DRIVER_APPROVE_TYPE.ADMIN">
+            <div class="col-sm-12 col-12">
+                <div class="form-group">
+                    <label for="serviceType"><span>{{'label-title.service-type' |
+                            translate}}</span></label>
+                    <ng-select id="serviceType" notFoundText="{{'label-title.no-data-found' | translate}}" appearance="outline" labelForId="serviceType" [searchable]="true"
+                        [clearable]="false" [(ngModel)]="selected_serviceType">
+                        <ng-option *ngFor="let type of vehicleType" [value]="type._id">
+                            <span *ngIf="type.type_detail">
+                                {{type.type_detail.typename}}
+                            </span>
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="selected_type != _helper.DRIVER_APPROVE_TYPE.ADMIN">
+            <div class="col-sm-12 col-12">
+                <div class="form-group">
+                    <label for="vehicle"><span>{{'label-title.vehicle' |
+                            translate}}</span></label>
+                    <ng-select id="vehicle" notFoundText="{{'label-title.no-data-found' | translate}}"  appearance="outline" labelForId="vehicle" [searchable]="true"
+                        [clearable]="false" [(ngModel)]="selected_vehicle">
+                        <div *ngIf="assignVehicleData">
+                            <ng-option [value]="vehicle._id" *ngFor="let vehicle of assignVehicleData.vehicle_detail">
+                                {{vehicle.name | titlecase}}
+                            </ng-option>
+                        </div>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="approveDriver(assignVehicleData)"
+            [disabled]="(selected_type == _helper.DRIVER_APPROVE_TYPE.NORMAL) && ((selected_serviceType == '') || (selected_vehicle == ''))"
+            class="btn btn-primary float-right">{{'button-title.submit' | translate}}
+        </button>
+    </div>
+</ng-template>
+
+<!-- Decline Driver model -->
+<ng-template #declineTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{selectedDriver.first_name | titlecase}} {{selectedDriver.last_name |
+            titlecase}}  ({{selectedDriver.unique_id}})</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelDeclineModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-0">
+        <div class="p-4">
+            <div class="row">
+                <div class="col-sm-12 col-12">
+                    <p *ngIf="!approvalStatus">
+                        {{'label-title.are-you-sure-you-want-to-decline-this' | translate}} {{'menu.driver' | translate}}
+                    </p>
+                    <p *ngIf="approvalStatus">
+                        {{'label-title.are-you-sure-you-want-to-approve-this' | translate}} {{'menu.driver' | translate}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="decline()" class="btn btn-primary float-right">
+            {{'button-title.confirm' | translate}}
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #unfreezeTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left" *ngIf="selectedDriver">{{selectedDriver.first_name | titlecase}} {{selectedDriver.last_name |
+            titlecase}}  ({{selectedDriver.unique_id}})</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeUnfreezeModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+            <p class="mb-0">
+                {{'label-title.are-you-sure-you-want-to-unfreeze-this' | translate}} {{'menu.driver' | translate}}.
+            </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="unfreeze(selectedDriver._id)" class="btn btn-primary float-right">{{'button-title.confirm' |
+            translate}}</button>
+    </div>
+</ng-template>
+
+<app-add-driver-modal #addNewDriverModal></app-add-driver-modal>
+<app-wsal-response-modal #wsalResponseModal></app-wsal-response-modal>

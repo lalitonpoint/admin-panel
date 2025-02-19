@@ -1,0 +1,16 @@
+.card {
+    .card-body {
+        .date-sm {
+            &::after{
+                top: 50%;
+                z-index: 0;
+                transform: translateY(-50%);
+            }
+            input {
+                border-radius: 2px;
+                padding: 0.6rem 0.75rem 0.6rem 0.75rem;
+                border: 1px solid #d7d7d7;
+            }
+        }
+    }
+}

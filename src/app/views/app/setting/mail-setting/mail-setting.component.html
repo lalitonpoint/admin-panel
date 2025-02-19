@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-12">
+    <app-heading></app-heading>
+    <app-breadcrumb></app-breadcrumb>
+    <div class="separator mb-5"></div>
+  </div>
+</div>
+
+<div class="card editor-card mb-4">
+  <div class="card-body">
+    <div class="d-flex flex-row justify-content-between">
+      <div class="float-left float-none-xs">
+        <div class="d-inline-block">
+          <h5 class="d-inline">{{'heading-title.edit-email' | translate }}</h5>
+        </div>
+      </div>
+      <div class="btn-group float-right float-none-xs mb-4">
+        <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" id="button-basic" type="button" class="btn btn-outline-primary btn-xs" (click)="save()"
+          [disabled]="selected_email._id == null"
+          [ngClass]="{'btn-disabled':selected_email._id == null}">{{'button-title.save' | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 col-12 form-group">
+        <div class="form-group mb-0">
+          <label for="email" class="font-weight-medium truncate mb-0">{{ 'label-title.select-email-for' | translate
+            }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.select-email-for-tooltip' | translate}}" placement="right"></i></span></label>
+          <ng-select appearance="outline" #emailSelect labelForId="email" [searchable]="true" [clearable]="false"
+            (change)="onSelectMail($event)" [(ngModel)]="selected"  placeholder="{{'label-title.select-email' | translate}}">
+            <ng-option *ngFor="let email of email_list" [value]="email">{{ email.emailUniqueTitle }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-8 col-12 form-group">
+        <div class="form-group mb-0">
+          <label for="email" class="font-weight-medium truncate mb-0">{{ 'label-title.email_title' | translate
+            }}</label>
+          <input type="text" class="form-control" [(ngModel)]="selected_email.emailTitle"
+            [value]="selected_email ? selected_email.emailTitle : ''" [readonly]="subadmin_readonly">
+        </div>
+      </div>
+      <div class="col-lg-8 col-12 form-group">
+        <div class="form-group mb-0">
+          <label for="email" class="font-weight-medium truncate mb-0">{{ 'label-title.email_admin_info' | translate
+            }}</label>
+          <input type="text" class="form-control" [(ngModel)]="selected_email.emailAdminInfo"
+            [value]="selected_email ? selected_email.emailAdminInfo : ''" [readonly]="subadmin_readonly">
+        </div>
+      </div>
+    </div>
+    <div class="my-3">
+      <div #editorElementRef></div>
+    </div>
+  </div>
+</div>

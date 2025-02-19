@@ -1,0 +1,76 @@
+<ng-template #template>
+  <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+    <div role="document" class="modal-dialog modal-right">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">{{'heading-title.add-new-hub' | translate }}</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+          <div class="modal-body">
+            <form [formGroup]="commonForm">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="fname">{{'label-title.hub-name' | translate }}</label>
+                  <input id="fname" type="text" name="name"  required=""
+                    class="form-control ng-untouched ng-pristine ng-valid" (keypress)="_helper.space_validation($event)" formControlName="name">
+                  <div *ngIf="commonForm.get('name').errors?.required && commonForm.get('name').touched" class="invalid-tooltip">
+                    {{'validation-title.hub-name-is-reqiured' | translate }}</div>
+                  <div *ngIf="commonForm.get('name').errors?.minlength && commonForm.get('name').touched" class="invalid-tooltip">
+                   {{'label-title.hub-name' | translate }} {{'label-title.must-contain-at-least-2-characters' | translate }}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="country">{{'label-title.country' | translate}}</label>
+                    <ng-select appearance="outline" #agreeSelect labelForId="country" [searchable]="true"
+                      placeholder="{{'label-title.select-country' | translate}}" (change)="getCountry($event)" [clearable]="false" formControlName="country">
+                      <ng-option *ngFor="let country of countryList" [value]="country">{{country.countryname}}</ng-option>
+                    </ng-select>
+                    <div *ngIf="commonForm.get('country').errors?.required && commonForm.get('country').touched" class="invalid-tooltip">
+                      {{'label-title.country' | translate}} {{'label-title.is-required' | translate }}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="city">{{'label-title.city' | translate}}</label>
+                  <ng-select appearance="outline" #agreeSelect labelForId="city" [searchable]="true" [clearable]="false"
+                    placeholder="{{'label-title.select-city' | translate}}" formControlName="city" (change)="cityChange($event);">
+                    <ng-option *ngFor="let city of cityList" [value]="city">{{city.cityname}}</ng-option>
+                  </ng-select>
+                  <div *ngIf="commonForm.get('city').errors?.required && commonForm.get('city').touched" class="invalid-tooltip">
+                    {{'label-title.city' | translate}} {{'label-title.is-required' | translate }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group search-address">
+                  <div class="info-hover">
+                    <label for="address" class="d-flex">{{'label-title.address' | translate}} <i class="simple-icon-info mt-1 ml-2" type="button" tooltip="{{'label-title.address-city-must-be-same-as-a-selected-city' | translate}}" placement="right"></i></label>
+                  </div>
+                  <input id="address" class="form-control"  formControlName="address">
+                  <div *ngIf="commonForm.get('address').errors?.required && commonForm.get('address').touched" class="invalid-tooltip">
+                    {{'label-title.address' | translate}} {{'label-title.is-required' | translate }}</div>
+                  
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="longitude">{{'label-title.hub-area' | translate}}</label>
+                  <div id="zone_map" style="width: 100%; min-height: 415px;" [ngClass]="{ 'mapdisabled': !_helper.has_permission(_helper.PERMISSION.EDIT) }"></div>
+                </div>
+              </div>
+              
+            </div>
+          </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" (click)="addNewHub()" class="btn btn-primary float-right">{{'button-title.submit' | translate }}</button>
+          </div>
+      </div>
+    </div>
+  </modal-container>
+</ng-template>

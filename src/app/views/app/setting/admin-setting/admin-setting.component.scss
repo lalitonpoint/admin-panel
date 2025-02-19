@@ -1,0 +1,11 @@
+.comment-likes {
+    text-align: right;
+    flex-basis: 120px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 575px) {
+    .card-top-buttons {
+        padding: 1.35rem;
+    }
+}

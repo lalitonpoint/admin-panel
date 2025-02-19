@@ -1,0 +1,29 @@
+.order-step li:last-child {
+    border-left: none;
+    margin-left: 3px;
+}
+
+.my-img {
+    height: 14px;
+    width: 14px;
+    margin-right: 0.7rem;
+}
+
+.stop-addresses>div {
+    border-left: 0.2em solid lightgray;
+    padding: 0 0 1rem 1rem;
+    position: relative;
+}
+
+.mr-07 {
+    margin-right: 0.7rem !important;
+}
+
+.profile-img{
+    height: 40px;
+    width: 40px;
+  }
+
+  tbody>tr>td {
+    white-space: normal !important;
+  }

@@ -1,0 +1,374 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3 word-wrap-break-word" style="overflow: hidden;">{{'label-title.notification-settings' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="onClickSetting()">
+                            {{ !is_edit_settings ? ('button-title.edit' | translate) : ('button-title.save' |
+                            translate) }} </button>
+                    </div>
+                </div>
+                <div class="form">
+                    <form class="form" [formGroup]="settingsForm">
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.sms-notification' | translate }}
+                                        <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.sms-notification-tooltip' | translate}}" placement="right"></i></span>
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch1" formControlName="sms_notification"
+                                        class="custom-control-input">
+                                    <label for="customSwitch1" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.email-notification' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.email-notification-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch2" formControlName="email_notification"
+                                        class="custom-control-input">
+                                    <label for="customSwitch2" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.provider-email-verification' | translate
+                                        }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.provider-email-verification-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch6" formControlName="providerEmailVerification"
+                                        class="custom-control-input">
+                                    <label for="customSwitch6" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.user-mobile-number-verification' |
+                                        translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.user-mobile-number-verification-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch7" formControlName="userSms"
+                                        class="custom-control-input">
+                                    <label for="customSwitch7" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.provider-mobile-number-verification' |
+                                        translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.provider-mobile-number-verification-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch8" formControlName="providerSms"
+                                        class="custom-control-input">
+                                    <label for="customSwitch8" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.user_social_login' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.user-social-login-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch19" formControlName="is_user_social_login"
+                                        class="custom-control-input">
+                                    <label for="customSwitch19" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.provider_social_login' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.provider-social-login-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch20" formControlName="is_provider_social_login"
+                                        class="custom-control-input">
+                                    <label for="customSwitch20" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.user_otp_login' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.user-otp-login-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch90" formControlName="is_user_login_using_otp"
+                                        class="custom-control-input">
+                                    <label for="customSwitch90" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.provider_otp_login' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.provider-otp-login-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch91" formControlName="is_provider_login_using_otp"
+                                        class="custom-control-input">
+                                    <label for="customSwitch91" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.driver-biomatrix-verification' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.driver-biomatrix-verification-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitchBiomatrix" formControlName="is_allow_biometric_verification_for_driver"
+                                        class="custom-control-input">
+                                    <label for="customSwitchBiomatrix" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.use-google-captcha' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.use-google-captcha-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitchCaptcha" formControlName="is_use_captcha"
+                                        class="custom-control-input">
+                                    <label for="customSwitchCaptcha" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.allow-fake-gps' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.allow-fake-gps-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="is_allow_fake_gps" formControlName="is_allow_fake_gps"
+                                        class="custom-control-input">
+                                    <label for="is_allow_fake_gps" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.guest-token' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.guest-token-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="is_guest_token" formControlName="is_guest_token"
+                                        class="custom-control-input">
+                                    <label for="is_guest_token" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.is-banner-visible' | translate }}
+                                        <span class="c-pointer d-inline-block mb-0"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.banner-show-tooltip' | translate}}" [containerClass]="'custom-tooltip-class'" placement="right"></i></span>
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" formControlName="is_banner_visible"
+                                        id="is_banner_visible" class="custom-control-input">
+                                    <label for="is_banner_visible" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3 word-wrap-break-word" style="overflow: hidden;">{{'heading-title.trip-settings' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="onClickNotificationSetting()">
+                            {{ !is_edit_notification_settings ? ('button-title.edit' | translate) : ('button-title.save' |
+                            translate) }} </button>
+                    </div>
+                </div>
+                <div class="form">
+                    <form class="form" [formGroup]="tripSettingsForm">
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.show-estimation-in-provider-app' |
+                                        translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.show-estimation-in-provider-app-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch17"
+                                        formControlName="is_show_estimation_in_provider_app" class="custom-control-input">
+                                    <label for="customSwitch17" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.show-estimation-in-user-app' | translate
+                                        }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.show-estimation-in-user-app-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch18" formControlName="is_show_estimation_in_user_app"
+                                        class="custom-control-input">
+                                    <label for="customSwitch18" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.draw-road-path-in-user-app' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.draw-road-path-in-user-app-tooltip' | translate}}" placement="right"></i></span>
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch3" formControlName="userPath"
+                                        class="custom-control-input">
+                                    <label for="customSwitch3" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.draw-road-path-in-driver-app' | translate
+                                        }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.draw-road-path-in-driver-app-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch4" formControlName="providerPath"
+                                        class="custom-control-input">
+                                    <label for="customSwitch4" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.otp_varification_start_trip' |
+                                        translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.otp-varification-start-trip-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch22" formControlName="is_otp_verification_start_trip"
+                                        class="custom-control-input">
+                                    <label for="customSwitch22" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.twilio-call-masking' | translate }}<span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.twilio-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch16" formControlName="twilio_call_masking"
+                                        class="custom-control-input">
+                                    <label for="customSwitch16" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.tip' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.tip-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitchTip" formControlName="is_tip" class="custom-control-input">
+                                    <label for="customSwitchTip" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.toll' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.toll-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitchToll" formControlName="is_toll" class="custom-control-input">
+                                    <label for="customSwitchToll" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.is_show_user_details_in_provider_app' | translate
+                                        }}<span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 4px;" tooltip="{{'tooltip-title.show-user-details-in-provider-app-tooltip' | translate}}" placement="right"></i></span></p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitchProvider" formControlName="is_show_user_details_in_provider_app"
+                                        class="custom-control-input">
+                                    <label for="customSwitchProvider" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

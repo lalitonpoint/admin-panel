@@ -1,0 +1,83 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'pages.send-mass-notification' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="massNotificationForm">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="user">{{'label-title.user-type' | translate}}</label>
+                                    <ng-select appearance="outline" labelForId="user" [searchable]="false" [clearable]="false"
+                                        placeholder="{{'label-title.user-type' | translate}}" formControlName="user_type" (change)="onChangeUserType()">
+                                        <ng-option [value]="1">{{'label-title.user' | translate}}</ng-option>
+                                        <ng-option [value]="2">{{'label-title.provider' | translate}}</ng-option>
+                                    </ng-select>
+                                    <div *ngIf="massNotificationForm.get('user_type').errors?.required && massNotificationForm.get('user_type').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.user-type' | translate}} {{'label-title.is-required' | translate
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="device">{{'label-title.device-type' | translate}}</label>
+                                    <ng-select appearance="outline" labelForId="device" [searchable]="false" [clearable]="false"
+                                        placeholder="{{'label-title.device-type' | translate}}" formControlName="device_type">
+                                        <ng-option value="all">{{'label-title.all' | translate}}</ng-option>
+                                        <ng-option value="android">{{'label-title.android' | translate}}</ng-option>
+                                        <ng-option value="ios">{{'label-title.ios' | translate}}</ng-option>
+                                        <ng-option value="web">{{'label-title.web' | translate}}</ng-option>
+                                    </ng-select>
+                                    <div *ngIf="massNotificationForm.get('device_type').errors?.required && massNotificationForm.get('device_type').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.device-type' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="country">{{'label-title.country' | translate}}</label>
+                                    <ng-select appearance="outline" labelForId="country" [searchable]="true" [clearable]="false"
+                                        placeholder="{{'label-title.select-country' | translate}}" formControlName="country" (change)="onChangeCountry($event)">
+                                        <ng-option value="all">{{'label-title.all' | translate}}</ng-option>
+                                        <ng-option [value]="country._id"
+                                            *ngFor="let country of all_countries">{{country.countryname}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <div *ngIf="massNotificationForm.get('country').errors?.required && massNotificationForm.get('country').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.country' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="message">{{'label-title.message' | translate}}</label>
+                                    <textarea id="message" rows="2"
+                                        class="form-control ng-untouched ng-pristine ng-invalid"
+                                        formControlName="message"></textarea>
+                                    <div *ngIf="massNotificationForm.get('message').errors?.required && massNotificationForm.get('message').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.message' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary float-right"
+                        (click)="sendNotification()">{{'button-title.submit' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

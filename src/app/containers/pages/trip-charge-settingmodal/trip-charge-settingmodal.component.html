@@ -1,0 +1,650 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.trip-charge-settings' | translate }}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="cityType_form" noPasteDrop appFocus>
+                        <div class="border-bottom">
+                            <div class="form-group row">
+                                <div class="col-sm-4 col-4">
+                                    <label for="inputState">{{'label-title.country' | translate}}</label>
+                                </div>
+                                <div class="col-sm-8 col-8">
+                                    <ng-select appearance="outline"
+                                        notFoundText="{{'validation-title.country-not-availble' | translate}}" #agreeSelect
+                                        labelForId="yesno" placeholder="{{'label-title.search' | translate}}"
+                                        [searchable]="true" [clearable]="false" [readonly]="selected_cityType"
+                                        (change)="getCountry($event)" formControlName="countryname" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                        <ng-option [value]="country" *ngFor="let country of countries_list">
+                                            {{country.countryname | titlecase}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <div *ngIf="cityType_form.get('countryname').errors?.required && cityType_form.get('countryname').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.country' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group row">
+                                <div class="col-sm-4 col-4">
+                                    <label for="inputState">{{'label-title.city' | translate}}</label>
+                                </div>
+                                <div class="col-sm-8 col-8">
+                                    <ng-select appearance="outline"
+                                        notFoundText="{{'validation-title.city-not-available' | translate}}" #agreeSelect
+                                        labelForId="yesno" placeholder="{{'label-title.search' | translate}}"
+                                        [searchable]="true" [clearable]="false" [readonly]="selected_cityType"
+                                        (change)="getCity($event)" formControlName="cityname" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                        <ng-option [value]="city" *ngFor="let city of city_list">
+                                            {{city.cityname | titlecase}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <div *ngIf="cityType_form.get('cityname').errors?.required && cityType_form.get('cityname').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.city' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group row">
+                                <div class="col-sm-4 col-4">
+                                    <label for="inputState">{{'label-title.price-type' | translate}}</label>
+                                </div>
+                                <div class="col-sm-8 col-8">
+                                    <ng-select appearance="outline"
+                                        notFoundText="{{'validation-title.no-data-found' | translate}}" #agreeSelect
+                                        labelForId="yesno1" placeholder="{{'label-title.search' | translate}}"
+                                        [searchable]="false" [clearable]="false" [readonly]="selected_cityType"
+                                        formControlName="is_ride_share" (change)="getTypeList()">
+                                        <ng-option [value]="_helper.SERVICE_PRICE_TYPE.NORMAL">{{'label-title.normal' | translate}}</ng-option>
+                                        <ng-option [value]="_helper.SERVICE_PRICE_TYPE.CAR_POOL">{{'label-title.car-pool' | translate}}</ng-option>
+                                        <ng-option [value]="_helper.SERVICE_PRICE_TYPE.OPEN_RIDE">{{'label-title.open-ride' | translate}}</ng-option>
+                                    </ng-select>
+                                    <div *ngIf="cityType_form.get('is_ride_share').errors?.required && cityType_form.get('is_ride_share').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.price-type' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group row">
+                                <div class="col-sm-4 col-4">
+                                    <label for="inputState">{{'label-title.type' | translate}}</label>
+                                </div>
+                                <div class="col-sm-8 col-8">
+                                    <ng-select appearance="outline"
+                                        notFoundText="{{'validation-title.type-not-available' | translate}}" #agreeSelect
+                                        labelForId="yesno" placeholder="{{'label-title.search' | translate}}"
+                                        [searchable]="true" [clearable]="false" [readonly]="selected_cityType"
+                                        formControlName="typename" (change)="getTypeName($event)" (keypress)="_helper.special_char_validation($event)" maxlength="50">
+                                        <ng-option [value]="type" *ngFor="let type of type_list">
+                                            {{type.typename | titlecase}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <div *ngIf="cityType_form.get('typename').errors?.required && cityType_form.get('typename').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.type' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <h5 class="card-title">{{'label-title.price-settings' | translate}}</h5>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.provider-profit' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event);_helper.maxLengthValidation($event,3)"
+                                            class="form-control" formControlName="provider_profit">
+                                        <div *ngIf="cityType_form.controls['provider_profit'].invalid"
+                                            class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['provider_profit'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['provider_profit'].errors.profitValueInvalid">
+                                                {{'validation-title.profit-validation' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['provider_profit'].errors.minprofitValueInvalid">
+                                                {{'validation-title.the-value-should-not-be-below-0' | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append"><span id="basic-addon"
+                                                class="input-group-text">%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.distance-for-base-price' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)"
+                                            class="form-control" formControlName="base_price_distance">
+                                        <div *ngIf="cityType_form.controls['base_price_distance'].invalid"
+                                            class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['base_price_distance'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['base_price_distance'].errors.basePriceDistanceValueInvalid">
+                                                {{'validation-title.base-price-distance-value-validation' | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span id="basic-addon2" class="input-group-text"
+                                                *ngIf="unit==1">{{'label-title.km' | translate}}</span>
+                                            <span id="basic-addon2" class="input-group-text"
+                                                *ngIf="unit==0">{{'label-title.mile' | translate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.base-price' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <div class="input-group-prepend"><span id="basic-addon1"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control" formControlName="base_price">
+                                        <div *ngIf="cityType_form.controls['base_price'].invalid"
+                                            class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['base_price'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['base_price'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.Price-per-unit-distance' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <div class="input-group-prepend"><span id="basic-addon1"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control"
+                                            formControlName="price_per_unit_distance">
+                                        <div *ngIf="cityType_form.controls['price_per_unit_distance'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['price_per_unit_distance'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['price_per_unit_distance'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.Price-per-unit-time-min' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <div class="input-group-prepend"><span id="basic-addon1"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control"
+                                            formControlName="price_for_total_time">
+                                        <div *ngIf="cityType_form.controls['price_for_total_time'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['price_for_total_time'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['price_for_total_time'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share != _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.waiting-time-start-after-minute' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)" class="form-control"
+                                            formControlName="waiting_time_start_after_minute">
+                                        <div *ngIf="cityType_form.controls['waiting_time_start_after_minute'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['waiting_time_start_after_minute'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['waiting_time_start_after_minute'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append"><span id="basic-addon1"
+                                                class="input-group-text">{{'label-title.min' | translate}}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share != _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.price-for-waiting-time' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span id="basic-addon2"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control"
+                                            formControlName="price_for_waiting_time">
+                                        <div *ngIf="cityType_form.controls['price_for_waiting_time'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['price_for_waiting_time'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['price_for_waiting_time'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--------------
+                            Commented below code as this functionality is still not implemented in android and iOS apps 
+                        -------------->
+                        <!-- <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">
+                                        {{'label-title.free-waiting-time-for-multiple-location' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                            class="form-control"
+                                            formControlName="waiting_time_start_after_minute_multiple_stops">
+                                        <div *ngIf="cityType_form.controls['waiting_time_start_after_minute_multiple_stops'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['waiting_time_start_after_minute_multiple_stops'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['waiting_time_start_after_minute_multiple_stops'].errors.freewaitingTimeStartValueInvalid">
+                                                {{'validation-title.free-waiting-time-for-multiple-location-value-validation'
+                                                | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append"><span id="basic-addon1" class="input-group-text">{{'label-title.min' |
+                                            translate}}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">
+                                        {{'label-title.Price-waiting-time-for-multiple-location' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span id="basic-addon8"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control"
+                                            formControlName="price_for_waiting_time_multiple_stops">
+                                        <div *ngIf="cityType_form.controls['price_for_waiting_time_multiple_stops'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['price_for_waiting_time_multiple_stops'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['price_for_waiting_time_multiple_stops'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.min-fare' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <div class="input-group-prepend"><span id="basic-addon7"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control" formControlName="min_fare">
+                                        <div *ngIf="cityType_form.controls['min_fare'].invalid" class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['min_fare'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['min_fare'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share == _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.baggage-allowance' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)" class="form-control" formControlName="luggage_allowacation">
+                                        <div *ngIf="cityType_form.controls['luggage_allowacation'].invalid" class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['luggage_allowacation'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['luggage_allowacation'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share == _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.vehicle-capacity' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)" class="form-control" formControlName="vehicle_capacity">
+                                        <div *ngIf="cityType_form.controls['vehicle_capacity'].invalid" class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['vehicle_capacity'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['vehicle_capacity'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['vehicle_capacity'].errors.min">
+                                                {{'validation-title.the-value-should-be-above-0' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom" *ngIf="cityType_form.value.is_ride_share != _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.max-space' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)" class="form-control" formControlName="max_space">
+                                        <div *ngIf="cityType_form.controls['max_space'].invalid" class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['max_space'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['max_space'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['max_space'].errors.min">
+                                                {{'validation-title.the-value-should-be-above-0' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <h3 class="card-title">{{'label-title.tax-settings' | translate}}</h3>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.cancellation-fee' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <div class="input-group-append"><span id="basic-addon6"
+                                            class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control" formControlName="cancellation_fee">
+                                        <div *ngIf="cityType_form.controls['cancellation_fee'].invalid"
+                                            class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['cancellation_fee'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['cancellation_fee'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.tax' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event);_helper.maxLengthValidation($event,3)"
+                                            class="form-control" formControlName="tax">
+                                        <div *ngIf="cityType_form.controls['tax'].invalid" class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['tax'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['tax'].errors.profitValueInvalid">
+                                                {{'validation-title.profit-validation' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['tax'].errors.minprofitValueInvalid">
+                                                {{'validation-title.the-value-should-not-be-below-0' | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append"><span id="basic-addon5"
+                                                class="input-group-text">%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.user-miscellaneous-fee' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <div class="input-group-prepend"><span id="basic-addon4"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control"
+                                            formControlName="user_miscellaneous_fee">
+                                        <div *ngIf="cityType_form.controls['user_miscellaneous_fee'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['user_miscellaneous_fee'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['user_miscellaneous_fee'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.user-tax' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event);_helper.maxLengthValidation($event,3)"
+                                            class="form-control" formControlName="user_tax">
+                                        <div *ngIf="cityType_form.controls['user_tax'].invalid" class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['user_tax'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['user_tax'].errors.profitValueInvalid">
+                                                {{'validation-title.profit-validation' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['user_tax'].errors.minprofitValueInvalid">
+                                                {{'validation-title.the-value-should-not-be-below-0' | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append"><span id="basic-addon3"
+                                                class="input-group-text">%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.provider-miscellaneous-fee' |
+                                        translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span id="basic-addon2"
+                                                class="input-group-text">{{currencysign}}</span></div>
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control"
+                                            formControlName="provider_miscellaneous_fee">
+                                        <div *ngIf="cityType_form.controls['provider_miscellaneous_fee'].invalid"
+                                            class="error errorShow">
+                                            <span
+                                                *ngIf="cityType_form.controls['provider_miscellaneous_fee'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span *ngIf="cityType_form.controls['provider_miscellaneous_fee'].errors.max">
+                                                {{'validation-title.max-value-msg' | translate}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group  row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-0">{{'label-title.provider-tax' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group ">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event);_helper.maxLengthValidation($event,3)"
+                                            class="form-control" formControlName="provider_tax">
+                                        <div *ngIf="cityType_form.controls['provider_tax'].invalid"
+                                            class="error errorShow">
+                                            <span *ngIf="cityType_form.controls['provider_tax'].errors.required">
+                                                {{'validation-title.this-is-required' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['provider_tax'].errors.profitValueInvalid">
+                                                {{'validation-title.profit-validation' | translate}}
+                                            </span>
+                                            <span
+                                                *ngIf="cityType_form.controls['provider_tax'].errors.minprofitValueInvalid">
+                                                {{'validation-title.the-value-should-not-be-below-0' | translate}}
+                                            </span>
+                                        </div>
+                                        <div class="input-group-append"><span id="basic-addon1"
+                                                class="input-group-text">%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <h3 class="card-title">{{'label-title.other-settings' | translate}}</h3>
+                        </div>
+                        <div class="mt-3 border-bottom">
+                            <div class="form-group d-flex justify-content-between">
+                                <p for="inputEmail3" class="mb-0">{{'label-title.business' | translate}}</p>
+                                <div class="custom-control custom-switch"><input type="checkbox" id="is_business"
+                                        class="custom-control-input" formControlName="is_business">
+                                    <label for="is_business" class="custom-control-label">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex justify-content-between" *ngIf="cityType_form.value.is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL">
+                                <p for="inputEmail3" class="mb-0">{{'label-title.car-rental-business' | translate}}</p>
+                                <div class="custom-control custom-switch"><input type="checkbox"
+                                        id="is_car_rental_business" class="custom-control-input"
+                                        formControlName="is_car_rental_business">
+                                    <label for="is_car_rental_business" class="custom-control-label">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex justify-content-between">
+                                <p for="inputEmail3" class="mb-0">{{'label-title.is-zone' | translate}}</p>
+                                <div class="custom-control custom-switch"><input type="checkbox" id="is_zone"
+                                        class="custom-control-input" formControlName="is_zone">
+                                    <label for="is_zone" class="custom-control-label">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex justify-content-between">
+                                <p for="inputEmail3" class="mb-0">{{'label-title.is-surge-hours' | translate}}</p>
+                                <div class="custom-control custom-switch"><input type="checkbox" id="is_surge"
+                                        class="custom-control-input" formControlName="is_surge_hours">
+                                    <label for="is_surge" class="custom-control-label">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary float-right"
+                        [disabled]="btnDisable" (click)="updateCityType()"
+                        *ngIf="selected_cityType">{{'button-title.update' | translate}}
+                    </button>
+                    <button type="submit" class="btn btn-primary float-right"
+                        [disabled]="btnDisable" (click)="addCityType()"
+                        *ngIf="!selected_cityType">{{'button-title.submit' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

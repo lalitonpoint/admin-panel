@@ -1,0 +1,43 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!is_edit">{{'heading-title.add-rent-car-feature' | translate }}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="is_edit">{{'heading-title.edit-rent-car-feature' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="featureForm" class="tooltip-label-center" appFocus>
+                        <div class="form-group d-flex align-items-center justify-content-between flex-wrap">
+                            <label for="exampleInputEmail1 col-sm-6 col-12">{{'label-title.title' | translate }}</label>
+                            <div class="position-relative col-sm-6 col-12">
+                              <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" class="form-control"
+                                formControlName="title" (keypress)="helper.special_char_validation($event)" maxlength="50">
+                              <div
+                                *ngIf="featureForm.get('title').errors?.required && featureForm.get('title').touched"
+                                class="invalid-tooltip">
+                                {{'label-title.title' | translate}} {{'label-title.is-required' | translate }}</div>
+                            </div>
+                          </div>
+                        <div class="mt-4" *ngIf="is_edit">
+                            <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+                                <span>{{'label-title.business' | translate}}</span>
+                                <input type="checkbox" id="businessSwitch" formControlName="is_active" class="custom-control-input" >
+                                <label for="businessSwitch" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button *ngIf="!is_edit" type="submit" (click)="onSave()"
+                        class="btn btn-primary float-right">{{'button-title.submit' | translate}}</button>
+                    <button *ngIf="is_edit" type="submit" class="btn btn-primary"
+                        (click)="onSave()">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

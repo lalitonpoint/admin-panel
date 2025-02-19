@@ -1,0 +1,123 @@
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{'heading-title.review' | translate}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-0">
+        <tabset class="card-tabs truncate" [justified]="true">
+            <tab heading="{{'heading-title.user' | translate | uppercase }}" class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-4 text-end" *ngIf="reviewDetail.user_details">
+                        <a href="javascript:;">
+                            <img alt="data.name" (error)="$event.target.src = USER_DEFAULT_IMAGE"
+                                class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center"
+                                [src]="IMAGE_URL + reviewDetail.user_details.picture">
+                        </a>
+                    </div>
+                    <div class="col-lg-9 col-8 m-auto p-0">
+                        <p class="font-weight-medium truncate mb-0" *ngIf="reviewDetail.user_details">{{reviewDetail.user_details.first_name}} {{reviewDetail.user_details.last_name}}</p>
+                        <p class="text-muted mb-0 truncate text-small">{{'label-title.trip_id' | translate}} :
+                            #{{reviewDetail.trip_unique_id}} </p>
+                        <p class="font-weight-medium truncate mb-0" *ngIf="reviewDetail.user_details">{{reviewDetail.user_details.country_phone_code}}        {{reviewDetail.user_details.phone}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="remove-last-border">
+                    <div class="mb-3 border-bottom justify-content-between">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-2">{{ 'label-title.user_comment' | translate }}</p>
+                                    <p class="text-muted mb-0 text-small" *ngIf="timezone_for_display_date">
+                                        {{_helper.moment(reviewDetail.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(reviewDetail.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <p class="text-muted mb-0 text-small">{{ 'label-title.comment' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="mt-2">
+                                    {{(!reviewDetail.userReview || reviewDetail.userReview === '' )?'N/A' : reviewDetail.userReview}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="text-muted mb-0 text-small">{{ 'label-title.rating' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12">
+                                <rating class="rating" [readonly]="true" [max]="5" [(ngModel)]="reviewDetail.userRating"
+                                    [customTemplate]="t">
+                                </rating>
+                                <ng-template #t let-index="index" let-value="value">{{index < value ? '' : ''}}</ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'heading-title.driver' | translate | uppercase }}" class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-4 text-end" *ngIf="reviewDetail.provider_details">
+                        <a href="javascript:;">
+                            <img alt="data.name" (error)="$event.target.src = USER_DEFAULT_IMAGE"
+                                class="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center"
+                                [src]="IMAGE_URL + reviewDetail.provider_details.picture">
+                        </a>
+                    </div>
+                    <div class="col-lg-9 col-8 m-auto p-0">
+                        <p class="font-weight-medium truncate mb-0" *ngIf="reviewDetail.provider_details">{{reviewDetail.provider_details.first_name}} {{reviewDetail.provider_details.last_name}}</p>
+                        <p class="text-muted mb-0 truncate text-small">{{'label-title.trip_id' | translate}} :
+                            #{{reviewDetail.trip_unique_id}} </p>
+                        <p class="font-weight-medium truncate mb-0" *ngIf="reviewDetail.provider_details">{{reviewDetail.provider_details.country_phone_code}}  {{reviewDetail.provider_details.phone}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="remove-last-border">
+                    <div class="mb-3 border-bottom justify-content-between">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-2">{{ 'label-title.driver_comment' | translate }}</p>
+                                    <p class="text-muted mb-0 text-small" *ngIf="timezone_for_display_date">{{_helper.moment(reviewDetail.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(reviewDetail.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <p class="text-muted mb-0 text-small">{{ 'label-title.comment' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="mt-2">
+                                    {{(!reviewDetail.providerReview || reviewDetail.providerReview === '' )?'N/A' : reviewDetail.providerReview}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="text-muted mb-0 text-small">{{ 'label-title.rating' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-2 mb-2">
+                            <div class="col-12">
+                                <rating class="rating" [readonly]="true" [max]="5" [(ngModel)]="reviewDetail.providerRating"
+                                    [customTemplate]="t">
+                                </rating>
+                                <ng-template #t let-index="index" let-value="value">{{index < value ? '' : ''}}</ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</ng-template>

@@ -1,0 +1,14 @@
+<div class="d-flex align-items-center justify-content-center">
+    <div class="card w-md-75 w-lg-50 py-4 px-3" >
+        <a class="c-pointer">
+            <div class="text-center">
+                <img class="logo-single pb-2" [src]="IMAGE_URL + 'web_images/user_logo.png'" alt="Logo">
+            </div>
+        </a>
+        <p class="h2 mb-0 text-center"> {{ 'heading-title.welcome-to'  | translate }} {{ 'app-title.app-name'  | translate }} </p>
+        <h4 class="mb-4 text-center">{{'label-title.subscription-expired' | translate}}</h4>
+        <div class="text-center">
+            <button class="btn btn-primary" (click)="onClickAddCard()">{{'button-title.subscribe-now' | translate}}</button>
+        </div>
+    </div>
+</div>

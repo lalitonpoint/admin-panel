@@ -1,0 +1,269 @@
+<div class="row">
+  <div class="col"></div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <app-heading title="{{'menu.dashboards' | translate}}"></app-heading>
+    <app-breadcrumb title="{{'menu.dashboards' | translate}}"></app-breadcrumb>
+    <div class="d-inline-block mr-1 mb-2" style="width: 200px;">
+      <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno" [searchable]="true"
+          notFoundText="{{'validation-title.no-data-found' | translate}}" [clearable]="false"
+          (change)="onChangeCountry($event)" placeholder="{{'label-title.country' | translate}}" [(ngModel)]="country">
+          <ng-option value="all">
+              {{'label-title.all'| translate}}
+          </ng-option>
+          <ng-option *ngFor="let country of country_list" [value]="country">
+              {{country.countryname | titlecase}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="separator mb-5"></div>
+  </div>
+</div>
+
+
+<div class="row mb-2">
+  <div class="col-12">
+   <div class="d-flex align-items-center flex-wrap mb-2" dropdown>
+        <button id="button-basic" dropdownToggle type="button"
+          class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option"
+          aria-controls="dropdown-basic">
+          {{'button-title.search-by' | translate}} : {{itemSelected.label | translate}} <span class="caret"></span>
+        </button>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu c-pointer ml-3 rtl-right-0" role="menu" aria-labelledby="button-basic" style="width: fit-content;">
+          <li role="menuitem" *ngFor="let item of itemOptions"><a
+              [ngClass]="item.value === itemSelected.value ? 'dropdown-item active' : 'dropdown-item'"
+              (click)="onChangeSearchBy(item)">{{item.label | translate}}</a></li>
+        </ul>
+        <div *ngIf="itemSelected.value == '6'" class="date-sm m-1">
+          <input [hidden]="direction=='rtl'" class="form-control theme_date_picker" placeholder="{{'label-title.select-dates' | translate}}"
+            [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetrans' }" #drp="bsDaterangepicker"
+            [(ngModel)]="item_bsRangeValue" bsDaterangepicker [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate" *ngIf="created_date">
+          <input [hidden]="direction=='ltr'" class="form-control theme_date_picker" placeholder="{{'label-title.select-dates' | translate}}"
+            [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldashboardpicker' }" #drp="bsDaterangepicker"
+            [(ngModel)]="item_bsRangeValue" bsDaterangepicker [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate" *ngIf="created_date">
+        </div>
+        <button *ngIf="itemSelected.value == '6'" id="button-basic5" type="button" class="btn btn-primary btn-xs m-1" (click)="apply()">
+          {{'button-title.apply' | translate}} <span class="caret"></span>
+        </button>
+      </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4  mb-4">
+    <div class="card">
+      <div class="card-body mb-0 mb-lg-4">
+        <h3 class="card-title font-weight-semiBlod">{{ 'heading-title.register-details' | translate }}</h3>
+        <div class="dashboard-list-with-user">
+          <div class="align-items-center row mb-3">
+            <i class="col-3 text-start simple-icon-people h-100 text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CUSTOMER].is_permission">{{'label-title.user' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CUSTOMER].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CUSTOMER].is_permission">{{'label-title.user' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_users}}</p>
+          </div>
+          <div class="align-items-center row mb-3">
+            <i class="col-3 iconsminds-business-man text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.DRIVER].is_permission">{{'label-title.driver' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.DRIVER].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.DRIVER].is_permission">{{'label-title.driver' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_providers}}</p>
+          </div>
+          <div class="align-items-center row mb-3">
+            <i class="col-3 iconsminds-handshake text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.PARTNER].is_permission">{{'label-title.partner' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.PARTNER].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.PARTNER].is_permission">{{'label-title.partner' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_partner}}</p>
+          </div>
+          <div class="align-items-center row mb-3">
+            <i class="col-3 iconsminds-office text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CORPORATE].is_permission">{{'label-title.corporate' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CORPORATE].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CORPORATE].is_permission">{{'label-title.corporate' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_corporate}}</p>
+          </div>
+          <div class="align-items-center row mb-3" *ngIf="country_id == 'all'">
+            <i class="col-3 simple-icon-globe text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.COUNTRY].is_permission">{{'label-title.country' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.COUNTRY].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.COUNTRY].is_permission">{{'label-title.country' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_countries}}</p>
+          </div>
+          <div class="align-items-center row mb-0 mb-lg-3">
+            <i class="col-3 iconsminds-hotel text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CITY].is_permission">{{'label-title.city' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CITY].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CITY].is_permission">{{'label-title.city' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_cities}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-4">
+    <div class="card">
+      <div class="card-body mb-0 mb-lg-4">
+        <h3 class="card-title font-weight-semiBlod">{{ 'heading-title.trip-details' | translate }}</h3>
+        <div class="dashboard-list-with-user">
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-basket-coins h-100 text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize">{{'label-title.total-trips' | translate}}</p>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_trips}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-loading-3 text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.RUNNING].is_permission">{{'label-title.running-trips' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.RUNNING].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.RUNNING].is_permission">{{'label-title.running-trips' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_trips_running}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-yes text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.COMPLETED].is_permission">{{'label-title.completed-trips' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.COMPLETED].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.COMPLETED].is_permission">{{'label-title.completed-trips' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_trips_completed}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-calendar-4 text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.SCHDULED].is_permission">{{'label-title.scheduled-trip' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.SCHDULED].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.SCHDULED].is_permission">{{'label-title.scheduled-trip' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_trips_schedule}}</p>
+          </div>
+          <div class="align-items-center row mb-0 mb-lg-3">
+            <i class="col-3 iconsminds-arrow-x-left text-primary"></i>
+            <p class="col-5 font-weight-medium mb-0 text-capitalize" *ngIf="!_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CANCELLED].is_permission">{{'label-title.cancelled-trip' | translate}}</p>
+            <a [routerLink]="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CANCELLED].path" class="col-5 font-weight-medium mb-0 text-capitalize redirect-a-tag" *ngIf="_helper.REDIRECT_PERMISSION[_helper.REDIRECT_PERMISSION_TYPE.CANCELLED].is_permission">{{'label-title.cancelled-trip' | translate}}</a>
+            <p class="col-4 text-end font-weight-medium mb-0">{{list.total_trips_cancelled}}</p>
+          </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-4">
+    <div class="card">
+      <div class="card-body mb-4 paymentDetails">
+        <h3 class="card-title font-weight-semiBlod">{{ 'heading-title.payment-details' | translate }}</h3>
+        <div class="dashboard-list-with-user">
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-financial h-100 text-primary"></i>
+            <p class="col-3 font-weight-medium mb-0 text-capitalize">{{'label-title.total' | translate}}</p>
+            <p class="col-6 text-end font-weight-medium mb-0">{{list.Total_payment | roundpipe:2}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 simple-icon-wallet text-primary"></i>
+            <p class="col-3 font-weight-medium mb-0 text-capitalize">{{'label-title.wallet' | translate}}</p>
+            <p class="col-6 text-end font-weight-medium mb-0">{{list.total_wallet_payment | roundpipe:2}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-credit-card-3 text-primary"></i>
+            <p class="col-3 font-weight-medium mb-0 text-capitalize">{{'label-title.card' | translate}}</p>
+            <p class="col-6 text-end font-weight-medium mb-0">{{list.total_card_payment | roundpipe:2}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-dollar text-primary"></i>
+            <p class="col-3 font-weight-medium mb-0 text-capitalize">{{'label-title.cash' | translate}}</p>
+            <p class="col-6 text-end font-weight-medium mb-0">{{list.total_cash_payment | roundpipe:2}}</p>
+          </div>
+          <div class="align-items-center row  mb-3">
+            <i class="col-3 iconsminds-coins text-primary"></i>
+            <p class="col-3 font-weight-medium mb-0 text-capitalize">{{'label-title.promo' | translate}}</p>
+            <p class="col-6 text-end font-weight-medium mb-0">{{list.total_promo_payment | roundpipe:2}}</p>
+          </div>
+          <div class="align-items-center row  mb-0 mb-lg-3">
+            <i class="col-3 iconsminds-coins-2 text-primary"></i>
+            <p class="col-3 font-weight-medium mb-0 text-capitalize text-nowrap">{{'label-title.remaining' | translate}}</p>
+            <p class="col-6 text-end font-weight-medium mb-0">{{list.total_remaining_payment | roundpipe:2}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 ">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 class="card-title font-weight-semiBlod">{{'heading-title.earning-details' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 info-tooltip" style="top: 2px;" tooltip="{{'tooltip-title.earning-details-tooltip' | translate}}" placement="right"></i></span></h3>
+        <div class="mb-5">
+          <div class="chart-container chart">
+            <app-pie-chart *ngIf="list.Total_payment > 0" [shadow]="true" [options]="chartDataConfig.pieChartOptions" [data]="{'total' : list.Total_payment,'total_admin_earning' : list.total_admin_earning , 'total_provider_earning' : list.total_provider_earning}">
+            </app-pie-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 ">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 class="card-title font-weight-semiBlod">{{'heading-title.payment-details' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 info-tooltip" style="top: 2px;" tooltip="{{'tooltip-title.payment-details-tooltip' | translate}}" placement="right"></i></span></h3>
+        <div class="mb-5">
+          <div class="chart-container chart">
+            <app-pie-chart [shadow]="true" [options]="chartDataConfig.pieChartOptions" [data]="list">
+            </app-pie-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="earning-chart col-md-12 mb-4">
+  <app-sales-chart-card></app-sales-chart-card>
+</div>
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex">
+      <h3 class="card-title font-weight-semiBlod">{{'heading-title.order-bar-chart' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 info-tooltip" style="top: 2px;" tooltip="{{'tooltip-title.order-bar-chart-tooltip' | translate}}" placement="right"></i></span></h3>
+      <div class="ml-3 d-block d-md-inline-block position-relative">
+        <ng-container *ngIf="created_date">
+          <div class="float-md-left mr-1 mb-1" dropdown>
+              <div (clickOutside)="dropdown3.hide()" class=" d-inline-block position-relative">
+                  <div class="btn-group" dropdown #dropdown3="bs-dropdown" [autoClose]="true" [isOpen]="false">
+                      <button dropdownToggle type="button"
+                          class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle">
+                          {{selected_start_month | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{selected_end_month | date:_helper.DATE_FORMAT.MMM_YYYY}}<span
+                              class="caret"></span>
+                      </button>
+                      <ul *dropdownMenu class="dropdown-menu week_date_list date-filter-dropdown-scroll" role="menu">
+                        <li role="menuitem" *ngFor="let week_day of week_days; let i= index">
+                            <a class="dropdown-item" [ngClass]="{'active':selected_end_month === week_day[1]}"
+                                (click)="changeMonts(week_days[i][0],week_days[i][1])" href="javascript:;">
+                                  {{week_days[i][0] | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{week_days[i][1] | date:_helper.DATE_FORMAT.MMM_YYYY}}
+                            </a>
+                        </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!created_date">
+          <div class="float-md-left mr-1 mb-1" dropdown>
+              <div (clickOutside)="dropdown3.hide()" class=" d-inline-block position-relative">
+                  <div class="btn-group" dropdown #dropdown3="bs-dropdown" [autoClose]="true" [isOpen]="false">
+                      <button dropdownToggle type="button"
+                          class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle">
+                          {{selected_start_month | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{selected_end_month | date:_helper.DATE_FORMAT.MMM_YYYY}}<span
+                              class="caret"></span>
+                      </button>
+                      <ul *dropdownMenu class="dropdown-menu week_date_list date-filter-dropdown-scroll" role="menu">
+                          <li role="menuitem" *ngFor="let week_day of week_days; let i= index">
+                              <a class="dropdown-item" [ngClass]="{'active':selected_end_month === week_day}"
+                                  (click)="changeMonts(week_days[i+1],week_days[i])" href="javascript:;" *ngIf="i <= week_days.length - 2">
+                                    {{week_days[i+1] | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{week_days[i] | date:_helper.DATE_FORMAT.MMM_YYYY}}
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+        </ng-container>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 mb-5">
+        <div class="chart-container chart">
+            <app-bar-chart [shadow]="true" [options]="chartDataConfig.barChartOptions" [data]="barChartData" [bar_chart_item_bsRangeValue]="bar_chart_item_bsRangeValue" #barChartComponent>
+            </app-bar-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

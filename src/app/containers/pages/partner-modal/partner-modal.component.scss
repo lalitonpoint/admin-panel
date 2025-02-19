@@ -1,0 +1,85 @@
+.card-tabs .nav-tabs {
+    padding: 0 !important;
+}
+
+.input-group-prepend {
+    margin-right: -2px;
+}
+
+#user-chat.app-row {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+#user-chat .chat-app .chat-text-left {
+    padding-left: 0px;
+}
+
+.chat-input-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.chat-app .scroll {
+    height: calc(100vh - 90px - 150px);
+}
+
+.btn-circle.hero-circle-button {
+    position: relative;
+    margin-left: 10px;
+}
+
+#fileInput,
+#file {
+    display: none;
+}
+
+.mlr-20 {
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.card-bottom-buttons {
+    padding: 0.3rem;
+    left: 14px;
+    bottom: 15px;
+}
+.idProof  {
+    padding: 0.3rem;
+    left: 0px;
+    bottom: 0px;
+}
+
+@media (max-width: 575px) {
+    .card-bottom-buttons {
+        left: 33%;
+    }
+}
+@media (max-width: 414px) {
+    .card-bottom-buttons {
+        left: 29%;
+    }
+}
+.doc .card-bottom-buttons{
+    padding: 0.3rem;
+    left: 23px ;
+    bottom: 16px ;
+}
+
+.user-profile{
+    min-width: 135px;
+    min-height: 135px;
+    max-height: 135px;
+    max-width: 135px;
+}
+
+.document-list{
+    min-width: 130px;
+    min-height: 130px;
+    max-height: 130px;
+    max-width: 130px;
+    border-radius: 0.75rem;
+}
+.form-control:disabled, .form-control[readonly]{
+    background-color: #e9ecef !important;
+}

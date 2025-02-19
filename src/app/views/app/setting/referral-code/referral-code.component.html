@@ -1,0 +1,175 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <app-breadcrumb></app-breadcrumb>
+        <div class="d-flex justify-content-between mb-4 filter-div">
+            <div class="d-flex flex-wrap">
+                <div class="d-block d-md-inline-block position-relative" >
+                    <div class="mr-1 mb-1" dropdown>
+                        <button id="button-basic" dropdownToggle type="button"
+                            class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" aria-controls="dropdown-basic">
+                            {{'button-title.search-by' | translate}} : {{itemOrder.label | translate}} <span
+                                class="caret"></span>
+                        </button>
+                        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                            aria-labelledby="button-basic">
+                            <li role="menuitem" *ngFor="let item of itemOptionsOrders" [ngClass]="item.isShow == false ? 'd-none' : ''">
+                                <a [ngClass]="item.value === itemOrder.value ? 'dropdown-item active' : 'dropdown-item'"
+                                    [checked]="item.value" (click)="onChangeOrderBy(item)">{{item.label |
+                                    translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="d-inline-block" >
+                    <div class="search-sm d-inline-block mr-1 mb-1 align-top">
+                        <input class="form-control" (keypress)="_helper.space_validation($event)" placeholder="{{'label-title.search' | translate }}"
+                            [(ngModel)]="search_value">
+                    </div>
+                </div>
+
+
+                <div class=" d-inline-block mr-1 mb-1 align-top">
+                    <div class="" dropdown>
+                        <button id="button-basic3" type="button" class="btn btn-primary btn-xs mr-1 mb-1"
+                            (click)="apply(search_value)">
+                            {{'button-title.apply' | translate}} <span class="caret"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class=" d-inline-block mr-1 mb-1 align-top">
+                    <div class="" dropdown>
+                        <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-1"
+                            (click)="clear()" [disabled]="search_value == '' && is_clear_disabled" [ngClass]="{'btn-disabled':(search_value == '' && is_clear_disabled)}">
+                            {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="float-right" *ngIf="showItemsPerPage">
+                <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                <span dropdown class="d-inline-block position-relative">
+                    <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                        {{itemsPerPage}}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                        <li role="menuitem" *ngFor="let item of itemOptionsPerPage">
+                            <a [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                (click)="onChangeItemsPerPage(item)">{{item | translate}}</a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+            
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mb-4">
+                <tabset class="separator-tabs">
+                    <tab heading="{{'label-title.user' | translate | uppercase}}" (selectTab)="changeType(PANEL_TYPE.USER)">
+                        <div class="card">
+                            <div class="card-body" *ngIf="referralList">
+                                <div class="table-responsive">
+                                    <table aria-describedby="disc" class="table table-hover">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">{{ 'heading-title.id' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.user' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.phone' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.email' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.referral-uses' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.referral' | translate}}</th>
+                                    </thead>
+                                    <tbody *ngIf="referralList.length != 0">
+                                        <tr *ngFor="let list of referralList | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}" class="c-pointer" (click)="onRefferal(list)">
+                                            <th scope="row">{{list.unique_id}}</th>
+                                            <td>{{list.first_name}} {{list.last_name}}</td>
+                                            <td>{{list.country_phone_code}}  {{list.phone}}</td>
+                                            <td>{{list.email}}</td>
+                                            <td><span class="badge badge-dark">{{list.total}}</span></td>
+                                            <td>{{list.code}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="referralList.length == 0">
+                                        <tr>
+                                            <th id="head" colspan="10" class="text-center">
+                                                <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="referralList">
+                            <div class="col-12" *ngIf="referralList.length != 0">
+                                <div class=" my-4">
+                                    <div class="row" >
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                                            nextLabel="{{'wizard.next' | translate}}" [ngClass]="darkMode ? 'dark' : ''" ></pagination-controls>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                    <tab heading="{{'label-title.provider' | translate | uppercase}}" (selectTab)="changeType(PANEL_TYPE.PROVIDER)">
+                        <div class="card">
+                            <div class="card-body" *ngIf="referralList">
+                                <div class="table-responsive">
+                                    <table aria-describedby="disc" class="table table-hover">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">{{ 'heading-title.id' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.user' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.phone' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.email' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.referral-uses' | translate}}</th>
+                                            <th scope="col">{{ 'heading-title.referral' | translate}}</th>
+                                    </thead>
+                                    <tbody *ngIf="referralList.length != 0">
+                                        <tr *ngFor="let list of referralList | paginate: { itemsPerPage: itemsPerPage, currentPage:  currentPage, totalItems: count * itemsPerPage}" class="c-pointer" (click)="onRefferal(list)">
+                                            <th scope="row">{{list.unique_id}}</th>
+                                            <td>{{list.last_name}}</td>
+                                            <td>{{list.country_phone_code}}  {{list.phone}}</td>
+                                            <td>{{list.email}}</td>
+                                            <td><span class="badge badge-dark">{{list.total}}</span></td>
+                                            <td>{{list.code}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="referralList.length == 0">
+                                        <tr>
+                                            <th id="head" colspan="10" class="text-center">
+                                                <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="referralList">
+                            <div class="col-12" *ngIf="referralList.length != 0">
+                                <div class=" my-4">
+                                    <div class="row" >
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+                                            nextLabel="{{'wizard.next' | translate}}" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-referral-details #ReferralDetails></app-referral-details>

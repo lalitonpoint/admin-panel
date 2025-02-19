@@ -1,0 +1,110 @@
+#profileFileInput,
+#vehicleDocfile,
+#docfileInput {
+    display: none;
+}
+
+.list-thumbnail {
+    border-radius: 0.1rem;
+    padding: 0;
+    border: initial;
+    max-width: unset;
+    height: 85px;
+    object-fit: cover;
+    min-width: 85px;
+}
+
+.card-bottom-buttons {
+    padding: 0.3rem;
+    left: 14px;
+    bottom: 15px;
+}
+
+@media (max-width: 575px) {
+    .card-bottom-buttons {
+        left: 33%;
+    }
+}
+
+@media (max-width: 414px) {
+    .card-bottom-buttons {
+        left: 29%;
+    }
+}
+
+.user-profile,
+.vehicledocImage {
+    min-width: 135px;
+    min-height: 135px;
+    max-height: 135px;
+    max-width: 135px;
+}
+
+.rent-vehicle-image {
+    min-width: 248px;
+    max-width: 248px;
+    min-height: 196px;
+    max-height: 196px;
+}
+
+.btn-circle.hero-circle-button {
+    position: relative;
+    margin-left: 10px;
+}
+
+.vehicledocImage {
+    border-top-left-radius: 1.1rem;
+    border-bottom-left-radius: 1.1rem;
+    border-top-right-radius: 1.1rem !important;
+    border-bottom-right-radius: 1.1rem !important;
+}
+
+.doc {
+    .list-thumbnail {
+        border-radius: 0.1rem;
+        padding: 0;
+        border: initial;
+        max-width: unset;
+        height: 85px;
+        object-fit: cover;
+        min-width: 85px;
+    }
+
+    .dInfo-card-img-left {
+        width: 100%;
+        border-top-left-radius: 1.1rem !important;
+        border-bottom-left-radius: 1.1rem !important;
+        border-top-right-radius: 1.1rem !important;
+        border-bottom-right-radius: 1.1rem !important;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rounded .dInfo-card-img-left {
+        border-top-left-radius: 1.1rem;
+        border-bottom-left-radius: 1.1rem;
+        border-top-right-radius: 1.1rem !important;
+        border-bottom-right-radius: 1.1rem !important;
+    }
+
+    .card-bottom-buttons {
+        padding: 0.3rem;
+        left: 8px !important;
+        bottom: 8px;
+    }
+}
+
+.vehicleDoc .card-bottom-buttons {
+    left: 6px !important;
+    bottom: 6px;
+}
+
+.documnet_img {
+    max-height: 150px;
+    min-height: 150px;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #e9ecef !important;
+}

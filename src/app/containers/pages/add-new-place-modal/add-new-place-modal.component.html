@@ -1,0 +1,41 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header align-items-baseline">
+                    <h4 class="modal-title pull-left">{{'label-title.rich-area-surge' | translate }}</h4>
+                    <span class="mb-0 ml-2 text-small c-pointer text-theme-1" tooltip="{{'label-title.rich-area-surge-tootltip' | translate}}" placement="right"> <i class="simple-icon-info"></i> </span>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-2">
+                    <form #surgeForm="ngForm" (ngSubmit)="updateRichArea(rich_area_surge_list)" noPasteDrop>
+                        <div *ngFor="let surge of rich_area_surge_list ; let i =index" class="mt-4 border-bottom">
+                            <div class="form-group row">
+                                <div class="col-sm-8 col-7">
+                                    <p for="inputEmail3" class="mb-1">{{surge.title | titlecase}} {{'label-title.surge-multiplier' | translate}}</p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <div class="input-group">
+                                        <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)" class="form-control" name="surge_multiplier-{{i}}" [value]="surge.surge_multiplier" [(ngModel)]="surge.surge_multiplier">
+                                        <!-- Error messages for individual validation -->
+                                        <div class="error top-100" *ngIf="surge.isErrorRequired">{{ 'validation-title.surge-multipler-is-required' | translate }}</div>
+                                        <div class="error top-100" *ngIf="surge.isErrorMaxValue">{{ 'validation-title.profit-validation' | translate }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input id="docfileInput" type="submit" />
+                    </form>
+                    <div *ngIf="rich_area_surge_list.length == 0">
+                        <div class="card-body text-center font-weight-bold text-capitalize">{{'validation-title.no-data-found' | translate}}</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" [disabled]="btnDisable"  onclick="document.getElementById('docfileInput').click();">{{'button-title.update' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

@@ -1,0 +1,48 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.app-url-settings' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="appUrlForm" class="tooltip-label-center">
+                        <p class="text-muted text-small mb-2 text-primary font-weight-bold">
+                            {{'heading-title.android-app-url' | translate | uppercase}}
+                        </p>
+                        <div class="mb-4">
+                            <div class="form-group mb-3">
+                                <label for="a-clienturl">{{'label-title.android-client-app-url' | translate }}</label>
+                                <input type="text" name="" id="a-clienturl" class="form-control" formControlName="android_client_app_url">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="a-driverurl">{{'label-title.android-driver-app-url' | translate }}</label>
+                                <input type="text" name="" id="a-driverurl" class="form-control" formControlName="android_driver_app_url">
+                            </div>
+                        </div>
+                        <p class="text-muted text-small mb-2 text-primary font-weight-bold">
+                            {{'heading-title.ios-app-url' | translate | uppercase}}
+                        </p>
+                        <div class="mb-4">
+                            <div class="form-group mb-3">
+                                <label for="i-clienturl">{{'label-title.ios-client-app-url' | translate }}</label>
+                                <input type="text" name="" id="i-clienturl" class="form-control" formControlName="ios_client_app_url">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="i-driverurl">{{'label-title.ios-driver-app-url' | translate }}</label>
+                                <input type="text" name="" id="i-driverurl" class="form-control" formControlName="ios_driver_app_url">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary float-right" (click)="update()">{{'button-title.update' | translate
+                        }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

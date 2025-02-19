@@ -1,0 +1,95 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.wsal-configuration' | translate }}</h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showWsalConfigurationModal()">
+                    {{'button-title.edit' | translate }} </button>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.wsal-client-id' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.wsal_client_id}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.wsal-app-id' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.wsal_app_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.wsal-app-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.wsal_app_id}}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.wsal-configuration' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="wsalConfigurationForm" class="tooltip-label-center">
+                        <div class="d-flex flex-row justify-content-between mb-2">
+                            <div class="flex-grow-1">
+                                <a href="javascript:;">
+                                    <p class="font-weight-medium mb-0">{{'label-title.is-use-wsal-service' | translate }}</p>
+                                </a>
+                            </div>
+                            <div class="comment-likes">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" id="customSwitch"
+                                        formControlName="is_wsal_service_use" class="custom-control-input">
+                                    <label for="customSwitch" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="wsal_client_id">{{'label-title.wsal-client-id' | translate}}</label>
+                                <input type="text" id="wsal_client_id" class="form-control"
+                                    name="wsal_client_id" formControlName="wsal_client_id">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="wsal_app_id">{{'label-title.wsal-app-id' | translate}}</label>
+                                <input type="text" id="wsal_app_id" class="form-control"
+                                    name="wsal_app_id" formControlName="wsal_app_id">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="wsal_app_key">{{'label-title.wsal-app-key' | translate}}</label>
+                                <input type="text" id="wsal_app_key" class="form-control"
+                                    name="wsal_app_key" formControlName="wsal_app_key">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" (click)="update()"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

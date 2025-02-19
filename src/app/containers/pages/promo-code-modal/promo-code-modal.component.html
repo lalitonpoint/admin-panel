@@ -1,0 +1,97 @@
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{promo_detail.promocode}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-4">
+        <div class="row mb-3">
+            <div class="col-6">
+                <p class="text-muted text-small mb-1">{{'label-title.promo-code' | translate }}</p>
+                <p class="mb-3"><b>{{promo_detail.promocode}}</b></p>
+            </div>
+            <div class="col-6">
+                <p class="text-muted text-small mb-1">{{'label-title.country' | translate }}</p>
+                <p class="mb-3"><b>{{promo_detail.country_details.countryname}}</b></p>
+            </div>
+            <div class="col-6">
+                <p class="text-muted text-small mb-1">{{'label-title.promo-type' | translate }}</p>
+                <p class="mb-3" *ngIf="promo_detail.code_type == 1"><b>{{'label-title.absolute' | translate}}</b></p>
+                <p class="mb-3" *ngIf="promo_detail.code_type == 2"><b>{{'pages.percentage' | translate}}</b></p>
+            </div>
+            <div class="col-6">
+                <p class="text-muted text-small mb-1">{{'label-title.value' | translate }}</p>
+                <p class="mb-3"><b>{{promo_detail.code_value}}</b></p>
+            </div>
+        </div>
+        <div class="" *ngIf="used_promo_array">
+            <div class="table-responsive d-none d-sm-block promo-table">
+                <table aria-describedby="disc" class="table">
+                    <thead class="">
+                        <tr>
+                            <th scope="col" class="font-weight-medium pl-0">{{'label-title.trip-id' | translate}}</th>
+                            <th scope="col" class="font-weight-medium">{{'label-title.details' | translate }}</th>
+                            <th scope="col" class="font-weight-medium">{{'label-title.paid-by' | translate}}</th>
+                            <th scope="col" class="font-weight-medium">{{'label-title.fees' | translate}}</th>
+                            <th scope="col" class="font-weight-medium">{{'label-title.total' | translate}}</th>
+                            <th scope="col" class="font-weight-medium">{{'label-title.promo-amount' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let user of used_promo_array">
+                        <tr>
+                            <td class="pl-0"><b>{{user.trip_details.unique_id}}</b></td>
+                            <td><b>{{user.user_details.unique_id}}</b><br><span class="text-muted text-small" style="width: 20px;overflow: hidden;">{{user.user_details.email}}</span></td>
+                            <td><b>
+                                <span class="text-small" *ngIf="user.trip_details.payment_mode == 1">{{'label-title.cash' | translate}}</span>
+                                <span class="text-small" *ngIf="user.trip_details.payment_mode == 0">{{'label-title.card' | translate}}</span>
+                            </b>
+                            </td>
+                            <td><b>{{user.trip_details.service_total_in_admin_currency.toFixed(_helper.to_fixed_number)}}</b></td>
+                            <td><b>{{user.trip_details.total.toFixed(_helper.to_fixed_number)}}</b></td>
+                            <td><b>{{user.trip_details.promo_payment.toFixed(_helper.to_fixed_number)}}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive d-block d-sm-none promo-table">
+                <table aria-describedby="disc" class="table promo-table">
+                    <tbody *ngFor="let user of used_promo_array">
+                        <tr>
+                            <th id="value" class="pl-0 font-weight-medium">{{'label-title.trip-id' | translate }} :</th>
+                            <td><b>{{user.trip_details.unique_id}}</b></td>
+                        </tr>
+                        <tr>
+                            <td  class="pl-0">{{'label-title.details' | translate }} :</td>
+                            <td><b>{{user.user_details.unique_id}}</b><br><span class="text-muted text-small">{{user.user_details.email}}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">{{'label-title.paid-by' | translate}} :</td>
+                            <td><b>
+                                <span class="text-small" *ngIf="user.trip_details.payment_mode == 1">{{'label-title.cash' | translate}}</span>
+                                <span class="text-small" *ngIf="user.trip_details.payment_mode == 0">{{'label-title.card' | translate}}</span>
+                            </b></td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">{{'label-title.fees' | translate}} :</td>
+                            <td><b>{{user.trip_details.service_total_in_admin_currency.toFixed(_helper.to_fixed_number)}}</b></td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">{{'label-title.total' | translate}} :</td>
+                            <td><b>{{user.trip_details.total.toFixed(_helper.to_fixed_number)}}</b></td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">{{'label-title.promo-amount' | translate}} :</td>
+                            <td><b>{{user.trip_details.promo_payment.toFixed(_helper.to_fixed_number)}}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div *ngIf="used_promo_array == '' " class="text-center">
+            <p class="text-small text-muted">{{'label-title.details_not_found' | translate}}</p>
+        </div>
+
+    </div>
+</ng-template>

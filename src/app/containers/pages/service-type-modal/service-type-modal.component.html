@@ -1,0 +1,132 @@
+<ng-template #template>
+  <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+    <div role="document" class="modal-dialog modal-right">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left" *ngIf="!is_edit">{{'heading-title.add-new-service-type' | translate }}</h4>
+          <h4 class="modal-title pull-left" *ngIf="is_edit">{{'heading-title.edit-service-type' | translate}}</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="typeFrom" class="tooltip-label-center" noPasteDrop appFocus>
+            <div class="mb-3">
+              <div class="form-group">
+                <label for="vehicle_type">{{'label-title.vehicle-type' | translate}}</label>
+                <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                  formControlName="vehicle_type" [readonly]="is_edit">
+                  <ng-option [value]="helper.VEHICLE_TYPE.NORMAL">{{'label-title.normal' | translate}}</ng-option>
+                  <ng-option [value]="helper.VEHICLE_TYPE.EV">{{'label-title.ev' | translate}}</ng-option>
+                </ng-select>
+                <div
+                  *ngIf="typeFrom.controls['vehicle_type'].invalid && (typeFrom.controls['vehicle_type'].dirty || typeFrom.controls['vehicle_type'].touched)"
+                  class="error">
+                  <span *ngIf="typeFrom.controls['vehicle_type'].errors.required">
+                    {{'label-title.vehicle-type' | translate}} {{'label-title.is-required' |
+                    translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-between flex-wrap">
+              <label for="exampleInputEmail1 col-sm-6 col-12">{{'label-title.service-type-name' | translate }}</label>
+              <div class="position-relative col-sm-6 col-12">
+                <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" class="form-control"
+                  formControlName="service_type_name" (keypress)="helper.space_validation($event)">
+                <div
+                  *ngIf="typeFrom.get('service_type_name').errors?.required && typeFrom.get('service_type_name').touched"
+                  class="invalid-tooltip">
+                  {{'label-title.service-type-name' | translate}} {{'label-title.is-required' | translate }}</div>
+              </div>
+            </div>
+            <div class="mt-4 ">
+              <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+                <span>{{'label-title.business' | translate}}</span>
+                <input type="checkbox" id="businessSwitch" formControlName="business_type" class="custom-control-input" (change)="businessChange($event)">
+                <label for="businessSwitch" class="custom-control-label"></label>
+              </div>
+            </div>
+            <div class="mt-4" *ngIf="is_edit">
+              <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+                <span>{{'label-title.default-select' | translate }}</span>
+                <input type="checkbox" id="defaultSelectwitch" class="custom-control-input"
+                  formControlName="defaultSelect">
+                <label for="defaultSelectwitch" class="custom-control-label"></label>
+              </div>
+            </div>
+            <div class="mt-4 border-top pt-3">
+              <div class="row">
+                <div class="col-sm-6 col-12 mb-3">
+                  <div class="text-center">
+                    <label class="mb-3">{{'label-title.service-type-image' | translate }}</label>
+                    <a>
+                      <img *ngIf="!is_edit" alt="Card image cap"
+                        [src]="upload_vehicle_imageurl === '' ? '/assets/img/Taxi/Taxi.jpg' : upload_vehicle_imageurl "
+                        class="card-img-top">
+                      <img *ngIf="is_edit" alt="Card image cap"
+                        [src]="upload_vehicle_imageurl===''? '/assets/img/Taxi/Taxi.jpg':upload_vehicle_imageurl"
+                        class="card-img-top" onerror="this.src = '../../../../assets/img/Taxi/Taxi.jpg'">
+                    </a>
+                  </div>
+                  <div class="input-group mt-2">
+                    <div class="custom-file">
+                      <input type="file" id="inputGroupFile02" class="custom-file-input"
+                        (change)="onSelectImageFile($event, 1)">
+                      <label for="inputGroupFile02" class="custom-file-label">{{'label-title.choose-a-file' |
+                        translate}}</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-12 mb-3">
+                  <div class="text-center">
+                    <label class="mb-3">{{'label-title.service-type-map-image' | translate }}</label>
+                    <div class="d-flex justify-content-center align-items-center mapImage">
+                      <img *ngIf="!is_edit" alt="Card image cap "
+                        [src]="upload_mappin_imageurl === '' ? '/assets/img/Taxi/pickup.jpg' : upload_mappin_imageurl "
+                        class="card-img-top pickupImg">
+                      <img *ngIf="is_edit" alt="Card image cap "
+                        [src]="upload_mappin_imageurl===''?'/assets/img/Taxi/pickup.jpg':upload_mappin_imageurl"
+                        class="card-img-top pickupImg" onerror="this.src = '../../../../assets/img/Taxi/pickup.jpg'">
+                    </div>
+                  </div>
+                  <div class="input-group mt-2">
+                    <div class="custom-file">
+                      <input type="file" id="inputGroupFile03" class="custom-file-input"
+                        (change)="onSelectImageFile($event, 2)">
+                      <label for="inputGroupFile03" class="custom-file-label">{{'label-title.choose-a-file' |
+                        translate}}</label>
+                    </div>
+                    <div class="input-group-append"></div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <p class="text-muted text-small mb-1">{{'label-title.service-type-image' | translate }}</p>
+                  <p class="mb-3">
+                    {{'label-title.upload-image-size-with-in-widthxheight-min' |
+                    translate}}100x80{{'label-title.and-max' | translate}}500x300{{'label-title.image-ratio-should-be' |
+                    translate}}1.67{{'label-title.and-upload-only' | translate}}jpg-jpeg-png{{'label-title.file' |
+                    translate}}</p>
+                  <p class="text-muted text-small mb-1">{{'label-title.service-type-map-image' | translate }}</p>
+                  <p class="mb-3">
+                    {{'label-title.upload-image-size-with-in-widthxheight-min' |
+                    translate}}45x100{{'label-title.and-max' | translate}}90x200{{'label-title.image-ratio-should-be' |
+                    translate}}0.45{{'label-title.and-upload-only' | translate}}jpg-jpeg-png{{'label-title.file' |
+                    translate}}</p>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button *ngIf="!is_edit" type="submit" (click)="service_Type()"
+            class="btn btn-primary float-right">{{'button-title.submit' | translate}}</button>
+          <button *ngIf="is_edit" type="submit" class="btn btn-primary"
+            (click)="service_Type()">{{'button-title.update' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </modal-container>
+</ng-template>
+<app-image-crop-model (updateImage)="imageCropped($event)" #cropModel></app-image-crop-model>

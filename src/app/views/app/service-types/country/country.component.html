@@ -1,0 +1,1300 @@
+<div class="row app-row">
+    <div class="col-12">
+        <h1 *ngIf="country">{{'heading-title.country-details' | translate }} </h1>
+        <h1 *ngIf="city">{{'heading-title.city-details' | translate }}</h1>
+        <app-breadcrumb></app-breadcrumb>
+        <br>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div *ngIf="country && selected_country == null && !addCountry" class="card-body text-center font-weight-bold text-capitalize">{{'validation-title.no-data-found' | translate}}</div>
+        </div>
+    </div>
+
+    <div class="w-100" *ngIf="(country && selected_country != null) || addCountry">
+        <tabset class="card-tabs separator-tabs w-100" #countryTabs>
+            <tab heading="{{'heading-title.basic-details' | translate | uppercase }}" (selectTab)="selectTab(0)">
+                <form [formGroup]="basic_details_form" (ngSubmit)="saveCountry()" noPasteDrop appFocus>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body ">
+                                        <div class="text-align saveBtn">
+                                            <button
+                                                *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && !selected_country"
+                                                id="next1" type="button" class="btn btn-outline-primary btn-xs"
+                                                (click)="nextPage(1)"> {{'button-title.next' | translate }} </button>
+                                            <button
+                                                *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) && selected_country"
+                                                id="save1" type="submit" class="btn btn-outline-primary btn-xs">
+                                                {{'button-title.save' | translate }} </button>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                                <div class="mb-4">
+                                                    <h5 class="font-weight-semibold mb-0" id="basic-details">
+                                                        {{'label-title.basic-details' | translate}}</h5>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="row">
+                                                        <div class="col-6 custom-control custom-radio">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" id="isBusiness" class="custom-control-input"
+                                                                    formControlName="isBusiness">
+                                                                <label for="isBusiness" class="custom-control-label">
+                                                                    <h5 class="mb-0">{{'label-title.business' | translate}}</h5>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 custom-control custom-radio">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" id="isRentalBusiness" class="custom-control-input"
+                                                                    formControlName="isRentalBusiness">
+                                                                <label for="isRentalBusiness" class="custom-control-label">
+                                                                    <h5 class="mb-0">{{'label-title.rental-business' | translate}}</h5>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3" *ngIf="!selected_country">
+                                                    <div class="form-group">
+                                                        <label for="country">{{'label-title.country' | translate}}</label>
+                                                        <ng-select id="country" appearance="outline"
+                                                            notFoundText="{{'validation-title.country-not-availble' | translate}}"
+                                                            #agreeSelect labelForId="yesno" [searchable]="true"
+                                                            [clearable]="false" (change)="onChangeCountry($event)"
+                                                            formControlName="countryname">
+                                                            <ng-option [value]="country"
+                                                                *ngFor="let country of all_countries">{{country.name}}
+                                                            </ng-option>
+                                                        </ng-select>
+                                                        <div *ngIf="basic_details_form.get('countryname').errors?.required && basic_details_form.get('countryname').touched"
+                                                            class="invalid-tooltip">
+                                                            {{'label-title.country' | translate}}
+                                                            {{'label-title.is-required' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="form-group"><label
+                                                            for="currencycode">{{'label-title.currency-code' |
+                                                            translate}}</label>
+                                                        <div class="d-flex flex-wrap">
+                                                            <div class="position-relative col-6 p-0">
+                                                                <input type="text" id="currencysign" class="form-control"
+                                                                    placeholder="" formControlName="currencysign"
+                                                                    [readonly]="countryDetail.sign != '' ">
+                                                                <div *ngIf="basic_details_form.get('currencysign').errors?.required && basic_details_form.get('currencysign').touched"
+                                                                    class="invalid-tooltip">
+                                                                    {{'label-title.currency-sign' | translate}}
+                                                                    {{'label-title.is-required' | translate }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="position-relative col-6 p-0">
+                                                                <input type="text" id="currencycode" class="form-control"
+                                                                    placeholder="" formControlName="currencycode"
+                                                                    [readonly]="countryDetail.currency_code != '' ">
+                                                                <div *ngIf="basic_details_form.get('currencycode').errors?.required && basic_details_form.get('currencycode').touched"
+                                                                    class="invalid-tooltip">
+                                                                    {{'label-title.currency-code' | translate}}
+                                                                    {{'label-title.is-required' | translate }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <small id="currency-code-small"
+                                                            class="form-text text-muted">{{'label-title.enter-sign-we-will-show-every-where-on-apps'
+                                                            | translate}}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <div class="form-group"><label
+                                                            for="countryphonecode">{{'label-title.phone-code' |
+                                                            translate}}</label>
+                                                        <input type="text" id="countryphonecode" class="form-control"
+                                                            placeholder="" formControlName="countryphonecode"
+                                                            [readonly]="countryDetail.code != '' ">
+                                                        <div *ngIf="basic_details_form.get('countryphonecode').errors?.required && basic_details_form.get('countryphonecode').touched"
+                                                            class="invalid-tooltip">
+                                                            {{'label-title.phone-code' | translate}}
+                                                            {{'label-title.is-required' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <h5 class=" font-weight-semibold" id="payment-to-driver">
+                                                        {{'label-title.payment-to-driver' | translate}}</h5>
+                                                    <div class="d-flex flex-wrap pl-3">
+                                                        <div class="row w-100">
+                                                            <div class="col-6 custom-control custom-radio">
+                                                                <input type="radio" id="is_auto_transfer_bank" [value]=true
+                                                                    name="is_auto_transfer" class="custom-control-input"
+                                                                    formControlName="is_auto_transfer"
+                                                                    (change)="showAutoTransfer(true)">
+                                                                <label for="is_auto_transfer_bank"
+                                                                    class="custom-control-label">{{'label-title.bank' |
+                                                                    translate}}</label>
+                                                            </div>
+                                                            <div class="col-6 custom-control custom-radio">
+                                                                <input type="radio" id="is_auto_transfer_cash" [value]=false
+                                                                    name="is_auto_transfer" class="custom-control-input"
+                                                                    formControlName="is_auto_transfer"
+                                                                    (change)="showAutoTransfer(false)">
+                                                                <label for="is_auto_transfer_cash"
+                                                                    class="custom-control-label text-nowrap">{{'label-title.manual-cash'
+                                                                    | translate}}</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3" [hidden]="!basic_details_form.value.is_auto_transfer">
+                                                    <div class="form-group"><label
+                                                            for="auto_transfer_day">{{'label-title.auto-transfer-day-for-driver'
+                                                            | translate}} <span
+                                                            class="c-pointer"><i
+                                                                class="simple-icon-info position-relative ml-1"
+                                                                style="top: 2px;"
+                                                                tooltip="{{'tooltip-title.auto-transfer-day-for-driver-tooltip' | translate}}"
+                                                                placement="right"></i></span></label>
+                                                        <input type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.max_number_validation($event,basic_details_form.value.auto_transfer_day,3);"
+                                                            min="0" id="auto_transfer_day" class="form-control"
+                                                            placeholder="" formControlName="auto_transfer_day">
+                                                        <div *ngIf="basic_details_form.controls['auto_transfer_day'].invalid && basic_details_form.get('auto_transfer_day').touched"
+                                                            class="error errorShow">
+                                                            <span
+                                                                *ngIf="basic_details_form.controls['auto_transfer_day'].errors.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.controls['auto_transfer_day'].errors.max">
+                                                                {{'validation-title.max-autotransfer-day-validation' |
+                                                                translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.controls['auto_transfer_day'].errors.min">
+                                                                {{'validation-title.min-autotransfer-day-validation' |
+                                                                translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group"><label
+                                                            for="countrytimezone">{{'label-title.auto-transfer-timezone' |
+                                                            translate}}</label>
+                                                        <ng-select id="countrytimezone" appearance="outline"
+                                                            notFoundText="{{'validation-title.timezone-not-availble' | translate}}"
+                                                            [clearable]="false" #agreeSelect labelForId="yesno"
+                                                            [searchable]="true" [readonly]="selected_country"
+                                                            formControlName="countrytimezone"
+                                                            (change)="onChangeTimeZone($event)">
+                                                            <ng-option [value]="timezone"
+                                                                *ngFor="let timezone of countrytimezoneData">{{timezone}}
+                                                            </ng-option>
+                                                        </ng-select>
+                                                        <div *ngIf="basic_details_form.get('countrytimezone').errors?.required && basic_details_form.get('countrytimezone').touched"
+                                                            class="invalid-tooltip">
+                                                            {{'label-title.auto-transfer-timezone' | translate}}
+                                                            {{'label-title.is-required' | translate }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="mb-3">
+                                                    <h5 class=" font-weight-semibold" id="Payment-Gateway">
+                                                        {{'label-title.select-Payment-Gateway' | translate}}</h5>
+                                                    <div class="row flex-wrap pl-3">
+                                                        <div class="col-4 custom-control custom-radio">
+                                                            <input type="radio" id="stripe" value=10 name="payment_gateways"
+                                                                class="custom-control-input"
+                                                                formControlName="payment_gateways">
+                                                            <label for="stripe"
+                                                                class="custom-control-label">{{'label-title.stripe' |
+                                                                translate}}</label>
+                                                        </div>
+                                                        <div class="col-4 custom-control custom-radio">
+                                                            <input type="radio" id="paystack" value=11
+                                                                name="payment_gateways" class="custom-control-input"
+                                                                formControlName="payment_gateways">
+                                                            <label for="paystack"
+                                                                class="custom-control-label">{{'label-title.paystack' |
+                                                                translate}}</label>
+                                                        </div>
+                                                        <div class="col-4 custom-control custom-radio">
+                                                            <input type="radio" id="payu" value=12 name="payment_gateways"
+                                                                class="custom-control-input"
+                                                                formControlName="payment_gateways">
+                                                            <label for="payu"
+                                                                class="custom-control-label">{{'label-title.payu' |
+                                                                translate}}</label>
+                                                        </div>
+                                                        <div class="col-4 custom-control custom-radio">
+                                                            <input type="radio" id="paytabs" value=13
+                                                                name="payment_gateways" class="custom-control-input"
+                                                                formControlName="payment_gateways">
+                                                            <label for="paytabs" class="custom-control-label">{{
+                                                                'label-title.paytabs' | translate}}</label>
+                                                        </div>
+                                                        <div class="col-4 custom-control custom-radio">
+                                                            <input type="radio" id="paypal" value=14 name="payment_gateways"
+                                                                class="custom-control-input"
+                                                                formControlName="payment_gateways">
+                                                            <label for="paypal" class="custom-control-label">{{
+                                                                'label-title.paypal' | translate}}</label>
+                                                        </div>
+                                                        <div class="col-4 custom-control custom-radio">
+                                                            <input type="radio" id="razorpay" value=15
+                                                                name="payment_gateways" class="custom-control-input"
+                                                                formControlName="payment_gateways">
+                                                            <label for="razorpay" class="custom-control-label">{{
+                                                                'label-title.razorpay' | translate}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="mb-0">
+                                                    <h5 class=" font-weight-semibold" id="send-money-to-friend">
+                                                        {{'label-title.send-money-to-friend'| translate}} <span
+                                                            class="c-pointer"><i
+                                                                class="simple-icon-info position-relative ml-1"
+                                                                style="top: 2px;"
+                                                                tooltip="{{'tooltip-title.send-money-to-friend-tooltip' | translate}}"
+                                                                placement="right"></i></span></h5>
+    
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" id="is_send_money_for_user"
+                                                            class="custom-control-input"
+                                                            formControlName="is_send_money_for_user">
+                                                        <label for="is_send_money_for_user" class="custom-control-label">
+                                                            <p>{{'label-title.send-money-user' | translate}}</p>
+                                                        </label>
+                                                    </div>
+    
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" id="is_send_money_for_provider"
+                                                            class="custom-control-input"
+                                                            formControlName="is_send_money_for_provider">
+                                                        <label for="is_send_money_for_provider"
+                                                            class="custom-control-label">
+                                                            <p>{{'label-title.send-money-provider' | translate}}</p>
+                                                        </label>
+                                                    </div>
+    
+                                                </div>
+                                                <div class="mb-0" *ngIf="setting_detail?.is_wsal_service_use">
+                                                    <h5 class=" font-weight-semibold" id="wsal_setting">
+                                                        {{'label-title.wsal-setting'| translate}} <span
+                                                            class="c-pointer"><i
+                                                                class="simple-icon-info position-relative ml-1"
+                                                                style="top: 2px;"
+                                                                tooltip="{{'tooltip-title.wsal-setting-tooltip' | translate}}"
+                                                                placement="right"></i></span></h5>
+    
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" id="is_use_wsal"
+                                                            class="custom-control-input"
+                                                            formControlName="is_use_wsal">
+                                                        <label for="is_use_wsal" class="custom-control-label">
+                                                            <p>{{'label-title.is-use-wsal' | translate}}</p>
+                                                        </label>
+                                                    </div>
+    
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-lg-6 col-xl-6 loyality-row">
+                                                <div class="mb-4 mt-lg-0 mt-4">
+                                                    <h5 class="mb-0 font-weight-semibold" id="referral-settings">
+                                                        {{'label-title.referral-settings' | translate}} <span
+                                                            class="c-pointer"><i
+                                                                class="simple-icon-info position-relative ml-1 info-tooltip"
+                                                                style="top: 2px;"
+                                                                tooltip="{{'tooltip-title.referral-settings-tooltip' | translate}}"
+                                                                placement="right"></i></span></h5>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="custom-control custom-switch"><input type="checkbox"
+                                                            id="is_referral" class="custom-control-input"
+                                                            formControlName="is_referral">
+                                                        <label for="is_referral" class="custom-control-label">
+                                                            <h5 class=" font-weight-semibold">
+                                                                {{'label-title.referral-for-user' | translate}}</h5>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text spanwidth">{{'label-title.no-of-user-use-code'
+                                                                | translate}}</span></div>
+                                                        <input id="userreferral" type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.number_validation($event)" min="0"
+                                                            class="form-control"
+                                                            [readonly]="!basic_details_form.value.is_referral"
+                                                            formControlName="userreferral">
+                                                        <div *ngIf="basic_details_form.get('userreferral').errors && basic_details_form.get('userreferral').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="basic_details_form.get('userreferral').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('userreferral').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text spanwidth">{{'label-title.bonus-to-user'
+                                                                | translate}}</span>
+                                                            <span
+                                                                class="input-group-text">{{basic_details_form.value.currencysign}}</span>
+                                                        </div>
+                                                        <input id="bonus_to_userreferral" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)"
+                                                            min="0" class="form-control"
+                                                            [readonly]="!basic_details_form.value.is_referral"
+                                                            formControlName="bonus_to_userreferral">
+                                                        <div *ngIf="basic_details_form.get('bonus_to_userreferral').errors && basic_details_form.get('bonus_to_userreferral').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="basic_details_form.get('bonus_to_userreferral').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('bonus_to_userreferral').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('bonus_to_userreferral').errors?.redeemValueInvalid">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <small id="user-wallet"
+                                                        class="form-text text-muted">{{'label-title.bonus-will-add-on-user-wallet'
+                                                        | translate}}</small>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text spanwidth truncate">{{'label-title.bonus-to-users-friend'
+                                                                | translate}}</span>
+                                                            <span
+                                                                class="input-group-text">{{basic_details_form.value.currencysign}}</span>
+                                                        </div>
+                                                        <input id="referral_bonus_to_user" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)"
+                                                            min="0" class="form-control"
+                                                            [readonly]="!basic_details_form.value.is_referral"
+                                                            formControlName="referral_bonus_to_user">
+                                                        <div *ngIf="basic_details_form.get('referral_bonus_to_user').errors && basic_details_form.get('referral_bonus_to_user').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="basic_details_form.get('referral_bonus_to_user').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('referral_bonus_to_user').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('referral_bonus_to_user').errors?.redeemValueInvalid">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <small id="user-friend-wallet"
+                                                        class="form-text text-muted">{{'label-title.bonus-will-add-on-user-friend-wallet'
+                                                        | translate}}</small>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="custom-control custom-switch"><input type="checkbox"
+                                                            id="is_provider_referral" class="custom-control-input"
+                                                            formControlName="is_provider_referral">
+                                                        <label for="is_provider_referral" class="custom-control-label">
+                                                            <h5 class=" font-weight-semibold">
+                                                                {{'label-title.referral-for-driver' | translate}}</h5>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text spanwidth">{{'label-title.no-of-driver-use-code'
+                                                                | translate}}</span></div>
+                                                        <input id="providerreferral" type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.number_validation($event)" min="0"
+                                                            max="9999999999" class="form-control"
+                                                            [readonly]="!basic_details_form.value.is_provider_referral"
+                                                            formControlName="providerreferral">
+                                                        <div *ngIf="basic_details_form.get('providerreferral').errors && basic_details_form.get('providerreferral').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="basic_details_form.get('providerreferral').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('providerreferral').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text spanwidth">{{'label-title.bonus-to-driver'
+                                                                | translate}}</span>
+                                                            <span
+                                                                class="input-group-text">{{basic_details_form.value.currencysign}}</span>
+                                                        </div>
+                                                        <input id="bonus_to_providerreferral" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)"
+                                                            min="0" class="form-control"
+                                                            [readonly]="!basic_details_form.value.is_provider_referral"
+                                                            formControlName="bonus_to_providerreferral">
+                                                        <div *ngIf="basic_details_form.get('bonus_to_providerreferral').errors && basic_details_form.get('bonus_to_providerreferral').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="basic_details_form.get('bonus_to_providerreferral').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('bonus_to_providerreferral').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('bonus_to_providerreferral').errors?.redeemValueInvalid">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <small id="driver-wallet"
+                                                        class="form-text text-muted">{{'label-title.bonus-will-add-on-driver-wallet'
+                                                        | translate}}</small>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text spanwidth truncate">{{'label-title.bonus-to-drivers-friend'
+                                                                | translate}}</span><span
+                                                                class="input-group-text">{{basic_details_form.value.currencysign}}</span>
+                                                        </div>
+                                                        <input id="referral_bonus_to_provider" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event)"
+                                                            min="0" class="form-control"
+                                                            [readonly]="!basic_details_form.value.is_provider_referral"
+                                                            formControlName="referral_bonus_to_provider">
+                                                        <div *ngIf="basic_details_form.get('referral_bonus_to_provider').errors && basic_details_form.get('referral_bonus_to_provider').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="basic_details_form.get('referral_bonus_to_provider').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('referral_bonus_to_provider').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="basic_details_form.get('referral_bonus_to_provider').errors?.redeemValueInvalid">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <small id="driver-friend-wallet"
+                                                        class="form-text text-muted">{{'label-title.bonus-amount-will-add-on-driver-friend-wallet'
+                                                        | translate}}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </tab>
+            <tab heading="{{'label-title.trip-bidding' | translate | uppercase }}" (selectTab)="selectTab(1)">
+                <form [formGroup]="bidding_form" (ngSubmit)="saveCountry()" noPasteDrop appFocus>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mb-2">
+                                            <p class="text-danger mb-0 text-right"
+                                                *ngIf="is_next_clicked && basic_details_form.invalid">
+                                                *{{'validation-title.please-fill-basic-details-first' | translate}}</p>
+                                        </div>
+                                        <div class="text-align saveBtn"
+                                            [ngClass]=" (is_next_clicked && basic_details_form.invalid) ?'position-saveBtn' : ''">
+                                            <button
+                                                *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && !selected_country"
+                                                id="next2" type="button" class="btn btn-outline-primary btn-xs"
+                                                (click)="nextPage(2)"> {{'button-title.next' | translate }} </button>
+                                            <button
+                                                *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) && selected_country"
+                                                id="save2" type="submit" class="btn btn-outline-primary btn-xs">
+                                                {{'button-title.save' | translate }} </button>
+                                        </div>
+                                        <div class="row pt-5 bidding-row">
+                                            <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                                <div class="mb-2">
+                                                    <div class="custom-control custom-switch"><input type="checkbox"
+                                                            id="is_allow_trip_bidding" class="custom-control-input"
+                                                            formControlName="is_allow_trip_bidding">
+                                                        <label for="is_allow_trip_bidding" class="custom-control-label">
+                                                            <h5 class=" font-weight-semibold">{{'label-title.trip-bidding' |
+                                                                translate}}</h5>
+                                                        </label>
+                                                        <h5 class="c-pointer d-inline-block"><i
+                                                                class="simple-icon-info position-relative ml-1"
+                                                                style="top: 4px;"
+                                                                tooltip="{{'tooltip-title.trip-bidding-tooltip' | translate}}"
+                                                                placement="right"></i></h5>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="custom-control custom-switch"><input type="checkbox"
+                                                            id="is_user_can_set_bid_price" class="custom-control-input"
+                                                            formControlName="is_user_can_set_bid_price">
+                                                        <label for="is_user_can_set_bid_price" class="custom-control-label">
+                                                            <h5 class=" font-weight-semibold">
+                                                                {{'label-title.user-can-set-bid-price' | translate}}</h5>
+                                                        </label>
+                                                        <h5 class="c-pointer d-inline-block"><i
+                                                                class="simple-icon-info position-relative ml-1"
+                                                                style="top: 4px;"
+                                                                tooltip="{{'tooltip-title.user-can-set-bid-price-tooltip' | translate}}"
+                                                                placement="right"></i></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend w-60"><span
+                                                                class="input-group-text spanwidth">{{'label-title.user-bidding-timeout'
+                                                                | translate}}</span></div>
+                                                        <div class="d-flex w-40">
+                                                            <input id="user_bidding_timeout" type="number"
+                                                                onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                                (wheel)="(false)"
+                                                                (keypress)="_helper.number_validation($event)" min="0"
+                                                                max="9999999999" class="form-control"
+                                                                formControlName="user_bidding_timeout">
+                                                            <div *ngIf="bidding_form.get('user_bidding_timeout').errors && bidding_form.get('user_bidding_timeout').touched"
+                                                                class="invalid-tooltip">
+                                                                <span
+                                                                    *ngIf="bidding_form.get('user_bidding_timeout').errors?.required">
+                                                                    {{'validation-title.this-is-required' | translate}}
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="bidding_form.get('user_bidding_timeout').errors?.max">
+                                                                    {{'validation-title.value-is-too-long' | translate}}
+                                                                </span>
+                                                            </div>
+                                                            <div class="input-group-append"><span
+                                                                    class="input-group-text">{{'label-title.sec' |
+                                                                    translate}}</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend w-60"><span
+                                                                class="input-group-text spanwidth">{{'label-title.driver-bidding-timeout'
+                                                                | translate}}</span></div>
+                                                        <div class="d-flex w-40">
+                                                            <input id="provider_bidding_timeout" type="number"
+                                                                onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                                (wheel)="(false)"
+                                                                (keypress)="_helper.number_validation($event)" min="0"
+                                                                max="9999999999" class="form-control"
+                                                                formControlName="provider_bidding_timeout">
+                                                            <div *ngIf="bidding_form.get('provider_bidding_timeout').errors && bidding_form.get('provider_bidding_timeout').touched"
+                                                                class="invalid-tooltip">
+                                                                <span
+                                                                    *ngIf="bidding_form.get('provider_bidding_timeout').errors?.required">
+                                                                    {{'validation-title.this-is-required' | translate}}
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="bidding_form.get('provider_bidding_timeout').errors?.max">
+                                                                    {{'validation-title.value-is-too-long' | translate}}
+                                                                </span>
+                                                            </div>
+                                                            <div class="input-group-append"><span
+                                                                    class="input-group-text">{{'label-title.sec' |
+                                                                    translate}}</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend w-60"><span
+                                                                class="input-group-text spanwidth">{{'label-title.no-of-drivers-can-bid'
+                                                                | translate}}</span></div>
+                                                        <input id="no_of_providers_can_bid" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control w-40"
+                                                            formControlName="no_of_providers_can_bid">
+                                                        <div *ngIf="bidding_form.get('no_of_providers_can_bid').errors && bidding_form.get('no_of_providers_can_bid').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="bidding_form.get('no_of_providers_can_bid').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="bidding_form.get('no_of_providers_can_bid').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="bidding_form.get('no_of_providers_can_bid').errors?.min">
+                                                                {{'validation-title.the-value-should-be-above-0' |
+                                                                translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend w-60"><span
+                                                                class="input-group-text spanwidth">{{'label-title.user-min-bidding-limit'
+                                                                | translate}}</span></div>
+                                                        <div class="d-flex w-40">
+                                                            <input id="user_min_bidding_limit" type="number"
+                                                                onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                                (wheel)="(false)"
+                                                                (keypress)="_helper.number_validation($event);_helper.maxLengthValidation($event,3)"
+                                                                min="0" max="100" class="form-control"
+                                                                formControlName="user_min_bidding_limit">
+                                                            <div *ngIf="bidding_form.controls['user_min_bidding_limit'].invalid"
+                                                                class="invalid-tooltip">
+                                                                <span
+                                                                    *ngIf="bidding_form.controls['user_min_bidding_limit'].errors.required">
+                                                                    {{'validation-title.this-is-required' | translate}}
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="bidding_form.controls['user_min_bidding_limit'].errors.profitValueInvalid">
+                                                                    {{'validation-title.profit-validation' | translate}}
+                                                                </span>
+                                                            </div>
+                                                            <div class="input-group-append"><span
+                                                                    class="input-group-text">%</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend w-60"><span
+                                                                class="input-group-text spanwidth">{{'label-title.driver-max-bidding-limit'
+                                                                | translate}}</span></div>
+                                                        <div class="d-flex w-40">
+                                                            <input id="driver_max_bidding_limit" type="number"
+                                                                onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                                (wheel)="(false)"
+                                                                (keypress)="_helper.number_validation($event);_helper.maxLengthValidation($event,3)"
+                                                                min="0" max="100" class="form-control"
+                                                                formControlName="driver_max_bidding_limit">
+                                                            <div *ngIf="bidding_form.controls['driver_max_bidding_limit'].invalid"
+                                                                class="invalid-tooltip">
+                                                                <span
+                                                                    *ngIf="bidding_form.controls['driver_max_bidding_limit'].errors.required">
+                                                                    {{'validation-title.this-is-required' | translate}}
+                                                                </span>
+                                                                <span
+                                                                    *ngIf="bidding_form.controls['driver_max_bidding_limit'].errors.profitValueInvalid">
+                                                                    {{'validation-title.profit-validation' | translate}}
+                                                                </span>
+                                                            </div>
+                                                            <div class="input-group-append"><span
+                                                                    class="input-group-text">%</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </tab>
+            <tab heading="{{'label-title.loyality-points' | translate | uppercase }}" (selectTab)="selectTab(2)">
+                <form [formGroup]="redeem_form" (ngSubmit)="saveCountry()" noPasteDrop appFocus>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body ">
+                                        <div class="mb-2">
+                                            <p class="text-danger mb-0 text-right"
+                                                *ngIf="is_next_clicked && basic_details_form.invalid">
+                                                *{{'validation-title.please-fill-basic-details-first' | translate}}</p>
+                                            <p class="text-danger mb-0 text-right"
+                                                *ngIf="is_next_clicked && bidding_form.invalid">
+                                                *{{'validation-title.please-fill-trip-bidding-details-first' | translate}}
+                                            </p>
+                                        </div>
+                                        <div class="text-align saveBtn"
+                                            [ngClass]=" (is_next_clicked && basic_details_form.invalid && bidding_form.invalid) ? 'position-saveBtn2' : (is_next_clicked && (basic_details_form.invalid || bidding_form.invalid) ? 'position-saveBtn' : '')">
+                                            <button
+                                                *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && !selected_country"
+                                                id="next3" type="submit" class="btn btn-outline-primary btn-xs">
+                                                {{'button-title.save' | translate }} </button>
+                                            <button
+                                                *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) && selected_country"
+                                                id="save3" type="submit" class="btn btn-outline-primary btn-xs">
+                                                {{'button-title.save' | translate }} </button>
+                                        </div>
+                                        <div class="row pt-5 loyality-row">
+                                            <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                                <div class="mb-2">
+                                                    <div class="custom-control custom-switch"><input type="checkbox"
+                                                            id="is_user_redeem_point_reward_on" class="custom-control-input"
+                                                            formControlName="is_user_redeem_point_reward_on">
+                                                        <label for="is_user_redeem_point_reward_on"
+                                                            class="custom-control-label">
+                                                            <h5 class=" font-weight-semibold">
+                                                                {{'label-title.user-redeem-point-reward' | translate }}</h5>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend w-70"><span
+                                                                class="input-group-text w-100">{{'label-title.trip-redeem-point'
+                                                                | translate }} <span class="c-pointer"><i
+                                                                        class="simple-icon-info position-relative ml-2"
+                                                                        tooltip="{{'tooltip-title.trip-redeem-point-tooltip' | translate}}"
+                                                                        placement="right" style="top: 1px;"></i>
+                                                                </span></span></div>
+                                                        <input id="trip_redeem_point" type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.number_validation($event)" min="0"
+                                                            max="9999999999" class="form-control w-30"
+                                                            [readonly]="!redeem_form.value.is_user_redeem_point_reward_on"
+                                                            formControlName="trip_redeem_point">
+                                                        <div *ngIf="redeem_form.get('trip_redeem_point').errors && redeem_form.get('trip_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('trip_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span *ngIf="redeem_form.get('trip_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100">{{'label-title.tip-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative c-pointer ml-2"
+                                                                    tooltip="{{'tooltip-title.tip-redeem-point-tooltip' | translate}}"
+                                                                    placement="right" style="top: 1px;"></i></span> </div>
+                                                        <input id="tip_redeem_point" type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.number_validation($event)" min="0"
+                                                            max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_user_redeem_point_reward_on"
+                                                            formControlName="tip_redeem_point">
+                                                        <div *ngIf="redeem_form.get('tip_redeem_point').errors && redeem_form.get('tip_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('tip_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span *ngIf="redeem_form.get('tip_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.referring-redeem-point-to-user'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative ml-1"
+                                                                    tooltip="{{'tooltip-title.referring-redeem-point-to-user-tooltip' | translate}}"
+                                                                    placement="right" style="top: 1px;"></i></span> </div>
+                                                        <input id="referring_redeem_point_to_user" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_user_redeem_point_reward_on"
+                                                            formControlName="referring_redeem_point_to_user">
+                                                        <div *ngIf="redeem_form.get('referring_redeem_point_to_user').errors && redeem_form.get('referring_redeem_point_to_user').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('referring_redeem_point_to_user').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('referring_redeem_point_to_user').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100">{{'label-title.review-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative ml-2 c-pointer"
+                                                                    tooltip="{{'tooltip-title.review-redeem-point-tooltip' | translate}}"
+                                                                    placement="right" style="top: 1px;"></i> </span></div>
+                                                        <input id="user_review_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_user_redeem_point_reward_on"
+                                                            formControlName="user_review_redeem_point">
+                                                        <div *ngIf="redeem_form.get('user_review_redeem_point').errors && redeem_form.get('user_review_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_review_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_review_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100">{{'label-title.minimum-point-requirement-for-withdrawal'
+                                                                | translate }}</span></div>
+                                                        <input id="user_minimum_point_require_for_withdrawal" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_user_redeem_point_reward_on"
+                                                            formControlName="user_minimum_point_require_for_withdrawal">
+                                                        <div *ngIf="redeem_form.get('user_minimum_point_require_for_withdrawal').errors && redeem_form.get('user_minimum_point_require_for_withdrawal').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_minimum_point_require_for_withdrawal').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_minimum_point_require_for_withdrawal').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_minimum_point_require_for_withdrawal').errors?.min">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text truncate w-100">{{'label-title.redeem-point-value'
+                                                                | translate }}</span><span
+                                                                class="input-group-text">{{basic_details_form.value.currencysign}}</span>
+                                                        </div>
+                                                        <input id="user_redeem_point_value" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)"
+                                                            (keypress)="_helper.decimalNum_validation($event)" min="0"
+                                                            class="form-control"
+                                                            [readonly]="!redeem_form.value.is_user_redeem_point_reward_on"
+                                                            formControlName="user_redeem_point_value">
+                                                        <div *ngIf="redeem_form.get('user_redeem_point_value').errors && redeem_form.get('user_redeem_point_value').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_redeem_point_value').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_redeem_point_value').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('user_redeem_point_value').errors?.redeemValueInvalid">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                                <div class="mb-2">
+                                                    <div class="custom-control custom-switch"><input type="checkbox"
+                                                            id="is_driver_redeem_point_reward_on"
+                                                            class="custom-control-input"
+                                                            formControlName="is_driver_redeem_point_reward_on">
+                                                        <label for="is_driver_redeem_point_reward_on"
+                                                            class="custom-control-label">
+                                                            <h5 class=" font-weight-semibold">
+                                                                {{'label-title.driver-redeem-point-reward' | translate }}
+                                                            </h5>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.daily-completed-trip-count-for-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative c-pointer ml-1"
+                                                                    tooltip="{{'tooltip-title.daily-completed-trip-count-for-redeem-point-tooltip' | translate}}"
+                                                                    placement="right" style="top: 2px;"></i> </span> </div>
+                                                        <input id="daily_completed_trip_count_for_redeem_point"
+                                                            type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.number_validation($event)" min="0"
+                                                            max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="daily_completed_trip_count_for_redeem_point">
+                                                        <div *ngIf="redeem_form.get('daily_completed_trip_count_for_redeem_point').errors && redeem_form.get('daily_completed_trip_count_for_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_completed_trip_count_for_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_completed_trip_count_for_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.daily-completed-trip-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative ml-1 c-pointer"
+                                                                    tooltip="{{'tooltip-title.daily-completed-trip-redeem-point-tooltip' | translate}}"
+                                                                    style="top: 2px;" placement="right"></i> </span> </div>
+                                                        <input id="daily_completed_trip_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="daily_completed_trip_redeem_point">
+                                                        <div *ngIf="redeem_form.get('daily_completed_trip_redeem_point').errors && redeem_form.get('daily_completed_trip_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_completed_trip_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_completed_trip_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.daily-accepted-trip-count-for-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative c-pointer ml-1"
+                                                                    style="top: 2px;"
+                                                                    tooltip="{{'tooltip-title.daily-accepted-trip-count-for-redeem-point-tooltip' | translate}}"
+                                                                    placement="right"></i> </span></div>
+                                                        <input id="daily_accepted_trip_count_for_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="daily_accepted_trip_count_for_redeem_point">
+                                                        <div *ngIf="redeem_form.get('daily_accepted_trip_count_for_redeem_point').errors && redeem_form.get('daily_accepted_trip_count_for_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_accepted_trip_count_for_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_accepted_trip_count_for_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.daily-accepted-trip-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative c-pointer ml-1"
+                                                                    tooltip="{{'tooltip-title.daily-accepted-trip-redeem-point-tooltip' | translate}}"
+                                                                    style="top: 2px;" placement="right"></i> </span></div>
+                                                        <input id="daily_accepted_trip_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="daily_accepted_trip_redeem_point">
+                                                        <div *ngIf="redeem_form.get('daily_accepted_trip_redeem_point').errors && redeem_form.get('daily_accepted_trip_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_accepted_trip_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('daily_accepted_trip_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.rating-average-count-for-redeem-point'
+                                                                | translate }} ({{'label-title.count' | translate }}) <i
+                                                                    class="simple-icon-info position-relative c-pointer ml-1"
+                                                                    style="top:2px"
+                                                                    tooltip="{{'tooltip-title.rating-average-count-for-redeem-point-tooltip' | translate}}"
+                                                                    placement="right"></i> </span></div>
+                                                        <input id="rating_average_count_for_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="rating_average_count_for_redeem_point">
+                                                        <div *ngIf="redeem_form.get('rating_average_count_for_redeem_point').errors && redeem_form.get('rating_average_count_for_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('rating_average_count_for_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('rating_average_count_for_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100 d-block">{{'label-title.rating-average-count-for-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative c-pointer ml-1"
+                                                                    tooltip="{{'tooltip-title.rating-average-for-redeem-point-tooltip' | translate}}"
+                                                                    style="top: 2px;" placement="right"></i> </span></div>
+                                                        <input id="high_rating_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="high_rating_redeem_point">
+                                                        <div *ngIf="redeem_form.get('high_rating_redeem_point').errors && redeem_form.get('high_rating_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('high_rating_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('high_rating_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100">{{'label-title.review-redeem-point'
+                                                                | translate }} <i
+                                                                    class="simple-icon-info position-relative d-block ml-2"
+                                                                    tooltip="{{'tooltip-title.review-redeem-point-driver-tooltip' | translate}}"
+                                                                    style="top: 1px;" placement="right"></i> </span></div>
+                                                        <input id="driver_review_redeem_point" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)" (keypress)="_helper.number_validation($event)"
+                                                            min="0" max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="driver_review_redeem_point">
+                                                        <div *ngIf="redeem_form.get('driver_review_redeem_point').errors && redeem_form.get('driver_review_redeem_point').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_review_redeem_point').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_review_redeem_point').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text w-100">{{'label-title.minimum-point-requirement-for-withdrawal'
+                                                                | translate }}</span></div>
+                                                        <input id="driver_minimum_point_require_for_withdrawal"
+                                                            type="number" onDrop="return false"
+                                                            (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                            (keypress)="_helper.number_validation($event)" min="0"
+                                                            max="9999999999" class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="driver_minimum_point_require_for_withdrawal">
+                                                        <div *ngIf="redeem_form.get('driver_minimum_point_require_for_withdrawal').errors && redeem_form.get('driver_minimum_point_require_for_withdrawal').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_minimum_point_require_for_withdrawal').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_minimum_point_require_for_withdrawal').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_minimum_point_require_for_withdrawal').errors?.min">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                class="input-group-text truncate w-100">{{'label-title.redeem-point-value'
+                                                                | translate }}</span><span
+                                                                class="input-group-text">{{basic_details_form.value.currencysign}}</span>
+                                                        </div>
+                                                        <input id="driver_redeem_point_value" type="number"
+                                                            onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                                            (wheel)="(false)"
+                                                            (keypress)="_helper.decimalNum_validation($event)" min="0"
+                                                            class="form-control"
+                                                            [readonly]="!redeem_form.value.is_driver_redeem_point_reward_on"
+                                                            formControlName="driver_redeem_point_value">
+                                                        <div *ngIf="redeem_form.get('driver_redeem_point_value').errors && redeem_form.get('driver_redeem_point_value').touched"
+                                                            class="invalid-tooltip">
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_redeem_point_value').errors?.required">
+                                                                {{'validation-title.this-is-required' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_redeem_point_value').errors?.max">
+                                                                {{'validation-title.value-is-too-long' | translate}}
+                                                            </span>
+                                                            <span
+                                                                *ngIf="redeem_form.get('driver_redeem_point_value').errors?.redeemValueInvalid">
+                                                                {{'validation-title.value-too-short' | translate}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </tab>
+        </tabset>
+    </div>
+    <div class="col-12" *ngIf="city">
+        <app-city [addCity]="addCity"></app-city>
+    </div>
+</div>
+<app-application-menu>
+    <tabset class="card-tabs h-100" [justified]="true">
+        <tab heading="{{'heading-title.country' | translate | uppercase }}" class="card-body h-100" (selectTab)="CountryShow()">
+            <div class="form-group d-flex">
+                <input type="text" class="form-control rounded-100" placeholder="{{'label-title.search' | translate}}" [(ngModel)]="country_search_text" #searchBoxContact id="search-box1" (keypress)="_helper.special_char_validation($event);"/>
+                <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" type="button" class="btn btn-primary w-30 ml-3 text-uppercase smwidth word-wrap-break-word" (click)="AddCountry()">{{'button-title.add' | translate}}</button>
+            </div>
+            <div class="chat-app-tab-pane-contacts">
+            <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}" *ngIf="countries_list && countries_list?.length>0 && (countries_list | searchpipe:country_search_text:['countryname'])?.length > 0">
+                <div class="w-100 border-bottom d-flex flex-row justify-content-between pr-0 pt-3 pb-3"
+                [ngClass]="selected_country?(selected_country._id == country._id ? 'text-primary': ''):''"
+                *ngFor="let country of countries_list|searchpipe:country_search_text:['countryname']" (click)="onSelectCountry(country)">
+                    <a class="d-block position-relative" ng-reflect-router-link="#" href="javascript:">
+                        <img class="list-thumbnail border-0 country_flag" (error)="$event.target.src = _helper.DEFAULT_IMAGE.COUNTRY_FLAG"
+                            [src]="country.alpha2?.toLowerCase() ? (_helper.image_url + 'flags/'+ country.alpha2?.toLowerCase()) + '.png' : _helper.DEFAULT_IMAGE.COUNTRY_FLAG" [alt]="country.countryname">
+                    </a>
+                    <div class="pl-3 flex-grow-1 c-pointer">
+                        <div *ngIf="country.isBusiness == 0" class="businessLabel float-right">
+                            <span class="badge badge-danger rounded">{{'label-title.business-off' | translate}}</span>
+                        </div>
+                      <p class="mb-1 font-weight-bold">{{country.countryname}}</p>
+                      <div class="pr-4">
+                        <p class="text-muted mb-1 text-small"
+                          [ngClass]="selected_country?(selected_country._id == country._id ? 'text-primary': ''):''">
+                          {{'label-title.code' | translate}}: {{country.countryphonecode}}</p>
+                      </div>
+                      <div class="text-small">{{'label-title.currency' | translate}}: {{country.currencysign}}({{country.currencycode}})</div>
+                    </div>
+                  </div>
+                </perfect-scrollbar>
+                <div class="d-flex justify-content-center align-items-center data-center"
+                    *ngIf="(!countries_list || (countries_list && countries_list.length == 0)) || (countries_list | searchpipe:country_search_text:['countryname'])?.length === 0">
+                    <p class="clr-primary">{{'label-title.no-record-found' | translate}}</p>
+                </div>
+            </div>
+        </tab>
+        <tab heading="{{'heading-title.city' | translate | uppercase }}" class="card-body h-100" (selectTab)="CityShow()">
+            <div class="chat-app-tab-pane-contacts">
+                <div class="pb-3 border-bottom">
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group d-flex">
+                                <input type="text" class="form-control rounded-100" placeholder="{{'label-title.search' | translate}}" [(ngModel)]="city_search_text" id="search-box2" (keypress)="_helper.special_char_validation($event);" />
+                                <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" type="button" class="btn btn-primary w-30 ml-3 text-uppercase smwidth text-center word-wrap-break-word"(click)="AddCity()">{{'button-title.add' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}" *ngIf="city_list && city_list.length>0 && (city_list | searchpipe:city_search_text:['cityname','countryname'])?.length > 0">
+                  <div class="border-bottom" *ngFor="let city of city_list|searchpipe:city_search_text:['cityname','countryname']"
+                    (click)="onSelectCity(city)" [ngClass]="selected_city?(selected_city._id == city._id ? 'text-primary': ''):''" #searchBoxContact>
+                    <div class="card-body row">
+                      <div class="col-sm-12 col-12 p-0 c-pointer">
+                        <div *ngIf="city.isBusiness == 0" class="ml-2 float-right">
+                          <span class="badge badge-danger rounded">{{'label-title.business-off' | translate}}</span>
+                        </div>
+                        <p class="font-weight-bold mb-0">{{ city.full_cityname }}</p>
+                        <p class="text-muted mb-0 text-small"
+                          [ngClass]="selected_city?(selected_city._id == city._id ? 'text-primary': ''):''">
+                          {{ city.countryname }} - {{ city.timezone }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </perfect-scrollbar>
+                <div class="row justify-content-center align-items-center data-center"
+                    *ngIf="(!city_list || (city_list && city_list.length == 0)) || (city_list | searchpipe:city_search_text:['cityname','countryname'])?.length === 0">
+                    <p class="clr-primary">{{'label-title.no-record-found' | translate}}</p>
+                </div>
+            </div>
+        </tab>
+    </tabset>
+</app-application-menu>

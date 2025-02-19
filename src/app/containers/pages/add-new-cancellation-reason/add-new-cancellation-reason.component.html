@@ -1,0 +1,30 @@
+<ng-template #template>
+    <div class="modal-header">
+      <h4 *ngIf="is_edit" class="modal-title pull-left">{{'heading-title.edit-reason' | translate}}</h4>
+      <h4 *ngIf="!is_edit" class="modal-title pull-left">{{'heading-title.add-reason' | translate}}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body p-4">
+      <form [formGroup]="cancellationReasonForm">
+        <div formArrayName="reason">
+          <label>{{ 'menu.cancellation-reason' | translate }}</label>
+          <div class="input-group mt-1" *ngFor="let reason of reason.controls;let i = index">
+              <div class="input-group-prepend">
+                <span class="width-60 input-group-text" id="basic-addon1">{{this._lang.supportedLanguages[i].shorthand | uppercase}}</span>
+              </div>
+              <input (keypress)="_helper.space_validation($event)"  type="text" class="form-control" [formControlName]="i" placeholder="{{'menu.cancellation-reason' | translate}}">
+              <div class="invalid-tooltip" *ngIf="this._lang.supportedLanguages[i].shorthand == 'en' && reason.errors?.required && reason.touched">
+                {{'menu.cancellation-reason' | translate}} {{'label-title.is-required' | translate }}
+              </div>
+            </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" 
+        (click)="save()">{{'button-title.submit' | translate }}</button>
+    </div>
+  </ng-template>
+  

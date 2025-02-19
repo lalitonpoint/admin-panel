@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-12">
+        <div>
+            <h1>{{'heading-title.language-settings' | translate}} </h1>
+            <div class="top-right-button-container mb-2 w-fit-content">
+                <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" type="button" class="top-right-button btn btn-primary btn-lg mr-1" (click)="showAddNewModal()">{{'button-title.add-language' | translate | uppercase}}</button>
+            </div>
+            <app-breadcrumb></app-breadcrumb>
+            <div class="separator mb-5"></div>
+        </div>
+    </div>
+</div>
+<app-add-new-language-modal #addNewModalRef (lang_data)="ngOnInit()"></app-add-new-language-modal>
+<div class="">
+    <div class="card mb-4">
+        <div class="card-body ">
+            <h5 class="card-title pl-4 pl-sm-1">{{ 'heading-title.language-list' | translate}}</h5>
+            <div class="px-1">
+                <table aria-describedby="disc" class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">{{ 'heading-title.name' | translate}}</th>
+                            <th scope="col">{{ 'heading-title.code' | translate}}</th>
+                            <th scope="col">{{ 'heading-title.action' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let language of language_list; let i=index;">
+                            <th scope="row">{{i+1}}</th>
+                            <td>{{language.name | titlecase}}</td>
+                            <td>{{language.code}}</td>
+                            <td class="">
+                                <div class="btn-group langDropdown" dropdown [ngStyle]="{ 'cursor': !_helper.has_permission(_helper.PERMISSION.EDIT) && !_helper.has_permission(_helper.PERMISSION.EXPORT) && (!_helper.has_permission(_helper.PERMISSION.DELETE) || language.code == 'en') ? 'not-allowed' : '' }">
+                                    <button id="button-basic{{language.id}}" dropdownToggle type="button" class="btn btn-xs btn-outline-primary dropdown-toggle"
+                                      aria-controls="dropdown-basic{{language.id}}" data-toggle="dropdown" data-boundary="window" [ngClass]="{ 'disabled-button': !_helper.has_permission(_helper.PERMISSION.EDIT) && !_helper.has_permission(_helper.PERMISSION.EXPORT) && (!_helper.has_permission(_helper.PERMISSION.DELETE) || language.code == 'en') }">
+                                      {{ 'button-title.action' | translate}} <span class="caret"></span>
+                                    </button>
+                                    <ul id="dropdown-basic{{language.id}}" *dropdownMenu class="dropdown-menu dropdown-menu-sm" role="menu" aria-labelledby="button-basic">
+                                        <li role="menuitem" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"><a class="dropdown-item" href="javascript:;" (click)="showEditModal(language)" >{{ 'label-title.edit_details' | translate}}</a></li>
+                                        <li role="menuitem" *ngIf="_helper.has_permission(_helper.PERMISSION.EXPORT)"><a class="dropdown-item" href="javascript:;" (click)="downLoadLang(language)" >{{ 'button-title.download' | translate}}</a></li>
+                                        <div *ngIf="_helper.has_permission(_helper.PERMISSION.DELETE)">
+                                            <li role="menuitem" *ngIf="language.code !== 'en'"><a class="dropdown-item" href="javascript:;" (click)="deleteLang(language)">{{ 'button-title.delete' | translate}}</a></li>
+                                        </div>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #confirmationTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left" *ngIf="selected_languge">{{'button-title.delete' | translate}} {{'menu.language' | translate}} ( {{selected_languge.name}} ) </h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-0">
+        <div class="p-4">
+            <p>
+                {{'label-title.are-you-sure-you-want-to-delete-this' | translate}} {{'menu.language' | translate}}
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="confirm()" class="btn btn-primary float-right">{{'button-title.confirm' | translate}}</button>
+    </div>
+</ng-template>

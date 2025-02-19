@@ -1,0 +1,62 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.google-captcha-configuration' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.google-captcha-configuration-tooltip' | translate}}" placement="right"></i></span></h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showGoogleCaptchaConfigurationModal()">
+                    {{'button-title.edit' | translate }} </button>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.web-app-google-captcha-secret-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.recaptcha_secret_key_for_web}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.web-app-google-captcha-site-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.recaptcha_site_key_for_web}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.android-google-captcha-secret-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.recaptcha_secret_key_for_android}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.android-google-captcha-site-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.recaptcha_site_key_for_android}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.ios-google-captcha-secret-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.recaptcha_secret_key_for_ios}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.ios-google-captcha-site-key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.recaptcha_site_key_for_ios}}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-google-captcha-configuration-modal #GoogleCaptchaConfigurationModal (google_captcha_change_event)="getSettingData()"></app-google-captcha-configuration-modal>

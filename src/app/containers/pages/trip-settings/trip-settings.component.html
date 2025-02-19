@@ -1,0 +1,145 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3 word-wrap-break-word" style="overflow: hidden;">{{'heading-title.trip-time-settings' | translate }}</h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showStoreSettingModal()">
+                    {{'button-title.edit' | translate }} </button>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.provider-time-out-in-second' | translate }}</p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.the-maximum-time-for-the-driver-to-respond-to-a-trip' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes"><span class="post-icon"><a
+                        href="javascript:;"><span>{{setting_detail.provider_timeout}} {{'label-title.sec' |
+                            translate}}</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.default-search-radius' | translate }}</p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.the-default-search-radius-for-looking-for-drivers' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes"><span class="post-icon"><a
+                        href="javascript:;"><span>{{setting_detail.default_Search_radious}} {{'label-title.km' |
+                            translate}}</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">
+                        {{'label-title.no-of-days-before-user-can-book-schedule' | translate}}
+                    </p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.no-of-days-before-user-can-book-schedule-string' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes"><span class="post-icon"><a
+                        href="javascript:;"><span>{{setting_detail.scheduled_request_pre_booking_days}}
+                            {{'label-title.days' | translate}}</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">
+                        {{'label-title.scheduled-request-pre-start-minutes' | translate}}
+                    </p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.after-X-minutes-customer-can-schedule-a-trip' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes"><span class="post-icon"><a
+                        href="javascript:;"><span>{{setting_detail.scheduled_request_pre_start_minute}}
+                            {{'label-title.min' | translate}}</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">
+                        {{'label-title.number-of-loop-for-find-nearest-driver' | translate }}
+                    </p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.X-numbers-of-time-loops-runs-to-find-nearby-drivers' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes"><span class="post-icon"><a
+                        href="javascript:;"><span>{{setting_detail.number_of_try_for_scheduled_request}}</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.nearest-driver-type' | translate }}</p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.nearest-driver-type-description' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes">
+                <span class="post-icon">
+                    <a href="javascript:;">
+                        <span *ngIf="setting_detail.find_nearest_driver_type == 1">{{'label-title.single' |
+                            translate}}</span>
+                        <span *ngIf="setting_detail.find_nearest_driver_type == 2">{{'label-title.multiple' |
+                            translate}}</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.request_sent_to_no_of_driver' | translate }}</p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.a-request-is-sent-to-X-numbers-of-drivers' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes"><span class="post-icon"><a
+                        href="javascript:;"><span>{{setting_detail.request_send_to_no_of_providers}}</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="border-bottom d-flex flex-row justify-content-between mb-3 pb-3">
+            <div class="flex-grow-1">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.pre-notification-time-for-rental-trip' | translate }}</p>
+                    <p class="text-muted text-small mb-0">
+                        {{'label-title.pre-notification-time-for-rental-trip-detail' | translate}}
+                    </p>
+                </a>
+            </div>
+            <div class="comment-likes">
+                <span class="post-icon">
+                    <a href="javascript:;">
+                        <span>{{setting_detail.rental_trip_pre_notification_time}} {{'label-title.min' | translate}}</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-basic-and-trip-setting-modal #storeSettingModal (basic_setting_data)="getSettingData()"></app-basic-and-trip-setting-modal>

@@ -1,0 +1,71 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!is_edit" >{{'heading-title.add-new-banner' | translate}}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="is_edit">{{'heading-title.edit-banner' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form">
+                        <form [formGroup]="bannerForm" class="form" appFocus>
+                            <div class="form-group">
+                                <label for="banner_title" class="">{{'label-title.banner_title' | translate}}</label>
+                                <input id="banner_title" type="text" class="form-control" formControlName="banner_title" required>
+                                <div class="error"
+                                    *ngIf="bannerForm.get('banner_title').errors && bannerForm.get('banner_title').touched">
+                                    <span
+                                        *ngIf="bannerForm.get('banner_title').errors.required">{{'validation-title.banner_title-is-required'
+                                        | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="redirect_url" class="">{{'label-title.redirect_url' | translate}}</label>
+                                <input id="redirect_url" type="text" class="form-control" formControlName="redirect_url" required (keypress)="_helper.nospace_validation($event)">
+                                <div class="error"
+                                    *ngIf="bannerForm.get('redirect_url').errors && bannerForm.get('redirect_url').touched">
+                                    <span
+                                        *ngIf="bannerForm.get('redirect_url').errors.required">{{'validation-title.redirect_url_is_required'
+                                        | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                    <span>{{ 'label-title.action_link' | translate }}</span>
+                                    <ng-select appearance="outline" name="delivery" formControlName="action_link"  placeholder="{{'label-title.choose' | translate}}..">
+                                        <ng-option *ngFor="let type of action_type" [value]="type.value">{{type.label}}</ng-option>
+                                      </ng-select>
+                            </div>
+                     
+                            <div class="mb-3">
+                                <label for="action_text" class="">{{'label-title.action_text' | translate}}</label>
+                                <input id="action_text" type="text" class="form-control" formControlName="action_text" required >
+                                <div class="error"
+                                    *ngIf="bannerForm.get('action_text').errors && bannerForm.get('action_text').touched">
+                                    <span
+                                        *ngIf="bannerForm.get('action_text').errors.required">{{'validation-title.action_text_is_required'
+                                        | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+                                <label for="">{{ 'label-title.is_visible' | translate }}<span class="text-primary t-url ml-1" ></span></label>
+                                    <input type="checkbox" id="is_visible" class="custom-control-input" formControlName="is_visible">
+                                    <label for="is_visible" class="custom-control-label"></label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="button-split" type="button" class="btn btn-outline-primary"
+                        (click)="closeModal()">{{'button-title.cancel' | translate}}</button>
+                    <button type="submit" class="btn btn-primary float-right" (click)="submit()">{{'button-title.submit'
+                        | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

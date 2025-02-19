@@ -1,0 +1,10 @@
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ 'dashboards.order-stock' | translate }}</h5>
+        <div class="chart-container">
+            <app-bar-chart [shadow]="true" [options]="chartDataConfig.barChartOptions" [data]="barChartData"></app-bar-chart>
+        </div>
+    </div>
+</div>
+

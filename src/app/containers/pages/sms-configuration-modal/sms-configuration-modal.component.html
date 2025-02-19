@@ -1,0 +1,50 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.sms_configuration' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="smsConfigurationForm" class="tooltip-label-center">
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="twilio_account_sid">{{'label-title.twilio_account_sid' | translate}}</label>
+                                <input type="text" id="twilio_account_sid" class="form-control"
+                                    name="twilio_account_sid" formControlName="twilio_account_sid">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="twilio_auth_token">{{'label-title.twilio_auth_token' | translate}}</label>
+                                <input type="text" id="twilio_auth_token" class="form-control"
+                                    name="twilio_auth_token" formControlName="twilio_auth_token">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="twilio_number">{{'label-title.twilio_number' | translate}}</label>
+                                <input type="text" id="twilio_number" class="form-control"
+                                    name="twilio_number" formControlName="twilio_number">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="twiml_url">{{'label-title.twilio_call_url' | translate}}</label>
+                                <input type="text" id="twiml_url" class="form-control"
+                                    name="twiml_url" formControlName="twiml_url">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" (click)="update()"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

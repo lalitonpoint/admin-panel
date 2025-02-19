@@ -1,0 +1,49 @@
+.tableScroll {
+    min-width: 750px;
+    overflow-y: auto;
+}
+
+.statementDetail {
+    text-align: center;
+
+    .card-box {
+        margin-bottom: 15px;
+        width: 17%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .statementDetail {
+        flex-wrap: wrap;
+        justify-content: unset !important;
+    }
+
+    .statementDetail .card-box {
+        width: 33%;
+    }
+}
+
+@media (max-width: 540px) {
+    .statementDetail .card-box {
+        width: 50%;
+    }
+}
+
+.col-xl-2 {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    .card {
+        height: 100%;
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            span {
+                white-space: nowrap;
+            }
+        }
+    }
+}

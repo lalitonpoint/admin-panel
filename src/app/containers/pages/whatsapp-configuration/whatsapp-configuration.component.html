@@ -1,0 +1,27 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.whatsapp-configuration' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.whatsapp-configuration-tooltip' | translate}}" placement="right"></i></span></h5>
+            <div class="d-flex">
+                <div class="mr-1" *ngIf="setting_detail.is_whatsapp_authenticated && setting_detail.whatsapp_status == 'READY'">
+                    <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                        (click)="logout()">
+                        {{'button-title.logout' | translate }}
+                    </button>
+                </div>
+                <button class="btn p-0" style="height: fit-content;margin-top: 5px;" (click)="getSettingData()">
+                    <i class="simple-icon-reload" style="font-size: 16px;"></i>
+                </button>
+            </div>
+        </div>
+        <div class="">
+            <div class="d-flex mb-2" [ngClass]="{'justify-content-center' : !setting_detail.is_whatsapp_authenticated}">
+                <p class="mr-2 mb-0">{{'label-title.status' | translate}} :</p>
+                <p class="text-primary mb-0">{{setting_detail.whatsapp_status}}</p>
+            </div>
+            <div class="text-center" *ngIf="!setting_detail.is_whatsapp_authenticated && setting_detail.whatsapp_status == 'QR RECEIVED'">
+                <img [src]="setting_detail.whatsapp_qrcode" alt="">
+            </div>
+        </div>
+    </div>
+</div>

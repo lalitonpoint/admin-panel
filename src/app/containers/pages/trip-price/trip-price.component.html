@@ -1,0 +1,272 @@
+<div class="row" *ngIf="selected_cityType != null">
+    <div class="position-absolute cityTypeBtn" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+        <button class="btn btn-xs btn-outline-primary" (click)="showPriceSettingModal()">
+            {{'button-title.edit' | translate}}
+        </button>
+    </div>
+    <div class="col-lg-6 col-md-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title font-weight-semibold">{{'label-title.price-settings' | translate}}</h5>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.provider-profit' | translate}} <span class="simple-icon-info mb-0 ml-1 position-relative" style="top: 1px;" tooltip="{{'label-title.provider-profit-tootltip' | translate}}" placement="right"> </span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.provider_profit}} %</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.distance-for-base-price' | translate}} <span class="simple-icon-info ml-1 mb-0 position-relative" style="top: 1px;" tooltip="{{'label-title.tooltip_distance_for_base_price' | translate}}" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.base_price_distance}} 
+                            <span *ngIf="unit==1">{{'label-title.km' | translate}}</span>
+                            <span *ngIf="unit==0">{{'label-title.mile' | translate}}</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.base-price' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_base_price' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.base_price?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.Price-per-unit-distance' | translate}} <span class="simple-icon-info ml-1 mb-0 position-relative" tooltip="{{'label-title.tooltip_price_per_unit_distance' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.price_per_unit_distance?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.Price-per-unit-time-min' | translate}} <span class="simple-icon-info ml-1 mb-0 position-relative" tooltip="{{'label-title.tooltip_price_per_unit_distance' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.price_for_total_time?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share != _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.waiting-time-start-after-minute' | translate}} <span class="simple-icon-info ml-1 mb-0 position-relative" tooltip="{{'label-title.tooltip_waiting_time_start_after_minute' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.waiting_time_start_after_minute}} {{'label-title.min' | translate}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share != _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.price-for-waiting-time' | translate}}  <span class="simple-icon-info ml-1 position-relative mb-0 " tooltip="{{'label-title.tooltip_price_for_waiting_time' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.price_for_waiting_time?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <!--------------
+                    Commented below code as this functionality is still not implemented in android and iOS apps 
+                -------------->
+                <!-- <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.free-waiting-time-for-multiple-location' | translate}}</p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.waiting_time_start_after_minute_multiple_stops}} {{'label-title.min' | translate}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.Price-waiting-time-for-multiple-location' | translate}}</p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.price_for_waiting_time_multiple_stops?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div> -->
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.min-fare' | translate}} <span class="simple-icon-info mb-0 ml-1 position-relative" tooltip="{{'label-title.tooltip_min_fare' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.min_fare?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row  justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share != _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.max-space' | translate}} <span class="simple-icon-info mb-0 ml-1 position-relative" tooltip="{{'label-title.tooltip_max_space' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.max_space}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share == _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.baggage-allowance' | translate}} <span class="simple-icon-info ml-1 mb-0 position-relative" tooltip="{{'label-title.tooltip_baggage_allowacation' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.luggage_allowacation}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share == _helper.SERVICE_PRICE_TYPE.OPEN_RIDE">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.vehicle-capacity' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_vehicle_capacity' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.vehicle_capacity}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-12 mb-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title font-weight-semibold">{{'label-title.tax-settings' | translate}}</h5>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.cancellation-fee' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_cancellation_fee' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.cancellation_fee?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.tax' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_tax' | translate}}" placement="right" style="top: 1px;"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.tax}} %</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.user-miscellaneous-fee' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0 " tooltip="{{'label-title.tooltip_user_miscellaneous_fee' | translate}}" style="top: 1px;" placement="right"></span>
+                            </p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.user_miscellaneous_fee?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.user-tax' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_user_tax' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.user_tax}} %</a>
+
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.provider-miscellaneous-fee' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_provider_miscellaneous_fee' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.provider_miscellaneous_fee?.toFixed(_helper.to_fixed_number)}} {{currencysign}}</a>
+                    </div>
+                </div>
+                <div class="d-flex flex-row  justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.provider-tax' | translate}} <span class="simple-icon-info ml-1 position-relative mb-0" tooltip="{{'label-title.tooltip_provider_tax' | translate}}" style="top: 1px;" placement="right"></span></p>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:;">{{selected_cityType.provider_tax}} %</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title font-weight-semibold">{{'label-title.other-settings' | translate}}</h5>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.business' | translate}}</p>
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <span *ngIf="!selected_cityType.is_business" class="badge badge-danger rounded">{{'label-title.off' | translate}}</span>
+                        <span *ngIf="selected_cityType.is_business" class="badge badge-success rounded">{{'label-title.on' | translate}}</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top" *ngIf="selected_cityType.is_ride_share == _helper.SERVICE_PRICE_TYPE.NORMAL">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.car-rental-business' | translate}}</p>
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <span *ngIf="!selected_cityType.is_car_rental_business" class="badge badge-danger rounded">{{'label-title.off' | translate}}</span>
+                        <span *ngIf="selected_cityType.is_car_rental_business" class="badge badge-success rounded">{{'label-title.on' | translate}}</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.is-zone' | translate}}</p>
+                        </a>
+                    </div>
+                    <div class="float-right">
+                        <span *ngIf="!selected_cityType.is_zone" class="badge badge-danger rounded">{{'label-title.off' | translate}}</span>
+                        <span *ngIf="selected_cityType.is_zone" class="badge badge-success rounded">{{'label-title.on' | translate}}</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row  justify-content-between align-items-top">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.is-surge-hours' | translate}}</p>
+                        </a>
+                    </div>
+                    <div  class="float-right">
+                        <span *ngIf="!selected_cityType.is_surge_hours" class="badge badge-danger rounded">{{'label-title.off' | translate}}</span>
+                        <span *ngIf="selected_cityType.is_surge_hours" class="badge badge-success rounded">{{'label-title.on' | translate}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card" *ngIf="selected_cityType == null">
+    <div class="card-body text-center font-weight-bold text-capitalize">{{'validation-title.no-data-found' | translate}}</div>
+</div>
+<app-trip-charge-settingmodal #tripChargeSettingModal (tripChargeHandler)="parentCall()"></app-trip-charge-settingmodal>

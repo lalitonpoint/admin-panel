@@ -1,0 +1,29 @@
+.pickupImg {
+    width: 8rem;
+    min-height: 125px;
+    max-height: 125px;
+}
+
+.mapImage {
+    min-height: 200px;
+}
+
+@media screen and (max-width : 1442px) {
+
+    .card-img-top,
+    .mapImage {
+        max-height: 150px;
+        min-height: 150px;
+    }
+
+    .mapImage .card-img-top {
+        max-height: 80px;
+        min-height: 80px;
+    }
+}
+
+@media screen and (max-width : 540px) {
+    .card-img-top {
+        max-width: 380px;
+    }
+}

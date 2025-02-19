@@ -1,0 +1,55 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex">
+      <h3 class="card-title " style="font-weight: 600;">{{ 'heading-title.earning' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 info-tooltip" style="top: 2px;" tooltip="{{'tooltip-title.earning-tooltip' | translate}}" placement="right"></i></span></h3>
+      <div class="ml-3 d-block d-md-inline-block position-relative">
+        <ng-container *ngIf="created_at">
+          <div class="float-md-left mr-1 mb-1" dropdown>
+            <div (clickOutside)="dropdown3.hide()" class=" d-inline-block position-relative">
+              <div class="btn-group" dropdown #dropdown3="bs-dropdown" [autoClose]="true" [isOpen]="false">
+                <button dropdownToggle type="button" class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle">
+                  {{selected_start_month | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{selected_end_month |
+                  date:_helper.DATE_FORMAT.MMM_YYYY}}<span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu week_date_list date-filter-dropdown-scroll" role="menu">
+                  <li role="menuitem" *ngFor="let week_day of week_days; let i= index">
+                    <a class="dropdown-item" [ngClass]="{'active':selected_end_month === week_day[1]}"
+                      (click)="changeMonts(week_days[i][0],week_days[i][1])" href="javascript:;">
+                      {{week_days[i][0] | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{week_days[i][1] |
+                      date:_helper.DATE_FORMAT.MMM_YYYY}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="created_at">
+          <div class="float-md-left mr-1 mb-1" dropdown *ngIf="!created_at">
+            <div (clickOutside)="dropdown3.hide()" class=" d-inline-block position-relative">
+              <div class="btn-group" dropdown #dropdown3="bs-dropdown" [autoClose]="true" [isOpen]="false">
+                <button dropdownToggle type="button" class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle">
+                  {{selected_start_month | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{selected_end_month |
+                  date:_helper.DATE_FORMAT.MMM_YYYY}}<span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu week_date_list date-filter-dropdown-scroll" role="menu">
+                  <li role="menuitem" *ngFor="let week_day of week_days; let i= index">
+                    <a class="dropdown-item" [ngClass]="{'active':selected_end_month === week_day}"
+                      (click)="changeMonts(week_days[i+1],week_days[i])" href="javascript:;" *ngIf="i <= week_days.length - 2">
+                      {{week_days[i+1] | date:_helper.DATE_FORMAT.MMM_YYYY}} - {{week_days[i] |
+                      date:_helper.DATE_FORMAT.MMM_YYYY}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="dashboard-line-chart">
+        <app-line-chart #lineChart [shadow]="true" [options]="chartDataConfig.lineChartOptions" [data]="lineChartData" [line_chart_item_bsRangeValue]="line_chart_item_bsRangeValue">
+      </app-line-chart>
+    </div>
+  </div>
+</div>

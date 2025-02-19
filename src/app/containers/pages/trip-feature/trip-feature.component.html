@@ -1,0 +1,265 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'label-title.trip_feature_settings' | translate }}</h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="onClickTripSetting()">
+                    {{ !is_edit_trip_settings ? ('button-title.edit' | translate) : ('button-title.save' | translate)}}
+                </button>
+            </div>
+        </div>
+        <div class="form">
+            <form class="form" [formGroup]="tripForm">
+                <div class="border-bottom mb-3 pb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.can_we_allow_driver' | translate }} 
+                                </p>
+                                <p class="text-muted text-small mb-0">{{'label-title.can_we_allow_driver_description' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch101" formControlName="is_receive_new_request_near_destination" class="custom-control-input">
+                                <label for="customSwitch101" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.howmuch_radius_set' | translate }}</p>
+                                <p class="text-muted mb-1 text-small">{{'label-title.howmuch_radius_set_description' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <ng-select appearance="outline" [searchable]="true" [clearable]="false"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" formControlName="near_destination_radius">
+                                <ng-option [value]="200">200</ng-option>
+                                <ng-option [value]="400">400</ng-option>
+                                <ng-option [value]="600">600</ng-option>
+                                <ng-option [value]="800">800</ng-option>
+                                <ng-option [value]="1000">1000</ng-option>
+                                <ng-option [value]="1200">1200</ng-option>
+                                <ng-option [value]="1400">1400</ng-option>
+                                <ng-option [value]="1600">1600</ng-option>
+                                <ng-option [value]="1800">1800</ng-option>
+                                <ng-option [value]="2000">2000</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-bottom mb-3 pb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.do_allow_driver_go_home' | translate
+                                    }}</p>
+                                <p class="text-muted text-small mb-1">
+                                    {{'label-title.do_allow_driver_go_home_description1' |
+                                    translate }}</p>
+                                <p class="text-muted text-small mb-0">
+                                    {{'label-title.do_allow_driver_go_home_description2' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch102" formControlName="is_driver_go_home" class="custom-control-input">
+                                <label for="customSwitch102" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.are_we_allow_driver_change_address' |
+                                    translate }}</p>
+                                <p class="text-muted text-small mb-0">
+                                    {{'label-title.are_we_allow_driver_change_address_description' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch103" formControlName="is_driver_go_home_change_address" class="custom-control-input">
+                                <label for="customSwitch103" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.radius_set_driver_home_destination' |
+                                    translate }}</p>
+                                <p class="text-muted mb-1 text-small">
+                                    {{'label-title.radius_set_driver_home_destination_description' | translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <ng-select appearance="outline" [searchable]="true" [clearable]="false"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" formControlName="driver_go_home_radius">
+                                <ng-option [value]="200">200</ng-option>
+                                <ng-option [value]="400">400</ng-option>
+                                <ng-option [value]="600">600</ng-option>
+                                <ng-option [value]="800">800</ng-option>
+                                <ng-option [value]="1000">1000</ng-option>
+                                <ng-option [value]="1200">1200</ng-option>
+                                <ng-option [value]="1400">1400</ng-option>
+                                <ng-option [value]="1600">1600</ng-option>
+                                <ng-option [value]="1800">1800</ng-option>
+                                <ng-option [value]="2000">2000</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-bottom mb-3 pb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.can_user_add_multiple_stop' |
+                                    translate }}</p>
+                                <p class="text-muted text-small mb-0">
+                                    {{'label-title.can_user_add_multiple_stop_description' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch104" formControlName="is_allow_multiple_stop" class="custom-control-input">
+                                <label for="customSwitch104" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-2">{{'label-title.waiting_time_charges' | translate }}
+                                </p>
+                                <p class="text-muted text-small mb-1">{{'label-title.waiting_time_charges_description1'
+                                    |
+                                    translate }}</p>
+                                <p class="text-muted text-small mb-0">{{'label-title.waiting_time_charges_description2'
+                                    |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch105" formControlName="is_multiple_stop_waiting_free_on_each_stop" class="custom-control-input">
+                                <label for="customSwitch105" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-1">{{'label-title.howmany_stop_user_can_enter' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <ng-select appearance="outline" [searchable]="true" [clearable]="false"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" formControlName="multiple_stop_count">
+                                <ng-option [value]="1">1</ng-option>
+                                <ng-option [value]="2">2</ng-option>
+                                <ng-option [value]="3">3</ng-option>
+                                <ng-option [value]="4">4</ng-option>
+                                <ng-option [value]="5">5</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-bottom mb-3 pb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-1">{{'label-title.can_user_rideshare' | translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch106" formControlName="is_allow_ride_share" class="custom-control-input">
+                                <label for="customSwitch106" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-1">{{'label-title.set_radius_for_pickup_new_user' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <ng-select appearance="outline" [searchable]="true" [clearable]="false"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" formControlName="ride_share_pickup_radius">
+                                <ng-option [value]="1">1</ng-option>
+                                <ng-option [value]="2">2</ng-option>
+                                <ng-option [value]="3">3</ng-option>
+                                <ng-option [value]="4">4</ng-option>
+                                <ng-option [value]="5">5</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-1">{{'label-title.set_radius_for_destination_area' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <ng-select appearance="outline" [searchable]="true" [clearable]="false"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" formControlName="ride_share_destination_radius">
+                                <ng-option [value]="1">1</ng-option>
+                                <ng-option [value]="2">2</ng-option>
+                                <ng-option [value]="3">3</ng-option>
+                                <ng-option [value]="4">4</ng-option>
+                                <ng-option [value]="5">5</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-bottom mb-3 pb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-1">{{'label-title.split_payment' | translate }}</p>
+                                <p class="text-muted text-small mb-0">{{'label-title.split_payment_with_friend' |
+                                    translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" id="customSwitch107" formControlName="is_split_payment" class="custom-control-input">
+                                <label for="customSwitch107" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="flex-grow-1 my-auto">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-1">{{'label-title.max_split_user' | translate }}</p>
+                            </a>
+                        </div>
+                        <div class="comment-likes text-right ml-2">
+                            <ng-select appearance="outline" [searchable]="true" [clearable]="false"
+                                notFoundText="{{'validation-title.no-data-found' | translate}}" formControlName="max_split_user">
+                                <ng-option [value]="1">1</ng-option>
+                                <ng-option [value]="2">2</ng-option>
+                                <ng-option [value]="3">3</ng-option>
+                                <ng-option [value]="4">4</ng-option>
+                                <ng-option [value]="5">5</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

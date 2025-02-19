@@ -1,0 +1,200 @@
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left" *ngIf="!promo_data">{{'heading-title.add-new-promo' | translate}}</h4>
+    <h4 class="modal-title pull-left" *ngIf="promo_data">{{'heading-title.edit_promo' | translate}} ( {{promo_data.promocode}} )</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="commonForm" class="tooltip-label-center" appFocus>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="promocode">{{'label-title.promo-code' | translate }}</label>
+          <input type="text" id="promocode" class="form-control" formControlName="promocode"
+            placeholder="{{'label-title.promo-code' | translate }}" (keypress)="_helper.special_char_validation_and_space_validation($event)">
+          <div *ngIf="commonForm.get('promocode').errors?.required && commonForm.get('promocode').touched"
+            class="invalid-tooltip">
+            {{'label-title.promo-code' | translate }}  {{'label-title.name' | translate }} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4" *ngIf="promo_data">
+        <div class="d-flex justify-content-between p-0 custom-control custom-switch">
+          <span>{{'label-title.is_promo_active' | translate }}</span>
+          <input type="checkbox" id="customSwitch_promo" formControlName="state" class="custom-control-input">
+          <label for="customSwitch_promo" class="custom-control-label"></label>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="promotype">{{'label-title.type' | translate }}</label>
+          <ng-select appearance="outline" #promotype labelForId="promotype" [searchable]="false" [clearable]="false"
+            formControlName="code_type" placeholder="{{'label-title.select-type' | translate}}" (change)="setNewValidators($event)">
+            <ng-option [value]="1">{{'label-title.absolute' | translate }}</ng-option>
+            <ng-option [value]="2">{{'pages.percentage' | translate }}</ng-option>
+          </ng-select>
+          <div *ngIf="commonForm.get('code_type').errors?.required && commonForm.get('code_type').touched"
+            class="invalid-tooltip">
+            {{'label-title.type' | translate}} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="codevalue">{{'label-title.value' | translate }}</label>
+          <input type="number" id="codevalue" class="form-control" formControlName="code_value"
+            placeholder="{{'label-title.value' | translate }}" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.decimalNum_validation($event);commonForm.value.code_type == 2 ? _helper.maxLengthValidation($event,3) : ''" maxlength="{{_helper.maxlength}}" noPasteDrop>
+          <div *ngIf="commonForm.get('code_value').errors && commonForm.get('code_value').touched"
+            class="invalid-tooltip">
+            <span *ngIf="commonForm.get('code_value').errors?.required">
+              {{'label-title.value' | translate }} {{'label-title.is-required' | translate }}
+            </span>
+            <span *ngIf="commonForm.get('code_value').errors?.profitValueInvalid">
+              {{'validation-title.profit-validation' | translate}}
+            </span>
+            <span *ngIf="!commonForm.get('code_value').errors?.required && commonForm.get('code_value').errors?.minValue">
+              {{'validation-title.the-value-should-be-above-0' | translate}}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="usagesno">{{'label-title.no-of-usages' | translate }}</label>
+          <input type="number" id="usagesno" class="form-control" formControlName="code_uses"
+            placeholder="{{'label-title.no-of-usages' | translate }}" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)" maxlength="{{_helper.maxlength}}" noPasteDrop>
+          <div *ngIf="commonForm.get('code_uses').errors && commonForm.get('code_uses').touched"
+            class="invalid-tooltip">
+            <span *ngIf="commonForm.get('code_uses').errors?.required">
+              {{'label-title.no-of-usages' | translate }} {{'label-title.is-required' | translate }}
+            </span>
+            <span *ngIf="commonForm.get('code_uses').errors?.min">
+              {{'validation-title.the-value-should-be-above-0' | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="countryvalid">{{'label-title.country' | translate }}</label>
+          <ng-select appearance="outline" labelForId="countryvalid" [searchable]="true" [clearable]="false" class="form-select"
+            placeholder="{{'label-title.select-country' | translate}}" formControlName="country_name"
+            (change)="onChangeCountry(null)">
+            <ng-option [value]="country.countryname" class="form-control" *ngFor="let country of all_countries">{{country.countryname}}
+            </ng-option>
+          </ng-select>
+          <div *ngIf="commonForm.get('country_name').errors?.required && commonForm.get('country_name').touched"
+            class="invalid-tooltip">
+            {{'label-title.country' | translate}} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="cityvalid">{{'label-title.city' | translate }}</label>
+          <ng-select [multiple]="true" [closeOnSelect]="false" formControlName="cityid" [clearable]="false" [searchable]="true"
+            placeholder="{{'label-title.select-city' | translate}}" class="city-name">
+            <ng-option *ngFor="let city of city_list" [value]="city._id">{{city.cityname}}
+            </ng-option>
+          </ng-select>
+          <div *ngIf="commonForm.get('cityid').errors?.required && commonForm.get('cityid').touched"
+            class="invalid-tooltip">
+            {{'label-title.city' | translate}} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="start_date">{{'label-title.start_date' | translate }}</label>
+            <input *ngIf="!promo_data" id="start_date" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker placeholder="{{'label-title.start_date' | translate }}"
+            [bsConfig]="{ adaptivePosition: true }" formControlName="start_date" [readOnly]="true" [minDate]="todayDate">
+            <input *ngIf="promo_data" id="start_date" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker placeholder="{{'label-title.start_date' | translate }}"
+            [bsConfig]="{ adaptivePosition: true }" formControlName="start_date" [readOnly]="true" [minDate]="commonForm.value.start_date">
+          <div *ngIf="commonForm.get('start_date')?.errors?.required && commonForm.get('start_date').touched"
+            class="invalid-tooltip">{{'label-title.start_date' | translate }} {{'label-title.is-required' | translate
+            }}</div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="expdate">{{'label-title.expiry_date' | translate }}</label>
+            <input *ngIf="!promo_data" id="expdate" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker placeholder="{{'label-title.expiry_date' | translate }}"
+            [bsConfig]="{ adaptivePosition: true }" formControlName="code_expiry" [readOnly]="true" [minDate]="commonForm.value.start_date ? commonForm.value.start_date : todayDate">
+            <input *ngIf="promo_data" id="expdate" type="text" class="form-control bg-unset" [container]="'html'" bsDatepicker placeholder="{{'label-title.expiry_date' | translate }}"
+            [bsConfig]="{ adaptivePosition: true }" formControlName="code_expiry" [readOnly]="true" [minDate]="commonForm.value.start_date">
+          <div *ngIf="commonForm.get('code_expiry')?.errors?.required && commonForm.get('code_expiry').touched"
+            class="invalid-tooltip">{{'label-title.expiry_date' | translate }} {{'label-title.is-required' | translate
+            }}</div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="completed_trips">{{'label-title.completed_trips' | translate }}</label>
+          <ng-select appearance="outline" #completed_trips labelForId="completed_trips" class="completed_trips" [searchable]="false" [clearable]="false"
+            placeholder="{{'label-title.completed_trips' | translate}}" formControlName="completed_trips_type">
+            <ng-option [value]="2">{{'label-title.minimum_number_of_completed_trips' | translate }}</ng-option>
+            <ng-option [value]="1">{{'label-title.specific_number_of_completed_trips' | translate }}</ng-option>
+          </ng-select>
+          <div
+            *ngIf="commonForm.get('completed_trips_type').errors?.required && commonForm.get('completed_trips_type').touched"
+            class="invalid-tooltip">
+            {{'label-title.completed_trips' | translate}} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="usagesno">{{'label-title.number_of_trips' | translate }}</label>
+          <input type="number" id="usagesno" class="form-control" formControlName="completed_trips_value"
+            placeholder="{{'label-title.number_of_trips' | translate }}" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.number_validation($event)" maxlength="{{_helper.maxlength}}" noPasteDrop>
+          <div
+            *ngIf="commonForm.get('completed_trips_value').errors?.required && commonForm.get('completed_trips_value').touched"
+            class="invalid-tooltip">
+            {{'label-title.number_of_trips' | translate }} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="form-group">
+          <label for="usagesno">{{'label-title.description' | translate }}</label>
+          <textarea formControlName="description" name="description" rows="3"
+            class="form-control" required>
+          </textarea>
+          <div *ngIf="commonForm.get('description').errors?.required && commonForm.get('description').touched"
+            class="invalid-tooltip">
+            {{'label-title.description' | translate }} {{'label-title.is-required' | translate }}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && !promo_data" type="submit" (click)="submit()" class="btn btn-primary mb-2">{{'button-title.submit' |
+      translate }}</button>
+    <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) && promo_data" type="submit" (click)="submit()" class="btn btn-primary mb-2">{{'button-title.submit' |
+      translate }}</button>
+    <button id="button-split" type="button" class="btn btn-danger mb-2" (click)="deletePromo();modalRef.hide()"
+      *ngIf="promo_data && _helper.has_permission(_helper.PERMISSION.DELETE)">{{'button-title.delete' | translate }}</button>
+  </div>
+</ng-template>
+
+<ng-template #confirmationTemplate>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left" *ngIf="promo_data">{{promo_data.promocode}}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body p-0">
+      <div class="p-4">
+          <p>
+              {{'label-title.are-you-sure-you-want-to-delete-this' | translate}} {{'label-title.promo-code' | translate}}
+          </p>
+      </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" (click)="confirm()" class="btn btn-primary float-right">{{'button-title.confirm' |
+          translate}}</button>
+  </div>
+</ng-template>

@@ -1,0 +1,292 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="is_history">{{'heading-title.history' | translate}}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="!is_history && !vehicleDetails">{{'heading-title.add-vehicle' | translate}}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="!is_history && vehicleDetails">{{vehicleDetails.name}} ({{vehicleDetails.unique_id}})</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" *ngIf="!is_history">
+                    <div>
+                        <form [formGroup]="addVehicle" appFocus>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="country_id">{{'label-title.country' | translate}}</label>
+                                    <ng-select appearance="outline" labelForId="yesno" [searchable]="true"
+                                        [clearable]="false" formControlName="country_id" [readonly]="vehicleDetails">
+                                        <ng-option [value]="country._id"
+                                            *ngFor="let country of country_list">{{country.countryname}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <div *ngIf="addVehicle.controls['country_id'].invalid && (addVehicle.controls['country_id'].dirty || addVehicle.controls['country_id'].touched)"
+                                        class="error">
+                                        <span *ngIf="addVehicle.controls['country_id'].errors.required">
+                                            {{'label-title.country' | translate}} {{'label-title.is-required' |
+                                            translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <label for="vehicle_type">{{'label-title.vehicle-type' | translate}}</label>
+                                    <ng-select appearance="outline" labelForId="yesno" [searchable]="true"
+                                        [clearable]="false" formControlName="vehicle_type" [readonly]="vehicleDetails" (change)="changeVehicleType($event)">
+                                        <ng-option [value]="_helper.VEHICLE_TYPE.NORMAL">{{'label-title.normal' | translate}}</ng-option>
+                                        <ng-option [value]="_helper.VEHICLE_TYPE.EV">{{'label-title.ev' | translate}}</ng-option>
+                                    </ng-select>
+                                    <div *ngIf="addVehicle.controls['vehicle_type'].invalid && (addVehicle.controls['vehicle_type'].dirty || addVehicle.controls['vehicle_type'].touched)"
+                                        class="error">
+                                        <span *ngIf="addVehicle.controls['vehicle_type'].errors.required">
+                                            {{'label-title.vehicle-type' | translate}} {{'label-title.is-required' |
+                                            translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3" *ngIf="!vehicleDetails?.user_type_id">
+                                <div class="form-group">
+                                    <label for="inputState">{{'label-title.type' | translate }}</label>
+                                    <ng-select appearance="outline" #agreeSelect labelForId="service_type"
+                                        notFoundText="{{'validation-title.service-type-not-available' | translate}}"
+                                        formControlName="service_type" [searchable]="true" [clearable]="false"
+                                        placeholder="{{'label-title.choose' | translate}}"
+                                        [readonly]="vehicleDetails?.user_type_id">
+                                        <ng-option *ngFor="let type of filteredvehicleType" [value]="type._id">
+                                            <span>
+                                                {{type.typename}}
+                                            </span>
+                                        </ng-option>
+                                    </ng-select>
+                                    <div *ngIf="addVehicle.get('service_type').errors?.required && addVehicle.get('service_type').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.service-type' | translate}} {{'required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3" *ngIf="vehicleDetails?.user_type_id">
+                                <label for="inputState">{{'label-title.type' | translate }}</label>
+                                <input type="text" [value]="service_type_name" [ngModelOptions]="{standalone: true}" class="form-control" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="">{{'label-title.name' | translate}}</label>
+                                <ng-select appearance="outline" #agreeSelect labelForId="name" formControlName="name"
+                                    [searchable]="true" [clearable]="false" (change)="onCHangeBrandName($event)">
+                                    <ng-option *ngFor="let brand of brand_list" [value]="brand._id">
+                                        <span>
+                                            {{brand.name}}
+                                        </span>
+                                    </ng-option>
+                                </ng-select>
+                                <div *ngIf="addVehicle.controls['name'].invalid && (addVehicle.controls['name'].dirty || addVehicle.controls['name'].touched)"
+                                    class="error">
+                                    <span *ngIf="addVehicle.controls['name'].errors.required">
+                                        {{'validation-title.vehicle' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="">{{'label-title.modal' | translate}}</label>
+                                <ng-select appearance="outline" #agreeSelect labelForId="modal" formControlName="modal" [searchable]="true"
+                                    [clearable]="false" (change)="onChangeBrandModal($event)">
+                                    <ng-option *ngFor="let brand_modal of filtered_brand_modal_list" [value]="brand_modal._id">
+                                        <span>
+                                            {{brand_modal.name}}
+                                        </span>
+                                    </ng-option>
+                                </ng-select>
+                                <div *ngIf="addVehicle.controls['modal'].invalid && (addVehicle.controls['modal'].dirty || addVehicle.controls['modal'].touched)"
+                                    class="error">
+                                    <span *ngIf="addVehicle.controls['modal'].errors.required">
+                                        {{'validation-title.modal' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="">{{'label-title.plate-no' | translate}}</label>
+                                <input type="text" formControlName="plate_no" class="form-control"
+                                    placeholder="{{'label-title.plate-no' | translate}}">
+                                <div *ngIf="addVehicle.controls['plate_no'].invalid && (addVehicle.controls['plate_no'].dirty || addVehicle.controls['plate_no'].touched)"
+                                    class="error">
+                                    <span *ngIf="addVehicle.controls['plate_no'].errors.required">
+                                        {{'validation-title.plate-no' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="">{{'label-title.year' | translate}}</label>
+                                <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)"
+                                    (wheel)="(false)" (keypress)="_helper.number_validation($event)" maxlength="4"
+                                    formControlName="year" class="form-control"
+                                    placeholder="{{'label-title.year' | translate}}">
+                                <div *ngIf="addVehicle.controls['year'].invalid && (addVehicle.controls['year'].dirty || addVehicle.controls['year'].touched)"
+                                    class="error">
+                                    <span *ngIf="addVehicle.controls['year'].errors.required">
+                                        {{'validation-title.year' | translate}}
+                                    </span>
+                                    <span *ngIf="addVehicle.controls['year'].errors.yearInvalid">
+                                        {{'validation-title.year-validation' | translate}} {{currentYear}}.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="">{{'label-title.color' | translate}}</label>
+                                <input type="text" formControlName="color" class="form-control"
+                                    placeholder="{{'label-title.color' | translate}}" pattern="[a-zA-Z ]*">
+                                <div *ngIf="addVehicle.controls['color'].invalid && (addVehicle.controls['color'].dirty || addVehicle.controls['color'].touched)"
+                                    class="error">
+                                    <span *ngIf="addVehicle.controls['color'].errors.required">
+                                        {{'validation-title.color' | translate}}
+                                    </span>
+                                    <span *ngIf="addVehicle.controls['color'].errors.pattern">
+                                        {{'validation-title.only-text-allowed' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="">{{'label-title.accessibility' |
+                                    translate}}</label>
+                                <ng-select [multiple]="true" [closeOnSelect]="false" formControlName="accessibility">
+                                    <ng-option value="baby_seat">{{'label-title.baby-seat' |
+                                        translate}}</ng-option>
+                                    <ng-option value="hotspot">{{'label-title.hotspot' |
+                                        translate}}</ng-option>
+                                    <ng-option value="handicap">{{'label-title.handicap' |
+                                        translate}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </form>
+                    </div>
+                    <div *ngIf="vehicleDetails">
+                        <div class="separator my-4"></div>
+                        <div class="w-100 mb-3" *ngIf="vehicleDocument && vehicleDocument.length>0">
+                            <p class="text-primary mb-0"> {{'validation-title.please-upload-document-in-formate' | translate}}</p>
+                        </div>
+                        <div class="card shadow-none" *ngFor="let document of  vehicleDocument ; let j = index ">
+                            <div class="position-absolute card-top-buttons p-0" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                <button type="button" class="btn btn-outline-primary btn-xs" *ngIf="!document.isDocumentEdit"
+                                    (click)="onVehicelDocumentEdit(document , j)" [disabled]="isDocumentEdit"> {{
+                                    'button-title.edit' |
+                                    translate }} </button>
+                                <button type="button" *ngIf="document.isDocumentEdit"
+                                    [ngClass]="{'btn-disabled':(document.is_expired_date && !updateDocument.value.expired_date) || (document.is_unique_code && !updateDocument.value.unique_code)}"
+                                    (click)="onVehicelDocumentUpdate(document,updateDocument.value , vehicle)"
+                                    class="btn btn-outline-primary btn-xs ">
+                                    {{'button-title.update' |
+                                    translate }}
+                                </button>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="mb-3 list-item-heading font-weight-bold">
+                                    {{document.name | titlecase}}<span class="text-danger" *ngIf="document.option == 1">*</span></h5>
+                                <div>
+                                    <form [formGroup]="updateDocument">
+                                        <div class="d-flex flex-row mb-3">
+                                            <a href="javascript:;" class="w-40 d-block position-relative doc vehicleDoc">
+                                                <div class="position-absolute card-bottom-buttons p-0">
+                                                    <input id="vehicleDocfile" type="file" (change)="onSelectImageFile($event)" #document1 />
+                                                    <button
+                                                        *ngIf="!document.isDocumentEdit && (document.document_picture != IMAGE_URL) && document.is_download == true && _helper.has_permission(_helper.PERMISSION.EXPORT)"
+                                                        class="btn btn-outline-primary icon-button"
+                                                        (click)="onDownload(document.document_picture,document.name)">
+                                                        <i class="simple-icon-cloud-download"></i>
+                                                    </button>
+                                                    <button *ngIf="document.isDocumentEdit" type="button"
+                                                        class="btn btn-outline-primary icon-button"
+                                                        onclick="document.getElementById('vehicleDocfile').click();">
+                                                        <i class="simple-icon-pencil"></i>
+                                                    </button>
+                                                </div>
+                                                <img (error)="$event.target.src = _helper.DEFAULT_IMAGE.DOCUMENT_PROFILE" class="vehicledocImage"
+                                                    [src]="document.document_picture ? document.document_picture : _helper.DEFAULT_IMAGE.DOCUMENT_PROFILE"
+                                                    [alt]="document.name" *ngIf="document.document_picture.split('.').pop() != 'pdf'">
+                                                <img class="dInfo-card-img-left vehicledocImage p-2"
+                                                    src="../../../../assets/default_images/pdf_img.png" [alt]="document.name"
+                                                    *ngIf="document.document_picture.split('.').pop() == 'pdf'">
+                                                <span class="badge badge-pill badge-theme-2 position-absolute badge-top-left"
+                                                    *ngIf="document.is_document_expired">{{'heading-title.expired'
+                                                    | translate }}</span>
+                                            </a>
+                                            <div class="w-60 pl-3 pr-2">
+                                                <div class="formGroup mb-2 position-relative" *ngIf="document.is_expired_date == true">
+                                                    <p class="text-small text-muted mb-1">
+                                                        {{'label-title.expiry-date' |
+                                                        translate }}</p>
+                                                    <a href="javascript:;" *ngIf="document.expired_date && !document.isDocumentEdit ">
+                                                        <p class="list-item-heading">
+                                                            {{document.expired_date | date :_helper.DATE_FORMAT.DD_MM_YYYY}}</p>
+                                                    </a>
+                                                    <a href="javascript:;"
+                                                        *ngIf="!document.expired_date && !document.isDocumentEdit || !document.is_expired_date">
+                                                        <p class="list-item-heading"> ---
+                                                        </p>
+                                                    </a>
+                                                    <input type="text" class="form-control background-unset" formControlName="expired_date"
+                                                        [showWeeks]="false" [minDate]="todayDate"
+                                                        *ngIf="document.isDocumentEdit && document.is_expired_date" bsDatepicker readonly
+                                                        [bsConfig]="{ isAnimated: true ,dateInputFormat: 'YYYY-MM-DD' , containerClass: 'documentExpiry', showWeekNumbers:false }"
+                                                        [readOnly]="true">
+                                                    <div *ngIf="document.isDocumentEdit && document.is_expired_date && !this.updateDocument.value.expired_date && document.is_update_clicked == true"
+                                                        class="invalid-tooltip">
+                                                        {{'validation-title.expired-date-is-required' | translate}}
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="document.is_unique_code == true" class="position-relative">
+                                                    <p class="text-small text-muted mb-1">
+                                                        {{'label-title.unique-code' |
+                                                        translate }}</p>
+                                                    <a href="javascript:;" *ngIf="document.unique_code && !document.isDocumentEdit ">
+                                                        <p class="list-item-heading">
+                                                            {{document.unique_code}}</p>
+                                                    </a>
+                                                    <a href="javascript:;" *ngIf="!document.unique_code && !document.isDocumentEdit ">
+                                                        <p class="list-item-heading"> ---
+                                                        </p>
+                                                    </a>
+                                                    <input type="text" class="form-control" formControlName="unique_code"
+                                                        *ngIf="document.isDocumentEdit">
+                                                    <div *ngIf="document.isDocumentEdit && document.is_unique_code && !this.updateDocument.value.unique_code && document.is_update_clicked == true"
+                                                        class="invalid-tooltip">
+                                                        {{'validation-title.unique-code-is-required' | translate}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="separator my-4"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" *ngIf="is_history">
+                    <div class="mb-3 border-bottom">
+                        <ol class="order-step">
+                            <li class="border-transparent pb-3" *ngFor="let log of history?.logs">
+                                <span class="font-weight-bold">{{_helper.VEHICLE_HISTORY_TYPE_STRING[log.type] | translate}}
+                                </span>
+                                <p class="mb-0">{{'label-title.by' | translate}}
+                                    {{_helper.TRIP_STATUS_TYPE_VALUE_STRING[log.by] | translate}}&nbsp;<span
+                                        *ngIf="log.by">:&nbsp;</span>{{log.username}}</p>
+                                <p class="mb-0" *ngIf="log.type == _helper.VEHICLE_HISTORY_TYPE.ASSIGNED || log.type == _helper.VEHICLE_HISTORY_TYPE.UNASSIGNED">
+                                    <span *ngIf="log.type == _helper.VEHICLE_HISTORY_TYPE.ASSIGNED">{{'label-title.to' | translate}}</span>
+                                    <span *ngIf="log.type == _helper.VEHICLE_HISTORY_TYPE.UNASSIGNED">{{'label-title.from' | translate}}</span>
+                                    {{log.meta_data?.name}}
+                                </p>
+                                <p style="color: gray;font-size: 10px;">{{log.at | date:_helper.DATE_FORMAT.D_MMM_H_MM_A}}</p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="modal-footer" *ngIf="!is_history">
+                    <button type="submit" class="btn btn-primary float-right"
+                        (click)="saveVehicle()">{{'button-title.submit' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

@@ -1,0 +1,28 @@
+.top-right-button-container {
+    @media screen and (max-width : 576px) {
+        button {
+            padding: 0.6rem 1.5rem 0.6rem 1.5rem;
+            font-size: 12px;
+            line-height: 1;
+        }
+    }
+
+    @media screen and (max-width : 426px) {
+        button {
+            padding: 0.6rem 1rem 0.6rem 1rem;
+            font-size: 10px;
+            line-height: 1;
+        }
+    }
+}
+
+@media screen and (max-width : 912px) {
+    .flex-md-row {
+        flex-direction: unset !important;
+    }
+
+    .flex-column {
+        row-gap: 4px;
+        flex-direction: column !important;
+    }
+}

@@ -1,0 +1,40 @@
+<form [formGroup]="iosCertificateForm">
+    <div class="card form-group mb-4">
+        <div class="card-body">
+            <div class="d-flex flex-row justify-content-between">
+                <h5 class="card-title mb-3">{{'heading-title.ios-certificates' | translate }}</h5>
+                <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                    <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                        (click)="onClickIOSCertificatesSetting()" [disabled]="iosCertificateForm.invalid">
+                        {{ !is_edit_ios_certificate_settings ? ('button-title.edit' | translate) : ('button-title.save'
+                        | translate) }}</button>
+                </div>
+            </div>
+            <div class="form-group mb-4">
+                <label for="certi-mode">{{'label-title.certificate-mode' | translate }}</label>
+                <ng-select appearance="outline" labelForId="certi-mode" [searchable]="true" [clearable]="false"
+                    placeholder="{{'label-title.choose' | translate}}" formControlName="ios_certificate_mode">
+                    <ng-option value="production">{{'label-title.production' | translate}}</ng-option>
+                    <ng-option value="sandbox">{{'label-title.sandbox' | translate}}</ng-option>
+                </ng-select>
+            </div>
+            <div class="form-group mb-4">
+                <label for="user_bundle_id">{{'label-title.user_bundle_id' | translate }}</label>
+                <input type="text" name="" id="user_bundle_id" class="form-control" formControlName="user_bundle_id">
+            </div>
+            <div class="form-group mb-4">
+                <label for="driver_bundle_id">{{'label-title.driver_bundle_id' | translate }}</label>
+                <input type="text" name="" id="driver_bundle_id" class="form-control"
+                    formControlName="provider_bundle_id">
+            </div>
+            <div class="form-group mb-4">
+                <label for="team_id">{{'label-title.team_id' | translate }}</label>
+                <input type="text" name="" id="team_id" class="form-control" formControlName="team_id">
+            </div>
+            <div class="form-group mb-4">
+                <label for="Key_id">{{'label-title.Key_id' | translate }}</label>
+                <input type="text" name="" id="Key_id" class="form-control" formControlName="key_id">
+            </div>
+        </div>
+    </div>
+</form>

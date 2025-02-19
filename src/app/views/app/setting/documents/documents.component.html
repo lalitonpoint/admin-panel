@@ -1,0 +1,288 @@
+<div class="row mb-4">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero" style="width: fit-content;">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)" type="button" (click)="onAdd()"
+                class="top-right-button btn btn-primary btn-lg mr-1 mb-2">{{'button-title.add-new' | translate |
+                uppercase}}</button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <div class="display-options-container">
+            <div class="d-flex flex-wrap">
+                <div class="mr-2 mb-3">
+                    <div class="search-sm d-inline-block float-sm-left align-top">
+                        <input class="form-control" (keypress)="_helper.space_validation($event)" placeholder="{{'label-title.search' | translate }}"
+                            [(ngModel)]="document_search">
+                    </div>
+                </div>
+                <div class="d-block mr-1 mb-2" style="width: 200px;">
+                    <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno" [searchable]="true"
+                        notFoundText="{{'validation-title.no-data-found' | translate}}" [clearable]="false"
+                        (change)="onChangeOrderBy($event)" placeholder="{{'label-title.country' | translate}}" [(ngModel)]="country">
+                        <ng-option [value]="1">
+                            {{'label-title.all'| translate}}
+                        </ng-option>
+                        <ng-option *ngFor="let country of country_list" [value]="country">
+                            {{country.countryname | titlecase}}</ng-option>
+                    </ng-select>
+                </div>
+                <div (clickOutside)="dropdown1.hide()" class="d-inline-block position-relative mr-2 mb-3">
+                    <div class="" dropdown>
+                        <div class="d-inline-block position-relative">
+                            <div class="btn-group" dropdown #dropdown1="bs-dropdown" [autoClose]="false"
+                                [isOpen]="false">
+                                <button dropdownToggle type="button"
+                                    class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle">
+                                    {{'button-title.select-user-type' | translate}}<span class="caret"></span>
+                                </button>
+                                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                                    <li role="menuitem" *ngFor="let filter of UserOptions; let i= index">
+                                        <a class="dropdown-item" href="javascript:;">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" (change)="onUserType(filter)"
+                                                    [checked]="filter.checked" id="{{'PId'+i}}"
+                                                    class="custom-control-input">
+                                                <label for="{{'PId'+i}}" class="custom-control-label">{{filter.name |
+                                                    translate}}</label>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="d-inline-block">
+                    <div class="">
+                        <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-1"
+                            (click)="clear()" [disabled]="document_search == '' && is_clear_disabled">
+                            {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="separator mb-4"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4" *ngIf="is_add">
+        <div class="sortable-survey">
+            <div class="card question d-flex mb-4">
+                <div class="d-flex flex-grow-1 min-width-zero">
+                    <div
+                        class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                        <div class="list-item-heading mb-0 truncate w-80 mb-1 mt-1">
+                            <span class=" d-inline-block">
+                                <div class=" flex-fill">
+                                    <a>
+                                        <p class="list-item-heading m-0"> {{'label-title.add-document' | translate}}</p>
+                                    </a>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="custom-control custom-checkbox pl-1 align-self-center pr-4 text-nowrap">
+                        <button type="submit" class="btn text-primary icon-button mr-2 ng-star-inserted check">
+                            <i class="simple-icon-check" (click)="onSubmit()"></i>
+                        </button>
+                        <button class="btn text-danger icon-button check" (click)="removeAddDocument()">
+                            <i class="simple-icon-close"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="collapseAnimated1" [collapse]="isCollapsedAnimated1" [isAnimated]="true">
+                    <div class="card-body pt-0">
+                        <form [formGroup]="documentForm" class="tooltip-label-center">
+                            <div class="ng-star-inserted">
+                                <div class="form-group mb-3"><label>{{'label-title.document-name' | translate}}</label>
+                                    <input type="text" formControlName="name"
+                                        class="form-control ng-pristine ng-valid ng-touched" (keypress)="_helper.space_validation($event)">
+                                    <div *ngIf="documentForm.get('name').errors?.required && documentForm.get('name').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.document-name' | translate }} {{'label-title.is-required' |
+                                        translate }}</div>
+                                    <div *ngIf="documentForm.get('name').errors?.minlength && documentForm.get('name').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.document-name' | translate }}
+                                        {{'label-title.must-contain-at-least-2-characters' | translate }}</div>
+                                </div>
+                                <div class="form-group"><label class="d-block">{{'label-title.document-for-country' |
+                                        translate}}</label>
+                                    <ng-select appearance="outline" #agreeSelect labelForId="yesno" [searchable]="true" [clearable]="false"
+                                        formControlName="country">
+                                        <ng-option *ngFor="let country of country_list" [value]="country._id">
+                                            {{country.countryname}}</ng-option>
+                                    </ng-select>
+                                    <div *ngIf="documentForm.get('country').errors?.required && documentForm.get('country').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.document-for-country' | translate}} {{'label-title.is-required' |
+                                        translate }}</div>
+                                </div>
+                                <div class="form-group"><label class="d-block">{{'label-title.document-for' |
+                                        translate}}</label>
+                                    <ng-select appearance="outline" #agreeSelect labelForId="yesno" [searchable]="false" [clearable]="false"
+                                        formControlName="documentFor">
+                                        <ng-option [value]="0">{{'label-title.user' | translate}}</ng-option>
+                                        <ng-option [value]="1">{{'label-title.driver' | translate}}</ng-option>
+                                        <ng-option [value]="2">{{'label-title.driver_vehicle' | translate}}</ng-option>
+                                    </ng-select>
+                                    <div *ngIf="documentForm.get('documentFor').errors?.required && documentForm.get('documentFor').touched"
+                                        class="invalid-tooltip">
+                                        {{'label-title.this-filed' | translate}} {{'label-title.is-required' | translate
+                                        }}</div>
+                                </div>
+                                <div class="separator mb-4"></div>
+                                <div class="">
+                                    <div class="mb-4">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" id="is_mandatory" formControlName="is_mandatory"
+                                                class="custom-control-input" (change)="onChangeAddDocumentMandatory()">
+                                            <label for="is_mandatory"
+                                                class="custom-control-label">{{'label-title.is-this-document-mandatory'
+                                                | translate}}</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" formControlName="is_expiry" id="is_expiry"
+                                                class="custom-control-input">
+                                            <label for="is_expiry" class="custom-control-label">
+                                                {{'label-title.is-document-have-expiry-date' | translate}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" formControlName="is_unique" id="is_unique"
+                                                class="custom-control-input">
+                                            <label for="is_unique"
+                                                class="custom-control-label">{{'label-title.is-document-have-unique-code'
+                                                | translate}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" formControlName="is_document_visible" id="is_document_visible"
+                                                class="custom-control-input">
+                                            <label for="is_document_visible"
+                                                class="custom-control-label">{{'label-title.is-document-visible'
+                                                | translate}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4"
+        *ngFor="let document of filtered_document | searchpipe: document_search : ['title']">
+        <div class="sortable-survey">
+            <div class="card question d-flex mb-4">
+                <div class="d-flex flex-grow-1 min-width-zero">
+                    <div
+                        class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                        <div class="list-item-heading mb-0 mb-1 mt-1">
+                            <span class=" d-inline-block">
+                                <div class=" flex-fill">
+                                    <a class="position-relative">
+                                        <input type="text" *ngIf="is_edit && selectedDocument == document._id"
+                                            [(ngModel)]="document.title"
+                                            class="form-control ng-pristine ng-valid ng-touched mb-1"
+                                            value="{{document.title}}" (keypress)="_helper.space_validation($event)">
+                                        <div *ngIf="!document.title"
+                                                class="invalid-tooltip" style="top: 70%;">
+                                                {{'label-title.document-name' | translate}} {{'label-title.is-required' | translate }}
+                                            </div>
+                                        <p class="list-item-heading m-0"
+                                            [hidden]="is_edit && selectedDocument == document._id">{{document.title}}<span class="text-danger text-one" *ngIf="document.option == 1">*</span>
+                                        </p>
+                                        <p class="text-muted mb-0 text-medium">
+                                            <span *ngIf="document.type == 0">{{'label-title.user' | translate}}</span>
+                                            <span *ngIf="document.type == 1">{{'label-title.driver' | translate}}</span>
+                                            <span *ngIf="document.type == 2">{{'label-title.driver_vehicle' |
+                                                translate}}</span>
+                                            &nbsp;-&nbsp;{{document.country_details.countryname}}
+                                        </p>
+                                    </a>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="custom-control custom-checkbox pl-2 align-self-center pr-4 text-nowrap d-flex">
+                        <div *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                            <button *ngIf="document.edit" [disabled]="is_edit" [attr.aria-expanded]="!document.open"
+                            class="btn text-primary btn-outline-theme-3 icon-button mr-2 ng-star-inserted check"
+                            (click)="edit(document)" aria-controls="collapseAnimated" style="font-size: 95%;"><i
+                            class="simple-icon-pencil"></i></button>
+                            <button *ngIf="!document.edit" class="btn text-primary icon-button mr-2 ng-star-inserted check"
+                            (click)="onUpdate()"><i class="simple-icon-check"></i></button>
+                        </div>
+                        <button class="btn btn-outline-theme-3 icon-button rotate-icon-click rotate"
+                            (click)="document.open = !document.open" [attr.aria-expanded]="!document.open"
+                            aria-controls="collapseAnimated1" [isAnimated]="true" >
+                            <i class="with-rotate-icon simple-icon-arrow-down"  *ngIf="!document.open"></i>
+                            <i class="with-rotate-icon simple-icon-arrow-up" *ngIf="document.open"></i>
+                        </button>
+
+                    </div>
+                </div>
+                <div id="collapseAnimated" [collapse]="!document.open" [isAnimated]="true">
+                    <div class="card-body pt-0">
+                        <div class="">
+                            <div class="mb-4">
+                                <div class="custom-control custom-switch"><input type="checkbox"
+                                        [checked]="document.option == 1" [id]="document._id + 'is_mandatory'"
+                                        [(ngModel)]="document.option" class="custom-control-input"
+                                        [disabled]="document.edit" (change)="onChangeEditDocumentMandatory(document)">
+                                    <label [for]="document._id + 'is_mandatory'"
+                                        class="custom-control-label">{{'label-title.is-this-document-mandatory' |
+                                        translate}}</label>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="custom-control custom-switch"><input type="checkbox"
+                                        [id]="document._id + 'is_expired_date'" [checked]="document.is_expired_date"
+                                        [(ngModel)]="document.is_expired_date" class="custom-control-input"
+                                        [disabled]="document.edit">
+                                    <label [for]="document._id + 'is_expired_date'"
+                                        class="custom-control-label">{{'label-title.is-document-have-expiry-date' |
+                                        translate}}</label>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="custom-control custom-switch"><input type="checkbox"
+                                        [id]="document._id + 'is_unique'" [checked]="document.is_unique_code"
+                                        [(ngModel)]="document.is_unique_code" class="custom-control-input"
+                                        [disabled]="document.edit">
+                                    <label [for]="document._id + 'is_unique'"
+                                        class="custom-control-label">{{'label-title.is-document-have-unique-code' |
+                                        translate}}</label>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="custom-control custom-switch"><input type="checkbox"
+                                        [id]="document._id + 'is_visible'" [checked]="document.is_visible"
+                                        [(ngModel)]="document.is_visible" class="custom-control-input"
+                                        [disabled]="document.edit || document.option == 1 || document.option == true">
+                                    <label [for]="document._id + 'is_visible'"
+                                        class="custom-control-label">{{'label-title.is-document-visible' |
+                                        translate}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12" *ngIf="((filtered_document && filtered_document.length == 0) || !filtered_document) || (filtered_document | searchpipe: document_search : ['title'])?.length === 0">
+        <div class=" text-center text-capitalize">
+            {{'label-title.no-record-found' | translate}}</div>
+    </div>

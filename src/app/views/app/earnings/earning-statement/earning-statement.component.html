@@ -1,0 +1,201 @@
+<div class="row">
+    <div class="col-12">
+        <h1 *ngIf="typestatement==1" class="w-60">{{'label-title.statement-driver-daily-earning' | translate }}</h1>
+        <h1 *ngIf="typestatement==2" class="w-60">{{'label-title.statement-driver-weekly-earning' | translate }}</h1>
+        <h1 *ngIf="typestatement==3" class="w-60">{{'label-title.admin-partner-weekly-earning-statement' | translate }}</h1>
+        <div class="separator mb-4"></div>
+    </div>
+</div>
+<div class="d-flex justify-content-between mb-4 flex-wrap">
+    <div class="px-3">
+        <div class="text-center">
+            <p class="card-text font-weight-semibold mb-0">{{ 'label-title.total-earning' | translate }}
+            </p>
+            <p class="h6 text-primary text-center" *ngIf="statementDetail.total_provider_service_fees">{{statementDetail.currency}}
+                {{statementDetail.total_provider_service_fees.toFixed(_helper.to_fixed_number)}}</p>
+        </div>
+    </div>
+    <div class="px-3">
+        <div class="text-center">
+            <p class="h6 text-primary text-center" *ngIf="typestatement == 1">{{start_date | date:_helper.DATE_FORMAT.DD_MM_YYYY}}</p>
+            <p class="h6 text-primary text-center" *ngIf="typestatement != 1">{{start_date | date:_helper.DATE_FORMAT.DD_MM_YYYY}} - {{end_date | date:_helper.DATE_FORMAT.DD_MM_YYYY}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2 mb-5" *ngIf="analyticDeatil">
+    <div class="col-md-12">
+        <div class="row" style="row-gap : 20px">
+            <div class="col-6 col-sm-4  col-lg-3 col-xl-2 ">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text font-weight-semibold mb-0 text-center">{{'label-title.online-minutes' | translate }}
+                        </p>
+                        <p class="h6 text-primary mb-0 text-center" *ngIf="typestatement != 2">{{(analyticDeatil.total_online_time/ 60) |roundpipe: 0 }}</p>                                                     
+                        <p class="h6 text-primary mb-0 text-center" *ngIf="typestatement == 2">{{(analyticDeatil.total_online_time / 60)|roundpipe: 0}}</p>                                                     
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4  col-lg-3 col-xl-2">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text font-weight-semibold mb-0 text-center">{{'label-title.received' | translate }}</p>
+                        <p class="h6 text-primary mb-0 text-center">{{analyticDeatil.received}}</p>                                                
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4  col-lg-3 col-xl-2">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text font-weight-semibold mb-0 text-center">{{'label-title.accepted' | translate }}</p>
+                        <p class="h6 text-primary mb-0 text-center">{{analyticDeatil.accepted}} <span> ( {{analyticDeatil.acception_ratio}} % ) </span>
+                        </p>  
+                    </div>                                                   
+                </div>
+            </div>
+            <div class="col-6 col-sm-4  col-lg-3 col-xl-2">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text font-weight-semibold mb-0 text-center">{{'label-title.completed' | translate }}</p>
+                        <p class="h6 text-primary mb-0 text-center">{{analyticDeatil.completed}} <span>( {{analyticDeatil.completed_ratio}} % ) </span>
+                        </p>                                                     
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4  col-lg-3 col-xl-2">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text font-weight-semibold mb-0 text-center">{{'label-title.rejected' | translate }}</p>
+                        <p class="h6 text-primary mb-0 text-center">{{analyticDeatil.rejected}} <span> ( {{analyticDeatil.rejection_ratio}} % ) </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4  col-lg-3 col-xl-2">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text font-weight-semibold mb-0 text-center">{{'label-title.cancelled' | translate }}</p>
+                        <p class="h6 text-primary mb-0 text-center">{{analyticDeatil.cancelled}} <span> ( {{analyticDeatil.cancellation_ratio}} % ) </span>
+                        </p>                                                 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="statementDetail.service_total != null">
+    <div class="col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h2>{{'label-title.trip-earning' | translate }}</h2>
+                <div class="invoice_table">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">{{'label-title.service-price' | translate }}</span>
+                        <span class="">{{statementDetail.service_total.toFixed(_helper.to_fixed_number)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">{{'label-title.surge-price' | translate }}</span>
+                        <span class="">{{statementDetail.total_service_surge_fees.toFixed(_helper.to_fixed_number)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">{{'label-title.tax-fees' | translate }}</span>
+                        <span class="">{{statementDetail.total_provider_tax_fees.toFixed(_helper.to_fixed_number)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">{{'label-title.miscellaneous-fees' | translate }}</span>
+                        <span class="">{{statementDetail.total_provider_miscellaneous_fees.toFixed(_helper.to_fixed_number)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">{{'label-title.toll-amount' | translate }}</span>
+                        <span class="">{{statementDetail.total_toll_amount.toFixed(_helper.to_fixed_number)}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="">{{'label-title.tip-amount' | translate }}</span>
+                        <span class="">{{statementDetail.total_tip_amount.toFixed(_helper.to_fixed_number)}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-12 mb-4">
+        <div class="card">
+            <div class="card-body" >
+                <h2>{{'label-title.payment-transaction' | translate }}</h2>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="">{{'label-title.driver-have-cash' | translate }}</span>
+                    <span class="">{{statementDetail.total_provider_have_cash.toFixed(_helper.to_fixed_number)}}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="">{{'label-title.deduct-wallet-amount' | translate }}</span>
+                    <span class="">{{statementDetail.total_deduct_wallet_amount.toFixed(_helper.to_fixed_number)}}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="">{{'label-title.added-walllet-amount' | translate }}</span>
+                    <span class="">{{statementDetail.total_added_wallet_amount.toFixed(_helper.to_fixed_number)}}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="">{{'label-title.total-earning' | translate }}</span>
+                    <span class="">{{statementDetail.total_provider_service_fees.toFixed(_helper.to_fixed_number)}}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="">{{'label-title.transferred-amount' | translate }}</span>
+                    <span class="">{{statementDetail.total_transferred_amount.toFixed(_helper.to_fixed_number)}}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="">{{'label-title.pay-to-driver' | translate }}</span>
+                    <span class="">{{statementDetail.total_pay_to_provider.toFixed(_helper.to_fixed_number)}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="typestatement==1">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table aria-describedby="disc" class="table table-hover mb-0 tableScroll">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">{{'heading-title.trip' | translate}}</th>
+                                <th scope="col">{{'heading-title.payment' | translate}}</th>
+                                <th scope="col">{{'heading-title.total' | translate}}</th>
+                                <th scope="col">{{'heading-title.profit' | translate}}</th>
+                                <th scope="col">{{'label-title.card' | translate}}</th>
+                                <th scope="col">{{'heading-title.cash' | translate}}</th>
+                                <th scope="col">{{'heading-title.wallet' | translate}}</th>
+                                <th scope="col">{{'heading-title.earn' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="tripsList.length>0">
+                            <tr *ngFor="let trip of tripsList">
+                                <th scope="row">{{trip.unique_id | translate}}</th>
+                                <td>
+                                    <span *ngIf="trip.payment_mode==1">{{'label-title.cash'|
+                                        translate}}</span>
+                                    <span *ngIf="trip.payment_mode==0">{{'label-title.card' |
+                                        translate}}</span>
+                                </td>
+                                <td>{{trip.total.toFixed(_helper.to_fixed_number)}}</td>
+                                <td>{{trip.provider_service_fees.toFixed(_helper.to_fixed_number)}}</td>
+                                <td>{{trip.card_payment.toFixed(_helper.to_fixed_number)}}</td>
+                                <td>{{trip.cash_payment.toFixed(_helper.to_fixed_number)}}</td>
+                                <td>{{trip.wallet_payment.toFixed(_helper.to_fixed_number)}}</td>
+                                <td>{{trip.pay_to_provider.toFixed(_helper.to_fixed_number)}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="tripsList.length==0">
+                            <tr>
+                                <th id="head" colspan="10" class="text-center">
+                                    <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

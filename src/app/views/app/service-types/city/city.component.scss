@@ -1,0 +1,22 @@
+.text-align {
+    text-align: end;
+}
+
+.inputwidth {
+    width: 10%;
+}
+
+.form-control[readonly] {
+    background-color: initial;
+}
+.width-40{
+    width: 40%;
+}
+@media (max-width:420px) {
+.areaInput .width-40{
+  width: 60%;
+}
+}
+.mapdisabled {
+    pointer-events: none;
+}

@@ -1,0 +1,538 @@
+<tabset class="card-tabs separator-tabs" #staticTabs>
+    <tab heading="{{'heading-title.basic-details' | translate | uppercase }}" (selectTab)="selectTab(0)">
+        <form [formGroup]="city_form" noPasteDrop appFocus>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div *ngIf="!selected_city && !addCity"
+                            class="card-body text-center font-weight-bold text-capitalize">
+                            {{'validation-title.no-data-found' | translate}}</div>
+                        <div *ngIf="addCity || selected_city" class="card-body ">
+                            <div class="text-align saveBtn">
+                                <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) && selected_city" type="button" (click)="saveCity()"
+                                class="btn btn-outline-primary btn-xs">
+                                {{'button-title.save' | translate }} </button>
+                                <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && !selected_city" id="nextButton-basic" type="button" (click)="nextPage()"
+                                class="btn btn-outline-primary btn-xs">
+                                {{'button-title.next' | translate }} </button>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                    <div class="mb-4">
+                                        <h5 class="font-weight-semibold">{{'label-title.basic-details' | translate}}
+                                        </h5>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch2" formControlName="isBusiness"
+                                                class="custom-control-input">
+                                            <label for="customSwitch2" class="custom-control-label">
+                                                <h5 class="mb-0">{{'label-title.business' | translate}}</h5>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3" *ngIf="!selected_city">
+                                        <div class="form-group">
+                                            <label for="inputState">{{'label-title.country' | translate}}</label>
+                                            <ng-select appearance="outline"
+                                                notFoundText="{{'validation-title.country-not-availble' | translate}}"
+                                                #agreeSelect labelForId="yesno"
+                                                placeholder="{{'label-title.search' | translate}}" [searchable]="true"
+                                                [clearable]="false" (change)="getCountryTimeZones($event)" [ngModelOptions]="{standalone: true}" formControlName="countryid">
+                                                <ng-option [value]="country._id" *ngFor="let country of countries_list">
+                                                    {{country.countryname}}
+                                                </ng-option>
+                                            </ng-select>
+                                            <div
+                                                *ngIf="city_form.get('countryid').errors?.required && city_form.get('countryid').touched"
+                                                class="invalid-tooltip">
+                                                {{'label-title.country' | translate}} {{'label-title.is-required' | translate }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group search-address">
+                                            <label for="cityname">{{'label-title.city' | translate}}</label>
+                                            <input type="text" id="cityname" class="form-control"
+                                                placeholder="{{'label-title.city' | translate}}"
+                                                [readOnly]="selected_city" formControlName="cityname">
+                                            <div
+                                                *ngIf="city_form.get('cityname').errors?.required && city_form.get('cityname').touched"
+                                                class="invalid-tooltip">
+                                                {{'label-title.city' | translate}} {{'label-title.is-required' | translate }}</div>
+                                            <div *ngIf="!city_form.get('cityname').errors?.required  && city_form.get('cityname').touched && city_form.get('city_lat').errors?.required" class="invalid-tooltip">
+                                                {{'validation-title.please-enter-valid-city' | translate}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label for="yesno1">{{'label-title.timezone' | translate}}</label>
+                                            <ng-select appearance="outline"
+                                                notFoundText="{{'validation-title.timezone-not-availble' | translate}}"
+                                                #agreeSelect labelForId="yesno1"
+                                                placeholder="{{'label-title.search' | translate}}" [searchable]="false"
+                                                [clearable]="false" formControlName="timezone"
+                                                [readonly]="selected_city">
+                                                <ng-option [value]="timezone" *ngFor="let timezone of timezones">
+                                                    {{timezone}}
+                                                </ng-option>
+                                            </ng-select>
+                                            <div
+                                                *ngIf="city_form.get('timezone').errors?.required && city_form.get('timezone').touched"
+                                                class="invalid-tooltip">
+                                                {{'label-title.timezone' | translate}} {{'label-title.is-required' | translate }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="form-group">
+                                            <label for="yesno2">{{'label-title.distance-unit' | translate}}</label>
+                                            <ng-select appearance="outline"
+                                                notFoundText="{{'validation-title.no-data-found' | translate}}"
+                                                #agreeSelect labelForId="yesno2"
+                                                placeholder="{{'label-title.search' | translate}}" [searchable]="false"
+                                                [clearable]="false" formControlName="unit">
+                                                <ng-option [value]="1">{{'label-title.km' | translate}}</ng-option>
+                                                <ng-option [value]="0">{{'label-title.mile' | translate}}</ng-option>
+                                            </ng-select>
+                                            <div
+                                                *ngIf="city_form.get('unit').errors?.required && city_form.get('unit').touched"
+                                                class="invalid-tooltip">
+                                                {{'label-title.distance-unit' | translate}} {{'label-title.is-required' | translate }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                    <div class="mb-4">
+                                        <h5 class="mb-0 font-weight-semibold">{{'label-title.user-payment-details' |
+                                            translate}}</h5>
+                                    </div>
+                                    <div class="mb-2 row">
+                                        <div class="d-flex flex-wrap justify-content-between col-8 col-lg-8">
+                                            <div class="custom-control custom-switch col-6"><input type="checkbox"
+                                                    id="is_payment_mode_cash" class="custom-control-input"
+                                                    formControlName="is_payment_mode_cash" (change)="changes_cash($event)">
+                                                <label for="is_payment_mode_cash" class="custom-control-label">
+                                                    <h6>{{'label-title.cash' | translate}}</h6>
+                                                </label>
+                                            </div>
+                                            <div class="custom-control custom-switch col-6"><input type="checkbox"
+                                                    id="is_payment_mode_card" class="custom-control-input"
+                                                    formControlName="is_payment_mode_card" (change)="changes_card($event)">
+                                                <label for="is_payment_mode_card" class="custom-control-label">
+                                                    <h6>{{'label-title.card' |
+                                                        translate}}</h6>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="isPromoApplyForCash" class="custom-control-input"
+                                                formControlName="isPromoApplyForCash">
+                                            <label for="isPromoApplyForCash" class="custom-control-label mb-0">
+                                                <h6 class="mb-0">{{'label-title.promo-apply-for-cash' | translate}}</h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-5">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="isPromoApplyForCard" class="custom-control-input"
+                                                formControlName="isPromoApplyForCard">
+                                            <label for="isPromoApplyForCard" class="custom-control-label mb-0">
+                                                <h6 class="mb-0">{{'label-title.promo-apply-for-card' | translate}}</h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <h5 class="mb-0 font-weight-semibold">{{'label-title.driver-wallet-setting' |
+                                            translate}}</h5>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch61" class="custom-control-input"
+                                                formControlName="is_provider_earning_set_in_wallet_on_cash_payment">
+                                            <label for="customSwitch61" class="custom-control-label">
+                                                <h6 class="mb-0">
+                                                    {{'label-title.driver-amount-add-in-wallet-by-cash-payment' |
+                                                    translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;"  tooltip="{{'tooltip-title.driver-amount-add-in-wallet-by-cash-tooltip' | translate}}" placement="right"></i></span></h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch7" class="custom-control-input"
+                                                formControlName="is_provider_earning_set_in_wallet_on_other_payment">
+                                            <label for="customSwitch7" class="custom-control-label">
+                                                <h6 class="mb-0">
+                                                    {{'label-title.driver-amount-add-in-wallet-by-other-payment' |
+                                                    translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;"  tooltip="{{'tooltip-title.driver-amount-add-in-wallet-by-other-payment-tooltip' | translate}}" placement="right"></i></span></h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <p class="text-primary" *ngIf="this.city_form.get('is_provider_earning_set_in_wallet_on_other_payment')?.disabled">{{'label-title.city-add-in-wallet-by-other-payment-disable-message' | translate}}</p>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch8" class="custom-control-input"
+                                                formControlName="is_check_provider_wallet_amount_for_received_cash_request" (change)="checkWalletChange()">
+                                            <label for="customSwitch8" class="custom-control-label">
+                                                <h6 class="mb-0">{{'label-title.check-wallet-amount-for-cash' |
+                                                    translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;"  tooltip="{{'tooltip-title.check-wallet-amount-for-cash-tooltip' | translate}}" placement="right"></i></span></h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3"
+                                        *ngIf="city_form.value.is_check_provider_wallet_amount_for_received_cash_request">
+                                        <div class="position-relative">
+                                            <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                                (keypress)="_helper.number_validation($event)" class="form-control" min="0"
+                                                formControlName="provider_min_wallet_amount_set_for_received_cash_request">
+                                            <div *ngIf="city_form.get('provider_min_wallet_amount_set_for_received_cash_request').touched && city_form.get('provider_min_wallet_amount_set_for_received_cash_request').errors?.required" class="invalid-tooltip">
+                                                {{'validation-title.this-field-is-required' | translate }}</div>
+                                        </div>
+                                        <small id="emailHelp"
+                                            class="form-text text-muted">{{'label-title.amount-required-in-wallet-to' |
+                                            translate}}</small>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-4 mt-2 col-12">
+                                    <h5 class="mb-0 font-weight-semibold">{{'label-title.other-pricing' | translate}}
+                                    </h5>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch63" class="custom-control-input"
+                                                formControlName="is_ask_user_for_fixed_fare">
+                                            <label for="customSwitch63" class="custom-control-label">
+                                                <h6 class="mb-0">
+                                                    {{'label-title.ask-user-for-fixed-fare' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.ask-user-for-fixed-fare-tooltip' | translate}}" placement="right"></i></span></h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch64" class="custom-control-input"
+                                                formControlName="airport_business">
+                                            <label for="customSwitch64" class="custom-control-label">
+                                                <h6 class="mb-0">
+                                                    {{'label-title.airport-business' | translate}}</h6>
+                                                </label>
+                                                <h6 class="d-inline-block"><span class="c-pointer"><i class="simple-icon-info position-relative ml-2" style="top: 4px;" tooltip="{{'tooltip-title.airport-business-tooltip' | translate}}" placement="right"></i></span></h6>
+                                            </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="open_ride" class="custom-control-input"
+                                                formControlName="open_ride_business">
+                                            <label for="open_ride" class="custom-control-label">
+                                                <h6 class="mb-0">
+                                                    {{'label-title.open-ride' | translate}}</h6>
+                                                </label>
+                                                <h6 class="d-inline-block"><span class="c-pointer"><i class="simple-icon-info position-relative ml-2" style="top: 2px;" tooltip="{{'tooltip-title.open-ride-tooltip' | translate}}" placement="right"></i></span></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch65" class="custom-control-input"
+                                                formControlName="city_business">
+                                            <label for="customSwitch65" class="custom-control-label">
+                                                <h6 class="mb-0">{{'label-title.destination-city-business' |
+                                                    translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.destination-city-business-tooltip' | translate}}" placement="right"></i></span></h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch66" class="custom-control-input"
+                                                formControlName="zone_business">
+                                            <label for="customSwitch66" class="custom-control-label">
+                                                <h6 class="mb-0">{{'label-title.zone-business' |
+                                                    translate}} </h6>
+                                            </label>
+                                            <h6 class="d-inline-block"><span class="c-pointer"><i class="simple-icon-info position-relative ml-2" style="top: 2px;" tooltip="{{'tooltip-title.zone-business-tooltip' | translate}}" placement="right"></i></span></h6>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="custom-control custom-switch"><input type="checkbox"
+                                                id="customSwitch67" class="custom-control-input"
+                                                formControlName="is_provider_initiate_trip">
+                                            <label for="customSwitch67" class="custom-control-label">
+                                                <h6 class="mb-0">{{'label-title.provider-initiate-trip' |
+                                                    translate}} </h6>
+                                            </label>
+                                            <h6 class="d-inline-block"><span class="c-pointer"><i class="simple-icon-info position-relative ml-2" style="top: 2px;" tooltip="{{'tooltip-title.driver-initial-trip-tooltip' | translate}}" placement="right"></i></span></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="destination_city_list.length>0">
+                                <div class="mb-4 mt-4">
+                                    <h5 class="font-weight-semibold mb-0">{{'label-title.destination-city' | translate}}
+                                    </h5>
+                                </div>
+                                <ng-container formArrayName="destination_city">
+                                    <div class="row">
+                                        <div class="custom-control custom-checkbox mb-2 col-6 col-md-6 col-lg-6 col-xl-6"
+                                            *ngFor="let city of destination_city.controls;let i=index">
+                                            <div class="col-6">
+                                                <input type="checkbox" [id]="'dest_city'+i" class="custom-control-input"
+                                                    [formControlName]="i" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                                <input type="checkbox" [id]="'dest_city'+i" class="custom-control-input"
+                                                    [formControlName]="i" disabled *ngIf="!_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                                <label [for]="'dest_city'+i" class="custom-control-label" >
+                                                    <h6 *ngIf="destination_city_list">
+                                                        {{destination_city_list[i].cityname}}</h6>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </tab>
+    <tab heading="{{'heading-title.city-area' | translate | uppercase }}" (selectTab)="selectTab(1)">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <p class="text-danger mb-0 text-right" *ngIf="is_save_clicked">*{{'validation-title.please-fill-basic-details-first' | translate}}</p>
+                        </div>
+                        <div class="mb-2">
+                            <div class="areaInput custom-control custom-switch d-flex">
+                                <div class="d-flex align-items-center w-60 mb-2">
+                                <input type="checkbox" id="customSwitch5"
+                                    class="custom-control-input" [(ngModel)]="is_use_radius" (change)="drawRadius()">
+                                <label for="customSwitch5" class="custom-control-label">
+                                    <h6 class="mb-0">{{'label-title.use-radius' | translate }}</h6>
+                                </label>
+                                <h6 class="d-inline-block"><i class="simple-icon-info position-relative ml-2" style="top: 6px;" tooltip="{{'tooltip-title.use-radius-tooltip' | translate}}" placement="right"></i></h6>
+                                <p class="mb-0 ml-2 mt-1 text-danger" *ngIf="is_use_radius && city_boundry_required && city_form.value.city_locations.length == 0">*{{'label-title.please-draw-city-boundry-first' | translate}}</p>
+                                <div class="width-40 ml-3" [hidden]="is_use_radius">
+                                    <div class="form-group mb-0">
+                                        <input type="number" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" onDrop="return false" (keypress)="_helper.number_validation($event)" min="0"
+                                            id="city_radius" class="form-control"
+                                            placeholder="{{'label-title.radius' | translate}}" [(ngModel)]="city_radius"
+                                            (keyup)="drawRadius()" noPasteDrop>
+                                            <div *ngIf="radiusRequired && !city_radius" class="error top-100">
+                                                {{'validation-title.city-radius-is-required' | translate}}
+                                            </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="width-40">
+                                <button id="button-basic-1" type="button" *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && !selected_city"
+                                    class="btn btn-outline-primary btn-xs float-right ml-2" (click)="saveCity()">
+                                    {{'button-title.save' | translate }} </button>
+                                <button id="button-basic-1" type="button" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT) && selected_city"
+                                    class="btn btn-outline-primary btn-xs float-right ml-2" (click)="saveCity()">
+                                    {{'button-title.save' | translate }} </button>
+                                <button id="button-basic-1" type="button" *ngIf="is_use_radius && selected_city && _helper.has_permission(_helper.PERMISSION.EDIT)"
+                                    class="btn btn-outline-danger btn-xs float-right" (click)="clearPolygon()"
+                                    [disabled]="city_form.value.city_locations && city_form.value.city_locations.length == 0"> {{'button-title.clear' | translate }} </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="city_radius_map" style="width: 100%; min-height: 415px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading=" {{!selected_city ? '' : 'heading-title.add-airport' | translate | uppercase }}"
+        (selectTab)="airportZoneArea()">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="border-bottom d-flex flex-row justify-content-between my-2 py-2"
+                            *ngFor="let zone of airportcity_zone">
+                            <div class="flex-grow-1 d-flex flex-nowrap justify-content-between">
+                                <div>
+                                    <a href="javascript:;" (click)="zone._id ? setZoneCenter(zone,1) : ''">
+                                        <p class="font-weight-medium mb-0"><span class="align-middle log-indicator mr-3"
+                                                [ngStyle]="{'border-color': zone.fill}"></span>{{ zone.title }}</p>
+                                    </a>
+                                </div>
+                                <div *ngIf="_helper.has_permission(_helper.PERMISSION.DELETE) && zone._id" class="remove-btn mr-0" (click)="deleteZoneConfirm(zone)">
+                                    <a href="javascript:void(0)" alt="remove">×</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom border-top d-flex flex-row justify-content-between my-3 py-3"
+                            *ngIf="airportcity_zone.length==0">
+                            <div class="pl-3 flex-grow-1">
+                                <a href="javascript:;">
+                                    {{ 'label-title.not-found-any-zones' | translate}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-8 col-xl-8">
+                <div class="card mb-4">
+                    <div class="position-absolute card-top-buttons">
+                        <div class="btn-group float-right float-none-xs mb-4" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"><button id="button-basic" type="button"
+                                (click)="saveAirportZone()" [disabled]="!city_form.valid && !selected_city"
+                                class="btn btn-outline-primary btn-xs"> {{'button-title.save' | translate}}
+                            </button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="">
+                            <h6 class="font-weight-semibold mb-3">{{ 'label-title.airport-business' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.airport-business-polygon-tooltip' | translate}}" placement="right"></i></span></h6>
+                        </div>
+                        <div id="airportMap" style="width: 100%; min-height: 415px;" [ngClass]="{ 'mapdisabled': !_helper.has_permission(_helper.PERMISSION.EDIT) }"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading="{{!selected_city ? '' : 'heading-title.add-zone' | translate | uppercase }}"
+        (selectTab)="cityZoneArea()">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="border-bottom d-flex flex-row justify-content-between my-2 py-2"
+                            *ngFor="let zone of city_zone">
+                            <div class="flex-grow-1 d-flex flex-nowrap justify-content-between">
+                                <div>
+                                    <a href="javascript:;" (click)="zone._id ? setZoneCenter(zone,2) : ''">
+                                        <p class="font-weight-medium mb-0"><span class="align-middle log-indicator mr-3"
+                                                [ngStyle]="{'border-color': zone.fill}"></span>{{ zone.title }}</p>
+                                    </a>
+                                </div>
+                                <div *ngIf="_helper.has_permission(_helper.PERMISSION.DELETE) && zone._id" class="remove-btn mr-0" (click)="deleteZoneConfirm(zone)">
+                                    <a href="javascript:void(0)" alt="remove">×</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom border-top d-flex flex-row justify-content-between my-3 py-3"
+                            *ngIf="city_zone.length==0">
+                            <div class="pl-3 flex-grow-1">
+                                <a href="javascript:;">
+                                    {{ 'label-title.not-found-any-zones' | translate}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-8 col-xl-8">
+                <div class="card mb-4">
+                    <div class="position-absolute card-top-buttons">
+                        <div class="btn-group float-right float-none-xs mb-4" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"><button id="button-basic" type="button"
+                                (click)="saveCityZone()" [disabled]="!city_form.valid && !selected_city"
+                                class="btn btn-outline-primary btn-xs"> {{'button-title.save' | translate}}
+                            </button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="">
+                            <h6 class="font-weight-semibold mb-3">{{ 'label-title.zone-business' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.zone-business-polygon-tooltip' | translate}}" placement="right"></i></span></h6>
+                        </div>
+                        <div id="zoneMap" style="width: 100%; min-height: 415px;" [ngClass]="{ 'mapdisabled': !_helper.has_permission(_helper.PERMISSION.EDIT) }"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading="{{!selected_city ?  '' : 'heading-title.red-zone-area' | translate | uppercase }}"
+        (selectTab)="redZoneArea()">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="border-bottom d-flex flex-row justify-content-between my-2 py-2"
+                            *ngFor="let zone of redcity_zone">
+                            <div class="flex-grow-1 d-flex flex-nowrap justify-content-between">
+                                <div>
+                                    <a href="javascript:;" (click)="zone._id ? setZoneCenter(zone,3) : ''">
+                                        <p class="font-weight-medium mb-0"><span class="align-middle log-indicator mr-3"
+                                                [ngStyle]="{'border-color': zone.fill}"></span>{{ zone.title }}</p>
+                                    </a>
+                                </div>
+                                <div *ngIf="_helper.has_permission(_helper.PERMISSION.DELETE) && zone._id" class="remove-btn mr-0" (click)="deleteZoneConfirm(zone)">
+                                    <a href="javascript:void(0)" alt="remove">×</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-bottom border-top d-flex flex-row justify-content-between my-3 py-3"
+                            *ngIf="redcity_zone.length==0">
+                            <div class="pl-3 flex-grow-1">
+                                <a href="javascript:;">
+                                    {{ 'label-title.not-found-any-zones' | translate}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-8 col-xl-8">
+                <div class="card mb-4">
+                    <div class="position-absolute card-top-buttons">
+                        <div class="btn-group float-right float-none-xs mb-4" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"><button id="button-basic" type="button"
+                                (click)="saveRedZone()" [disabled]="!city_form.valid && !selected_city"
+                                class="btn btn-outline-primary btn-xs"> {{'button-title.save' | translate}}
+                            </button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="">
+                            <h6 class="font-weight-semibold mb-3">{{ 'label-title.red-zone' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.red-zone-polygon-tooltip' | translate}}" placement="right"></i></span></h6>
+                        </div>
+                        <div id="redZoneMap" style="width: 100%; min-height: 415px;" [ngClass]="{ 'mapdisabled': !_helper.has_permission(_helper.PERMISSION.EDIT) }"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+</tabset>
+<!-- delete zone confirm modal -->
+<ng-template #deleteZone>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{'heading-title.delete-zone' | translate}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p class="mb-0">{{'label-title.deleting' | translate}} {{delete_zone.title}}
+            {{'label-title.zone-deleted-in-database' | translate}} </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="deleteZoneArea(delete_zone._id)"
+            class="btn btn-primary float-right">{{'button-title.confirm' | translate}}</button>
+    </div>
+</ng-template>
+
+<ng-template #confirmationTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{'label-title.city-boundry' | translate}} ( {{selected_city?.cityname}} )</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body p-0">
+        <div class="p-4">
+            <p *ngIf="selected_city">
+                {{'label-title.are-you-sure-you-want-to-clear-this' | translate}} {{'label-title.city-boundry' | translate}}.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" (click)="confirm()" class="btn btn-primary float-right">{{'button-title.confirm' |
+            translate}}</button>
+    </div>
+</ng-template>
+

@@ -1,0 +1,87 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!type_details">{{'heading-title.add-new-car-rent-type' | translate}}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="type_details">{{type_details.name}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="carRentTypeForm" appFocus>
+                        <div class="row form-group">
+                            <div class="col-6 col-sm-8 d-flex mb-3 pb-3 border-bottom align-items-center">
+                                <div class="flex-grow-1">
+                                    <a href="javascript:;">
+                                        <p class="font-weight-medium mb-0">{{'label-title.title' | translate }}</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-4 d-flex mb-3 pb-3 border-bottom justify-content-end align-items-center">
+                                <div class="input-group">
+                                    <input type="text" (keypress)="_helper.special_char_validation($event);" class="form-control" formControlName="name" maxlength="50">
+                                    <div *ngIf="carRentTypeForm.get('name').errors?.required && carRentTypeForm.get('name').touched"
+                                        style="white-space: nowrap;" class="invalid-tooltip">
+                                        {{'label-title.title' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group" *ngIf="type_details">
+                            <div class="col-6 col-sm-8 d-flex mb-3 pb-3 border-bottom align-items-center">
+                                <div class="flex-grow-1">
+                                    <a href="javascript:;">
+                                        <p class="font-weight-medium mb-0">{{'label-title.business' | translate }}</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-4 d-flex mb-3 pb-3 border-bottom justify-content-end align-items-center">
+                                <div class="comment-likes">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" id="customSwitch11" formControlName="is_active"
+                                            class="custom-control-input">
+                                        <label for="customSwitch11" class="custom-control-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-sm-8 d-flex mb-3 pb-3 border-bottom align-items-center">
+                                <a>
+                                    <p class="font-weight-medium mb-0">{{'label-title.platform-fee' | translate }}</p>
+                                </a>
+                            </div>
+                            <div class="col-6 col-sm-4 d-flex mb-3 pb-3 border-bottom justify-content-end align-items-center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span id="basic-addon1" class="input-group-text">{{currencysign}}</span>
+                                    </div>
+                                    <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.max_number_validation($event,carRentTypeForm.value.plateform_fee,4)" class="form-control" formControlName="plateform_fee">
+                                    <div *ngIf="carRentTypeForm.controls['plateform_fee'].invalid"
+                                        class="error errorShow">
+                                        <span *ngIf="carRentTypeForm.controls['plateform_fee'].errors.required">
+                                            {{'label-title.platform-fee' | translate}} {{'label-title.is-required' | translate }}
+                                        </span>
+                                        <span *ngIf="carRentTypeForm.controls['plateform_fee'].errors.max">
+                                            {{'validation-title.max-value-msg' | translate}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-3" *ngIf="!brand_details && _helper.has_permission(_helper.PERMISSION.ADD)">
+                        <button class="btn btn-primary" (click)="saveRentType()">{{'button-title.submit' | translate}}</button>
+                    </div>
+                    <div class="col-3" *ngIf="brand_details && _helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button class="btn btn-primary" (click)="saveRentType()">{{'button-title.update' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

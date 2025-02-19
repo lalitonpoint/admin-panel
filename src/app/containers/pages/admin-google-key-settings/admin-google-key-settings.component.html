@@ -1,0 +1,393 @@
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3">{{'heading-title.andriod-user-app' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.ANDROID_USER_APP_KEYS)">
+                            {{'button-title.edit' | translate }} </button>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-place-autocomplete-key' |
+                                translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.google-place-autocomplete-tooltip' | translate}}" placement="right"></i></span></p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_user_app_google_places_autocomplete_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-geocoding-key' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.google-geocoding-key-tooltip' | translate}}" placement="right"></i></span></p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_user_app_google_geocoding_key}} </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-distance-matrix-key' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.google-distance-matrix-tooltip' | translate}}" placement="right"></i></span>
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_user_app_google_distance_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-direction-matrix-key' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.google-direction-matrix-key-tooltip' | translate}}" placement="right"></i></span>
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_user_app_google_direction_matrix_key}} </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3">{{'heading-title.andriod-driver-app' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.ANDROID_DRIVER_APP_KEYS)">
+                            {{'button-title.edit' | translate }} </button>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-place-autocomplete-key' |
+                                translate}}</p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_driver_app_google_places_autocomplete_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-geocoding-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_driver_app_google_geocoding_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-distance-matrix-key' | translate}}
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_driver_app_google_distance_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-direction-matrix-key' | translate}}
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.android_driver_app_google_direction_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3">{{'heading-title.ios-user-app' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.IOS_USER_APP_KEYS)">
+                            {{'button-title.edit' | translate }} </button>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-map-key' | translate}} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.google-map-key-tooltip' | translate}}" placement="right"></i></span></p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.ios_user_app_google_map_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-place-autocomplete-key' |
+                                translate}}</p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_user_app_google_places_autocomplete_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-geocoding-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_user_app_google_geocoding_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-distance-matrix-key' | translate}}
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_user_app_google_distance_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-direction-matrix-key' | translate}}
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_user_app_google_direction_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3">{{'heading-title.ios-driver-app' | translate }}</h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.IOS_DRIVER_APP_KEYS)">
+                            {{'button-title.edit' | translate }} </button>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-map-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.ios_driver_app_google_map_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-place-autocomplete-key' |
+                                translate}}</p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_driver_app_google_places_autocomplete_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-geocoding-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_driver_app_google_geocoding_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-distance-matrix-key' | translate}}
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_driver_app_google_distance_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.google-direction-matrix-key' | translate}}
+                            </p>
+                            <p class="text-muted mb-0 text-small">
+                                {{setting_detail.ios_driver_app_google_direction_matrix_key}}</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Commented out the Flutter Google API key setting as we are not currently working on Flutter development -->
+
+        <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-row justify-content-between">
+                        <h5 class="card-title mb-3">{{'heading-title.flutter-user-app' | translate }}</h5>
+                        <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                            <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                                (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.FLUTTER_USER_APP_KEYS)">
+                                {{'button-title.edit' | translate }} </button>
+                        </div>
+                    </div>
+                    <div
+                        class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                        <div class="flex-fill">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-0">{{'label-title.google-place-autocomplete-key' | translate}}
+                                </p>
+                                <p class="text-muted mb-0 text-small">
+                                    {{setting_detail.flutter_user_app_google_places_autocomplete_key}}
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-row justify-content-between">
+                        <h5 class="card-title mb-3">{{'heading-title.flutter-driver-app' | translate }}</h5>
+                        <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                            <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                                (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.FLUTTER_DRIVER_APP_KEYS)">
+                                {{'button-title.edit' | translate }} </button>
+                        </div>
+                    </div>
+                    <div
+                        class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                        <div class="flex-fill">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-0">{{'label-title.google-place-autocomplete-key' | translate}}
+                                </p>
+                                <p class="text-muted mb-0 text-small">
+                                    {{setting_detail.flutter_driver_app_google_places_autocomplete_key}}
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    <!-- ---------------------------------------------------------------------------------------------------------------------------------- -->
+
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h5 class="card-title mb-3">{{'heading-title.web-panel' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1" style="top: 2px;" tooltip="{{'tooltip-title.web-panel-google-map-key-tooltip' | translate}}" placement="right"></i></span></h5>
+                    <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                        <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                            (click)="showGoogleKeySettingModal(GOOGLE_KEY_TYPE.WEB_APP_KEYS)">
+                            {{'button-title.edit' | translate }} </button>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.admin-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.admin_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.user-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.user_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.driver-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.driver_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.dispatcher-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.dispatcher_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.corporate-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.corporate_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.hotel-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.hotel_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-row mb-3 pb-3 border-bottom justify-content-between align-items-center overflow-auto">
+                    <div class="flex-fill">
+                        <a href="javascript:;">
+                            <p class="font-weight-medium mb-0">{{'label-title.partner-panel-google-key' | translate}}</p>
+                            <p class="text-muted mb-0 text-small">{{setting_detail.partner_panel_google_key}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-google-key-setting-modal #googleKeySettingModal
+    (google_key_data)="getSettingData()"></app-google-key-setting-modal>

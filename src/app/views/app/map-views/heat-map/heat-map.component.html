@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading> 
+        <app-breadcrumb></app-breadcrumb> <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 info-tooltip" style="top: 2px;left: -10px;" tooltip="{{'tooltip-title.heat-map-tooltip' | translate}}" placement="right"></i></span>
+        <br>
+        <div class="separator mb-4"></div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row flex-wrap">
+                    <div class="position-relative dateWidth col-lg-3 col-sm-6 col-12">
+                        <label class="font-weight-semibold mb-2" style="white-space: nowrap;">{{'label-title.select-dates' | translate }}</label>
+                        <div class="date-sm float-md-left position-relative w-100 mr-1 mb-3">
+                            <input [hidden]="direction=='rtl'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}" (ngModelChange)="onChangeDate($event)"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetrans1' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate">
+                            <input [hidden]="direction=='ltr'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}" (ngModelChange)="onChangeDate($event)"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatetrans1246' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate">
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3 col-sm-6 col-12 mb-3">
+                        <label class="font-weight-semibold mb-2">{{'label-title.country' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="countryvalid" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select-country' | translate}}"
+                            (change)="onChangeCountry($event)" [(ngModel)]="country_id">
+                            <ng-option [value]="country._id"
+                                *ngFor="let country of all_countries">{{country.countryname}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="form-group col-lg-3 col-sm-6 col-12 mb-3">
+                        <label class="font-weight-semibold mb-2">{{'label-title.city' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="cityvalid" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select-city' | translate}}"
+                            (change)="onChangeCity($event)" [(ngModel)]="city_id">
+                            <ng-option value="all">{{'label-title.all' | translate }}
+                            </ng-option>
+                            <ng-option [value]="city._id"
+                                *ngFor="let city of city_list">{{city.cityname}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="form-group col-lg-3 col-sm-6 col-12 mb-3">
+                        <label class="font-weight-semibold mb-2">{{'label-title.service_type' | translate }}</label>
+                        <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                            placeholder="{{'label-title.select_vehicle' | translate }}" [(ngModel)]="type_name"
+                            (change)="onChangeVehicleType($event)" notFoundText="{{'validation-title.service-type-not-available' | translate}}">
+                            <ng-option value="all" *ngIf="vehicle_list.length > 0">{{'label-title.all' | translate}}</ng-option>
+                            <ng-option [value]="vehicle" *ngFor="let vehicle of vehicle_list">
+                                <span *ngIf="vehicle">{{vehicle.typename}}</span>
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                </div>
+                <div id="heat_map" style="width: 100%; min-height: 550px;"></div>
+            </div>
+        </div>
+    </div>
+</div>

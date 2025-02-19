@@ -1,0 +1,108 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.surge-settings' | translate }}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="onClose()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex flex-row mb-4 pb-4 border-bottom justify-content-between align-items-center">
+                        <div class=" flex-fill">
+                            <a href="javascript:;">
+                                <p class="font-weight-medium mb-0">{{'label-title.is-surge-hours' | translate}}
+                                </p>
+                            </a>
+                        </div>
+                        <div>
+                            <div placement="left" class="custom-control custom-switch">
+                                <input type="checkbox" id="surgeSwitch" class="custom-control-input"
+                                    [(ngModel)]="is_surge_hours">
+                                <label for="surgeSwitch" class="custom-control-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <form #surgeHourForm="ngForm" (ngSubmit)="onSave()">
+                        <div class="mb-4 pb-4 border-bottom" *ngFor="let days of surge_hours;let weekindex = index">
+
+                            <div class="d-flex flex-row justify-content-between align-items-top">
+                                <div class="flex-fill">
+                                    <h5 class="mb-0 font-weight-medium">{{ 'week-days.'+days.day | translate }}</h5>
+                                </div>
+                                <div>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" [id]="'customSwitch'+days.day" name="surge-{{weekindex}}" [value]="days.is_surge" [ngModel]="days.is_surge" (ngModelChange)="changeDay($event,weekindex)"
+                                            class="custom-control-input" [disabled]="!is_surge_hours">
+                                        <label [for]="'customSwitch'+days.day" class="custom-control-label"></label>
+                                    </div>
+                                    <input type="submit" name="submit" id="submit" hidden>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6 mt-2" *ngFor="let time of days.day_time;let slot_index = index">
+                                        <button type="button" class="btn text-primary p-0 mr-3"
+                                            (click)="onCheck(slot_index, weekindex)">
+                                            <span aria-hidden="true" class="simple-icon-close h4"></span>
+                                        </button>
+                                        <span class="text-primary">{{time.start_time}}&nbsp;&nbsp;{{'label-title.to'
+                                            |translate}}&nbsp;&nbsp;{{time.end_time}}</span>
+                                        &nbsp;-&nbsp;
+                                        <span class="font-weight-bold">{{time.multiplier }}</span>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="addSlotTime[weekindex] && daysSurgeBoolean[weekindex]">
+                                <div class="row mt-2">
+                                    <div class="col-12 col-sm-6 mb-3">
+                                        <label>{{ 'label-title.start-time' | translate }}</label>
+                                        <timepicker [(ngModel)]="start_time" class="timepicker" name="start_time{{slot_index}}"></timepicker>
+                                        <div *ngIf="errorStartTime" class="error">
+                                            {{'validation-title.start-time-is-required' | translate}}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 mb-3 float-right">
+                                        <label>{{ 'label-title.end-time' | translate }}</label>
+                                        <timepicker [(ngModel)]="end_time" class="timepicker" name="end_time{{slot_index}}"></timepicker>
+                                        <div *ngIf="errorEndTime" class="error">
+                                            {{'validation-title.end-time-is-required' | translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="exampleInput" class="d-flex align-items-center col-12 col-sm-6 mb-sm-0">{{'label-title.surge-multipler' |
+                                        translate
+                                        }}</label>
+                                    <div class="input-group col-6 col-sm-5">
+                                        <input type="number" (keypress)="_helper.decimalNum_validation($event)" 
+                                            (keyup)="onMultipler(multiplier)" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)"
+                                             class="form-control" placeholder=""
+                                            [(ngModel)]="multiplier" name="multiplier{{slot_index}}" noPasteDrop>
+                                        <div *ngIf="errorMultiplier" class="error top-100">
+                                            {{'validation-title.surge-multipler-is-required' | translate}}
+                                        </div>
+                                        <div *ngIf="errorMaxvalue" class="error top-100">
+                                            {{'validation-title.max-value-msg' | translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="row" *ngIf="daysSurgeBoolean[weekindex]">
+                                <div class="col-12 my-2">
+                                    <span class="btn btn-outline-primary btn-xs c-pointer" *ngIf="!addSlotTime[weekindex]"
+                                        (click)="addNewSlot(weekindex)">{{ 'button-title.add-new-surge' | translate}}</span>
+                                    <span class="btn btn-outline-primary btn-xs c-pointer" *ngIf="addSlotTime[weekindex]"
+                                        (click)="saveSlot(weekindex)">{{'button-title.save-new-surge' | translate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" [disabled]="!btnDisable && (cityid == null)"
+                        onclick="document.getElementById('submit').click()">{{'button-title.submit' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

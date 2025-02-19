@@ -1,0 +1,152 @@
+<div class="row">
+  <div class="col-12">
+      <app-heading></app-heading>
+      <app-breadcrumb></app-breadcrumb>
+      <br>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <tabset class="separator-tabs">
+      <tab heading="{{'heading-title.user_terms_and_condition' | translate | uppercase}}">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <span *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="badge badge-pill badge-outline-primary mb-1 c-pointer" (click)="save()">{{
+                      'button-title.save' | translate }}</span>
+                  </div>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <div class="row">
+                    <div class="col-12 height-fit">
+                      <quill-editor [placeholder]="''" [(ngModel)]="legal_info.user_terms_and_condition" class="privacy-terms" [readOnly]="subadmin_readonly">{{ legal_info.user_terms_and_condition }}</quill-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{'heading-title.user_privacy_policy' | translate | uppercase}}">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <span *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="badge badge-pill badge-outline-primary mb-1 c-pointer" (click)="save()">{{
+                      'button-title.save' | translate }}</span>
+                  </div>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <div class="row">
+                    <div class="col-12 height-fit">
+                      <quill-editor [placeholder]="''" [(ngModel)]="legal_info.user_privacy_policy" class="privacy-terms" [readOnly]="subadmin_readonly">{{ legal_info.user_privacy_policy }}</quill-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{'heading-title.user-delete-account-policy' | translate | uppercase}}">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <span *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="badge badge-pill badge-outline-primary mb-1 c-pointer" (click)="save()">{{
+                      'button-title.save' | translate }}</span>
+                  </div>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <div class="row">
+                    <div class="col-12 height-fit">
+                      <quill-editor [placeholder]="''" [(ngModel)]="legal_info.user_delete_policy" class="privacy-terms w-100" [readOnly]="subadmin_readonly">{{ legal_info.user_delete_policy }}</quill-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{'heading-title.driver_terms_and_condition' | translate | uppercase}}">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <span *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="badge badge-pill badge-outline-primary mb-1 c-pointer" (click)="save()">{{
+                      'button-title.save' | translate }}</span>
+                  </div>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <div class="row">
+                    <div class="col-12 height-fit">
+                      <quill-editor [placeholder]="''" [(ngModel)]="legal_info.provider_terms_and_condition" class="privacy-terms" [readOnly]="subadmin_readonly">{{ legal_info.provider_terms_and_condition }}</quill-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{'heading-title.driver_privacy_policy' | translate | uppercase}}">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <span *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="badge badge-pill badge-outline-primary mb-1 c-pointer" (click)="save()">{{
+                      'button-title.save' | translate }}</span>
+                  </div>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <div class="row">
+                    <div class="col-12 height-fit">
+                      <quill-editor [placeholder]="''" [(ngModel)]="legal_info.provider_privacy_policy" class="privacy-terms" [readOnly]="subadmin_readonly">{{ legal_info.provider_privacy_policy }}</quill-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{'heading-title.driver-delete-account-policy' | translate | uppercase}}">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <span *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" class="badge badge-pill badge-outline-primary mb-1 c-pointer" (click)="save()">{{
+                      'button-title.save' | translate }}</span>
+                  </div>
+                </div>
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                  <div class="row">
+                    <div class="col-12 height-fit">
+                      <quill-editor [placeholder]="''" [(ngModel)]="legal_info.provider_delete_policy" class="privacy-terms w-100" [readOnly]="subadmin_readonly">{{ legal_info.provider_delete_policy }}</quill-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>

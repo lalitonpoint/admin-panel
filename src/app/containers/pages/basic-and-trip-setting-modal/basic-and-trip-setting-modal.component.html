@@ -1,0 +1,361 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">
+                        <span *ngIf="type == 1">{{'heading-title.basic-settings' | translate}}</span>
+                        <span *ngIf="type == 2">{{'heading-title.trip-settings' | translate}}</span>
+                    </h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="commonForm" class="tooltip-label-center" appFocus>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="countryname">{{'label-title.country' | translate}}</label>
+
+                                <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false" formControlName="countryname" (change)="onChangeCountry()">
+                                    <ng-option [value]="country.countryname" *ngFor="let country of all_countries">{{country.countryname}}
+                                    </ng-option>
+                                </ng-select>
+                                <div *ngIf="commonForm.get('countryname').errors?.required && commonForm.get('countryname').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.country' | translate}} {{'label-title.is-required' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="currencycode">{{'label-title.currency-code' | translate}}</label>
+                                <input type="text" name="" id="currencycode" class="form-control"
+                                    name="currencyCode" formControlName="adminCurrencyCode" [readOnly]="true">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="currency">{{'label-title.currency' | translate}}</label>
+                                <input type="text" name="" id="currency" class="form-control" name="currency"
+                                    formControlName="adminCurrency" [readOnly]="true">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="timezone">{{'label-title.admin_timezone' | translate}}</label>
+                                <input type="text" name="" id="timezone" class="form-control" name="timezone"
+                                    formControlName="adminTimeZone" [readOnly]="true">
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="display_date_timezone">{{'label-title.display-date-timezone' | translate}}</label>
+                                <ng-select appearance="outline" labelForId="display_date_timezone" [searchable]="true" [clearable]="false"
+                                    placeholder="{{'label-title.choose' | translate}}"
+                                    formControlName="timezone_for_display_date">
+                                    <ng-option [value]="timezone" *ngFor="let timezone of timezone_list">{{timezone}}
+                                    </ng-option>
+                                </ng-select>
+                                <div *ngIf="commonForm.get('timezone_for_display_date').errors?.required && commonForm.get('timezone_for_display_date').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.display-date-timezone' | translate}} {{'label-title.is-required' |
+                                    translate }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="store-phone">{{'label-title.phone' | translate}}</label>
+                                <input type="text" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" name="phone"
+                                    id="store-phone" class="form-control" formControlName="admin_phone" (keypress)="_helper.number_validation($event)"
+                                    [minlength]="_helper.admin_setting_details?.minimum_phone_number_length ? _helper.admin_setting_details.minimum_phone_number_length : 8"
+                                    [maxlength]="_helper.admin_setting_details?.maximum_phone_number_length ? _helper.admin_setting_details.maximum_phone_number_length : 12"
+                                    noPasteDrop>
+                                <div *ngIf="commonForm.get('admin_phone').errors?.required && commonForm.get('admin_phone').touched"
+                                    class="invalid-tooltip">{{'label-title.phone' | translate }}
+                                    {{'label-title.is-required' | translate }}</div>
+                                <div *ngIf="commonForm.get('admin_phone').errors?.minlength && commonForm.get('admin_phone').touched"
+                                    class="invalid-tooltip">
+                                    {{'validation-title.min' | translate}}&nbsp;{{_helper.admin_setting_details?.minimum_phone_number_length ? _helper.admin_setting_details.minimum_phone_number_length : 8}}&nbsp;{{'validation-title.character-requires' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="admin_email">{{'label-title.admin_email' | translate}}</label>
+                                <input type="email" name="" id="admin_email" class="form-control"
+                                    formControlName="admin_email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                <div *ngIf="commonForm.get('admin_email').errors?.required && commonForm.get('admin_email').touched"
+                                    style="white-space: nowrap; left: 38%;" class="invalid-tooltip">
+                                    {{'label-title.admin_email' | translate }} {{'label-title.is-required' | translate }}
+                                </div>
+                                <div *ngIf="commonForm.get('admin_email').errors?.email && commonForm.get('admin_email').touched"
+                                    style="white-space: nowrap; left: 38%;" class="invalid-tooltip">
+                                    {{'label-title.admin_email' | translate }} {{'label-title.must-be-a-valid-address' | translate }}
+                                </div>
+                                <div *ngIf="commonForm.get('admin_email').errors?.pattern && commonForm.get('admin_email').touched"
+                                    style="white-space: nowrap; left: 38%;" class="invalid-tooltip">
+                                    {{'label-title.admin_email' | translate }} {{'label-title.must-be-a-valid-address' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="contact_email">{{'label-title.contact_email' | translate}}</label>
+                                <input type="email" name="" id="contact_email" class="form-control"
+                                    formControlName="contactUsEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                <div *ngIf="commonForm.get('contactUsEmail').errors?.required && commonForm.get('contactUsEmail').touched"
+                                    style="white-space: nowrap; left: 38%;" class="invalid-tooltip">
+                                    {{'label-title.contact_email' | translate }} {{'label-title.is-required' | translate }}
+                                </div>
+                                <div *ngIf="commonForm.get('contactUsEmail').errors?.email && commonForm.get('contactUsEmail').touched"
+                                    style="white-space: nowrap; left: 38%;" class="invalid-tooltip">
+                                    {{'label-title.contact_email' | translate }} {{'label-title.must-be-a-valid-address' | translate }}
+                                </div>
+                                <div *ngIf="commonForm.get('contactUsEmail').errors?.pattern && commonForm.get('contactUsEmail').touched"
+                                    style="white-space: nowrap; left: 38%;" class="invalid-tooltip">
+                                    {{'label-title.contact_email' | translate }} {{'label-title.must-be-a-valid-address' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="latitude">{{'label-title.default-map-load-latitude' | translate}}</label>
+                                <input type="number" name="" id="latitude" class="form-control"
+                                    formControlName="latitude" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.nagetiveNumValidation($event)">
+                                <div *ngIf="commonForm.get('latitude').errors?.required"
+                                    class="invalid-tooltip">{{'label-title.default-map-load-latitude' | translate}}
+                                    {{'label-title.is-required' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="longitude">{{'label-title.default-map-load-Longitude' | translate}}</label>
+                                <input type="number" name="" id="longitude" class="form-control"
+                                    formControlName="longitude" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" (keypress)="_helper.nagetiveNumValidation($event)">
+                                <div *ngIf="commonForm.get('longitude').errors?.required"
+                                    class="invalid-tooltip">{{'label-title.default-map-load-Longitude' | translate}}
+                                    {{'label-title.is-required' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2">
+                            <div class="form-group">
+                                <label for="provider_timeout">{{'label-title.provider-time-out-in-second' | translate}}</label>
+                                <input type="text" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" name="" id="provider_timeout" class="form-control"
+                                    formControlName="provider_timeout" (keypress)="_helper.number_validation($event)" noPasteDrop [maxlength]="4">
+                                <div *ngIf="commonForm.get('provider_timeout').errors && commonForm.get('provider_timeout').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('provider_timeout').errors?.required">
+                                        {{'label-title.provider-time-out-in-second' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('provider_timeout').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="provider_offline_min">{{'label-title.provider-offline-min' |
+                                    translate}}</label>
+                                <input type="text" name="" id="provider_offline_min" class="form-control"
+                                    formControlName="provider_offline_min" (keypress)="_helper.number_validation($event)" noPasteDrop>
+                                <div *ngIf="commonForm.get('provider_offline_min').errors && commonForm.get('provider_offline_min').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('provider_offline_min').errors?.required">
+                                        {{'label-title.provider-offline-min' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('provider_offline_min').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2">
+                            <div class="form-group">
+                                <label for="default_Search_radious">{{'label-title.default-search-radius' | translate}}</label>
+                                <input type="text" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" name="" id="default_Search_radious" class="form-control"
+                                    formControlName="default_Search_radious" (keypress)="_helper.number_validation($event)" noPasteDrop [maxlength]="4">
+                                <div *ngIf="commonForm.get('default_Search_radious').errors && commonForm.get('default_Search_radious').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('default_Search_radious').errors?.required">
+                                        {{'label-title.default-search-radius' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('default_Search_radious').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2">
+                            <div class="form-group">
+                                <label for="scheduled_request_pre_booking_days">{{'label-title.no-of-days-before-user-can-book-schedule' |
+                                    translate}}</label>
+                                <input type="text" name="" id="scheduled_request_pre_booking_days" class="form-control"
+                                    formControlName="scheduled_request_pre_booking_days" (keypress)="_helper.number_validation($event)" noPasteDrop [min]="1" [maxlength]="4">
+                                <div *ngIf="commonForm.get('scheduled_request_pre_booking_days').errors && commonForm.get('scheduled_request_pre_booking_days').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('scheduled_request_pre_booking_days').errors?.required">
+                                        {{'label-title.no-of-days-before-user-can-book-schedule' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('scheduled_request_pre_booking_days').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2">
+                            <div class="form-group">
+                                <label for="scheduled_request_pre_start_minute">{{'label-title.scheduled-request-pre-start-minutes' |
+                                    translate}}</label>
+                                <input type="text" name="" id="scheduled_request_pre_start_minute" class="form-control"
+                                    formControlName="scheduled_request_pre_start_minute" (keypress)="_helper.number_validation($event)" noPasteDrop [maxlength]="4">
+                                <div *ngIf="commonForm.get('scheduled_request_pre_start_minute').errors && commonForm.get('scheduled_request_pre_start_minute').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('scheduled_request_pre_start_minute').errors?.required">
+                                        {{'label-title.scheduled-request-pre-start-minutes' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('scheduled_request_pre_start_minute').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2">
+                            <div class="form-group">
+                                <label for="number_of_try_for_scheduled_request">{{'label-title.number-of-loop-for-find-nearest-driver'
+                                    | translate}}</label>
+                                <input type="text" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" name="" id="number_of_try_for_scheduled_request" class="form-control"
+                                    formControlName="number_of_try_for_scheduled_request" (keypress)="_helper.number_validation($event)" noPasteDrop [maxlength]="4">
+                                <div *ngIf="commonForm.get('number_of_try_for_scheduled_request').errors && commonForm.get('number_of_try_for_scheduled_request').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('number_of_try_for_scheduled_request').errors?.required">
+                                        {{'label-title.number-of-loop-for-find-nearest-driver' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('number_of_try_for_scheduled_request').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2" [ngClass]="{'border-bottom':commonForm.value.find_nearest_driver_type != 2}">
+                            <div class="form-group">
+                                <label for="find_nearest_driver_type">{{'label-title.nearest-driver-type' | translate}}</label>
+                                <ng-select appearance="outline" #agreeSelect labelForId="find_nearest_driver_type"
+                                    [searchable]="false" [clearable]="false" formControlName="find_nearest_driver_type"
+                                    placeholder="{{'label-title.choose' | translate}}">
+                                    <ng-option [value]="1">{{'label-title.single' | translate}}</ng-option>
+                                    <ng-option [value]="2">{{'label-title.multiple' | translate}}</ng-option>
+                                </ng-select>
+                                <div *ngIf="commonForm.get('find_nearest_driver_type').errors?.required && commonForm.get('find_nearest_driver_type').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.nearest-driver-type' | translate}} {{'label-title.is-required' |
+                                    translate }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-2 border-bottom" *ngIf="commonForm.value.find_nearest_driver_type == 2 && type == 2">
+                            <div class="form-group">
+                                <label for="no_of_driver">{{'label-title.request_sent_to_no_of_driver'
+                                    | translate}}</label>
+                                <input type="text" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" name="" id="no_of_driver" class="form-control"
+                                    formControlName="request_send_to_no_of_providers" (keypress)="_helper.number_validation($event)" noPasteDrop [maxlength]="4">
+                                <div *ngIf="commonForm.get('request_send_to_no_of_providers').errors && commonForm.get('request_send_to_no_of_providers').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('request_send_to_no_of_providers').errors?.required">
+                                        {{'label-title.request_sent_to_no_of_driver' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('request_send_to_no_of_providers').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="decimal_point_value">{{'label-title.decimal-places' | translate}} ({{'label-title.for-website-only' | translate}})</label>
+                                <ng-select appearance="outline" #agreeSelect labelForId="decimal_point_value"
+                                    [searchable]="false" [clearable]="false" formControlName="decimal_point_value"
+                                    placeholder="{{'label-title.choose' | translate}}">
+                                    <ng-option [value]="0">0</ng-option>
+                                    <ng-option [value]="1">1</ng-option>
+                                    <ng-option [value]="2">2</ng-option>
+                                    <ng-option [value]="3">3</ng-option>
+                                    <ng-option [value]="4">4</ng-option>
+                                </ng-select>
+                                <div *ngIf="commonForm.get('decimal_point_value').errors?.required && commonForm.get('decimal_point_value').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.decimal-places' | translate}} {{'label-title.is-required' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="min_phoneno_length">{{'label-title.min_phoneno_length'
+                                    | translate}}</label>
+                                <input type="text" name="" id="min_phoneno_length" class="form-control"
+                                    formControlName="minimum_phone_number_length" (keypress)="_helper.number_validation($event)" (keyup)="checkMinMaxPhoneLengthValidation(1)" noPasteDrop>
+                                <div *ngIf="commonForm.get('minimum_phone_number_length').errors?.required && commonForm.get('minimum_phone_number_length').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.min_phoneno_length' | translate}} {{'label-title.is-required' | translate }}
+                                </div>
+                                <div *ngIf="!(commonForm.get('minimum_phone_number_length').errors?.required && commonForm.get('minimum_phone_number_length').touched) && minimum_phone_number_length_error"
+                                    class="invalid-tooltip">
+                                    {{minimum_phone_number_length_error | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="max_phoneno_length">{{'label-title.max_phoneno_length'
+                                    | translate}}</label>
+                                <input type="number" onDrop="return false" (keydown)="_helper.keyUpDown($event)" (wheel)="(false)" name="" id="max_phoneno_length" class="form-control"
+                                    formControlName="maximum_phone_number_length" (keypress)="_helper.number_validation($event)" (keyup)="checkMinMaxPhoneLengthValidation(2)" noPasteDrop>
+                                <div *ngIf="commonForm.get('maximum_phone_number_length').errors?.required && commonForm.get('maximum_phone_number_length').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.max_phoneno_length' | translate}} {{'label-title.is-required' | translate }}
+                                </div>
+                                <div *ngIf="!(commonForm.get('maximum_phone_number_length').errors?.required && commonForm.get('maximum_phone_number_length').touched) && maximum_phone_number_length_error"
+                                    class="invalid-tooltip">
+                                    {{maximum_phone_number_length_error | translate}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 1">
+                            <div class="form-group">
+                                <label for="driver_panel_url">{{'label-title.driver-panel-url'
+                                    | translate}}</label>
+                                <input type="text" id="driver_panel_url" class="form-control" formControlName="driver_panel_url">
+                                <div *ngIf="commonForm.get('driver_panel_url').errors && commonForm.get('driver_panel_url').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('driver_panel_url').errors?.pattern">
+                                        {{'validation-title.please-enter-valid-url' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2" *ngIf="type == 2">
+                            <div class="form-group">
+                                <label for="rental_trip_pre_notification_time">{{'label-title.pre-notification-time-for-rental-trip' |
+                                    translate}}</label>
+                                <input type="text" name="" id="rental_trip_pre_notification_time" class="form-control"
+                                    formControlName="rental_trip_pre_notification_time" (keypress)="_helper.number_validation($event)" noPasteDrop [maxlength]="4">
+                                <div *ngIf="commonForm.get('rental_trip_pre_notification_time').errors && commonForm.get('rental_trip_pre_notification_time').touched"
+                                    class="invalid-tooltip">
+                                    <span *ngIf="commonForm.get('rental_trip_pre_notification_time').errors?.required">
+                                        {{'label-title.pre-notification-time-for-rental-trip' | translate}} {{'label-title.is-required' | translate }}
+                                    </span>
+                                    <span *ngIf="commonForm.get('rental_trip_pre_notification_time').errors?.min">
+                                        {{'validation-title.the-value-should-be-above-0' | translate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"  (click)="update()"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

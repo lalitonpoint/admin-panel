@@ -1,0 +1,50 @@
+<app-list-page-header [showSearch]="showSearch" [showItemsPerPage]="showItemsPerPage"
+  [showDisplayMode]="showDisplayMode" [showdropdown]="showdropdown" [showOrderBy]="showOrderBy"
+  (addNewItem)="showAddNewModal()"></app-list-page-header>
+<div class="d-flex align-items-center w-100 mb-3">
+    <div class="search-sm mb-2 mr-2 float-md-left align-top">
+      <input class="form-control" placeholder="{{'label-title.search' | translate }}" [(ngModel)]="search_value" (keypress)="helper.special_char_validation($event);">
+    </div>
+    <button id="button-clear" type="button" class="mb-2 btn btn-outline-primary btn-xs " [disabled]="!search_value" (click)="search_value = ''">
+      {{'button-title.clear-filter' | translate}}  
+    </button>
+</div>
+<div class="row listing-card-container">
+  <div class="col-sm-6 col-lg-4 col-xl-3 col-12 mb-4" *ngFor="let item of listData | typefilter:search_value;">
+    <div class="card">
+      <div class="position-relative">
+        <a href="javascript:;">
+          <img [alt]="item.typename" class="card-img-top p-6px"
+            [src]="item.type_image_url ? (helper.image_url + item.type_image_url) : helper.DEFAULT_IMAGE.DEFAULT_TAXI_IMAGE"
+            onerror="this.src = '../../../../assets/img/Taxi/Taxi.jpg'">
+        </a>
+        <span class="badge badge-pill badge-danger position-absolute badge-top-left"
+          *ngIf="item.is_business==0">{{'label-title.business-off'
+          | translate}}</span>
+          <span class="badge badge-pill badge-secondary position-absolute badge-top-left"
+            *ngIf="item.is_default_selected==true" [ngClass]="item.is_business==0 ? 'default-badge-top' : '' ">
+            {{'menu.default' | translate}}
+          </span>
+          <span class="badge badge-pill badge-success position-absolute badge-top-left" *ngIf="item.vehicle_type == 1"
+            [ngClass]="(item.is_default_selected == true || item.is_business==0) ? 'default-badge-top' : '' ">
+            {{'label-title.ev' | translate}}
+          </span>
+        <button *ngIf="helper.has_permission(helper.PERMISSION.EDIT)" class="btn btn-outline-primary icon-button position-absolute editIcon" (click)="editType(item)">
+          <i class="simple-icon-pencil"></i>
+        </button>
+      </div>
+      <div class="card-body ">
+        <a class="cursor-default">
+          <h6 class="ellipsis d-flex justify-content-between align-items-center font-weight-semibold"> {{item.typename}}
+          </h6>
+
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 text-center" *ngIf="(!listData || listData.length == 0) || (listData | typefilter:search_value)?.length === 0">
+    {{'validation-title.no-data-found' | translate}}
+  </div>
+</div>
+
+<app-service-type-modal (vehicleHandler)="Init()" #addNewModalRef8></app-service-type-modal>

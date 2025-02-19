@@ -1,0 +1,578 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero" *ngIf="_helper.has_permission(_helper.PERMISSION.EXPORT)">
+            <button id="button-basic" type="button" class="btn btn-lg btn-outline-primary mr-2" (click)="export()">
+                {{'button-title.export' | translate | uppercase}}
+            </button>
+            <button id="button-basic" type="button" class="btn btn-lg btn-outline-primary"
+                (click)="showExportHistoryModal()">
+                {{'button-title.export' | translate | uppercase}} {{'button-title.history' | translate | uppercase}}
+            </button>
+        </div>
+        <app-breadcrumb></app-breadcrumb> <span class="c-pointer"><i
+                class="simple-icon-info position-relative ml-1 info-tooltip" style="top: 2px;left: -10px;"
+                tooltip="{{'tooltip-title.report-tooltip' | translate}}" placement="right"></i></span>
+    </div>
+    <div class="col-12">
+        <div class="display-options-container">
+            <div class="d-flex justify-content-between mb-2">
+                <div class="d-flex flex-wrap mr-2">
+                    <div class="d-block mr-1 mb-2" style="width: 200px;">
+                        <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno"
+                            [searchable]="true" notFoundText="{{'validation-title.no-data-found' | translate}}"
+                            [clearable]="false" (change)="getCountry($event)"
+                            placeholder="{{'label-title.country' | translate}}" [(ngModel)]="selectedCountryId">
+                            <ng-option *ngFor="let country of country_list" [value]="country._id">
+                                {{country.countryname | titlecase}}</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="d-block mr-1 mb-2" style="width: 200px;" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                        <ng-select class="custom country-dropdown" appearance="outline"
+                            notFoundText="{{'validation-title.city-not-available' | translate}}" #agreeSelect
+                            labelForId="yesno" placeholder="{{'label-title.city' | translate}}" [searchable]="true"
+                            [clearable]="false" (change)="getCity($event)"
+                            placeholder="{{'label-title.city' | translate}}" [(ngModel)]="selectedCityId">
+                            <ng-option value="all" *ngIf="city_list.length > 0">
+                                {{'label-title.all' | translate}}
+                            </ng-option>
+                            <ng-option [value]="city._id" *ngFor="let city of city_list">
+                                {{city.cityname | titlecase}}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="">
+                        <div class="search-sm d-inline-block float-md-left mr-1 mb-2 align-top">
+                            <input class="form-control" (keypress)="_helper.space_validation($event)"
+                                placeholder="{{'label-title.user_name' | translate }}" [(ngModel)]="search_value">
+                        </div>
+                    </div>
+                    <div class="d-block mr-1 mb-2" style="width: 200px;">
+                        <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno"
+                            [searchable]="true" notFoundText="{{'validation-title.no-data-found' | translate}}"
+                            [clearable]="false" (change)="getProvider($event)" [(ngModel)]="selectedProviderId"
+                            placeholder="{{'menu.driver-user' | translate}}">
+                            <ng-option *ngFor="let provider of provider_list" [value]="provider._id">
+                                {{provider.first_name | titlecase}} {{provider.last_name | titlecase}}</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="d-block mr-1 mb-2" style="width: 200px;" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                        <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno"
+                            [searchable]="true" notFoundText="{{'validation-title.no-data-found' | translate}}"
+                            [clearable]="false" (change)="getPartner($event)" [(ngModel)]="selectedPartnerId"
+                            placeholder="{{'menu.partner' | translate}}">
+                            <ng-option *ngFor="let partner of partner_list" [value]="partner._id">
+                                {{partner.first_name | titlecase}} {{partner.last_name | titlecase}}</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="d-block mr-1 mb-2" style="width: 200px;"
+                        *ngIf="requestMainType === RequestMainType.NORMAL">
+                        <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno"
+                            [searchable]="true" notFoundText="{{'validation-title.no-data-found' | translate}}"
+                            [clearable]="false" (change)="getCorporate($event)" [(ngModel)]="selectedCorporateId"
+                            placeholder="{{'menu.corporate' | translate}}">
+                            <ng-option *ngFor="let corporate of corporate_list" [value]="corporate._id">
+                                {{corporate.name | titlecase}}</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="d-block mr-1 mb-2" style="width: 200px;" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                        <ng-select class="custom country-dropdown" appearance="outline" #agreeSelect labelForId="yesno"
+                            [searchable]="true" notFoundText="{{'validation-title.no-data-found' | translate}}"
+                            [clearable]="false" (change)="getServiceType($event)" [(ngModel)]="selectedServiceTypeId"
+                            placeholder="{{'label-title.service-type' | translate}}">
+                            <ng-option *ngFor="let type of servicetype_list" [value]="type._id">
+                                {{type.typename | titlecase}}</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="position-relative" *ngIf="requestMainType === RequestMainType.NORMAL">
+                        <div class="mr-1 mb-2 float-md-left" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle"
+                                aria-controls="dropdown-basic">
+                                {{'label-title.booking-type' | translate}} : {{bookingType.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of bookingTypesList"><a
+                                        [ngClass]="item.booking_type === bookingType.booking_type ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeBookingType(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="position-relative" *ngIf="requestMainType === RequestMainType.NORMAL">
+                        <div class="mr-1 mb-2 float-md-left" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle"
+                                aria-controls="dropdown-basic">
+                                {{'label-title.created-by' | translate}} : {{itemcreatedType.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemcreatedTypesList"><a
+                                        [ngClass]="item.value === itemcreatedType.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeCreatedBy(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="position-relative" *ngIf="requestMainType === RequestMainType.NORMAL">
+                        <div class="mr-1 mb-2 float-md-left" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle"
+                                aria-controls="dropdown-basic">
+                                {{'heading-title.payment-mode' | translate}} : {{itemPayment.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsPayments"><a
+                                        [ngClass]="item.value === itemPayment.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangePayments(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="position-relative">
+                        <div class="mr-1 mb-2 float-md-left" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle"
+                                aria-controls="dropdown-basic">
+                                {{'label-title.trip-status' | translate}} : {{itemStatus.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsStatus"><a
+                                        [ngClass]="item.value === itemStatus.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeStatus(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="position-relative dateWidth" *ngIf="created_date">
+                        <div class="date-sm float-md-left mr-1 mb-2">
+                            <input [hidden]="direction=='rtl'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetreportrans' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date"
+                                [maxDate]="todayDate">
+                            <input [hidden]="direction=='ltr'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatereporttrans' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date"
+                                [maxDate]="todayDate">
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="d-inline-block float-md-left position-relative" dropdown>
+                            <button id="button-basic5" type="button" class="btn btn-primary btn-xs mr-1 mb-2"
+                                (click)="apply()">
+                                {{'button-title.apply' | translate}} <span class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="">
+                        <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-2"
+                            (click)="clear()" [disabled]="search_value == '' && is_clear_disabled">
+                            {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="float-right">
+                    <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                                    [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table aria-describedby="disc" class="table table-hover mb-0 tableScroll">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer" (click)="onSort('unique_id')">
+                                            <span class="sortIcon1"
+                                                [ngClass]="sort_item == 'unique_id' &&  sort_order == -1 ?  'active' : ''"></span>
+                                            <span class="sortIcon2"
+                                                [ngClass]="sort_item == 'unique_id' &&  sort_order == 1 ?  'delative' : ''"></span>
+                                            {{'label-title.trip_id' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.RENTAL_RIDE">
+                                        {{'label-title.user' | translate}}
+                                    </th>
+                                    <th scope="col">{{'label-title.driver' | translate}}</th>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer" (click)="onSort('vehicle_name')">
+                                            <span class="sortIcon1"
+                                                [ngClass]="sort_item == 'vehicle_name' &&  sort_order == -1 ?  'active' : ''"></span>
+                                            <span class="sortIcon2"
+                                                [ngClass]="sort_item == 'vehicle_name' &&  sort_order == 1 ?  'delative' : ''"></span>
+                                            {{'label-title.service' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.base-price' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.distance' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.distance-price' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.time' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.time-price' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.waiting-time' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.wait-time-price' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col"> 
+                                        <span class="sortIcon c-pointer" (click)="onSort('total')">
+                                            <span class="sortIcon1"
+                                                [ngClass]="sort_item == 'total' &&  sort_order == -1 ?  'active' : ''"></span>
+                                            <span class="sortIcon2"
+                                                [ngClass]="sort_item == 'total' &&  sort_order == 1 ?  'delative' : ''"></span>
+                                            {{'label-title.total' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.user-tax' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.tax' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.user-miscellaneous-fee' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.tip' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.toll' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.driver-profit' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.driver-tax' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.driver-miscellaneous-fee' | translate }}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.payment' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.payment-status' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer" (click)="onSort('user_create_time')">
+                                            <span class="sortIcon1"
+                                                [ngClass]="sort_item == 'user_create_time' &&  sort_order == -1 ?  'active' : ''"></span>
+                                            <span class="sortIcon2"
+                                                [ngClass]="sort_item == 'user_create_time' &&  sort_order == 1 ?  'delative' : ''"></span>
+                                            {{'label-title.create-time' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col">
+                                        <span class="sortIcon c-pointer" (click)="onSort('provider_trip_start_time')">
+                                            <span class="sortIcon1"
+                                                [ngClass]="sort_item == 'provider_trip_start_time' &&  sort_order == -1 ?  'active' : ''"></span>
+                                            <span class="sortIcon2"
+                                                [ngClass]="sort_item == 'provider_trip_start_time' &&  sort_order == 1 ?  'delative' : ''"></span>
+                                            {{'label-title.start-time' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col"> 
+                                        <span class="sortIcon c-pointer" (click)="onSort('provider_trip_end_time')">
+                                            <span class="sortIcon1"
+                                                [ngClass]="sort_item == 'provider_trip_end_time' &&  sort_order == -1 ?  'active' : ''"></span>
+                                            <span class="sortIcon2"
+                                                [ngClass]="sort_item == 'provider_trip_end_time' &&  sort_order == 1 ?  'delative' : ''"></span>
+                                            {{'label-title.end-time' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.pickup-address' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.destination-address' | translate}}
+                                        </span>
+                                    </th>
+                                    <th scope="col" *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                        <span class="sortIcon c-pointer">
+                                            {{'label-title.address' | translate}}
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="rows?.length>0">
+                                <tr *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}"
+                                    (click)="showAddNewModal(row._id,row.is_trip_completed)">
+                                    <td class="pl-4 text-nowrap">{{row.unique_id}}</td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.RENTAL_RIDE">
+                                        <span *ngIf="row.user_first_name">{{row.user_first_name}}
+                                            {{row.user_last_name}}</span>
+                                        <span *ngIf="!row.user_first_name">--</span>
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <span *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.RENTAL_RIDE">
+                                            <span *ngIf="row.provider_first_name">{{row.provider_first_name}}
+                                                {{row.provider_last_name}}</span>
+                                            <span *ngIf="!row.provider_first_name">--</span>
+                                        </span>
+                                        <span *ngIf="requestMainType === RequestMainType.OPEN_RIDE">
+                                            <span
+                                                *ngIf="row.provider_details[0].first_name">{{row.provider_details[0].first_name}}
+                                                {{row.provider_details[0].last_name}}</span>
+                                            <span *ngIf="!row.provider_details[0].first_name">--</span>
+                                        </span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span *ngIf="row.vehicle_name">{{row.vehicle_name}}</span>
+                                        <span *ngIf="!row.vehicle_name">--</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                            <span>{{row.base_distance_cost?.toFixed(_helper.to_fixed_number)}}</span>
+                                        </span>
+                                        <span *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                            <span>{{row.base_price?.toFixed(_helper.to_fixed_number)}}</span>
+                                        </span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>
+                                            {{row.total_distance?.toFixed(_helper.to_fixed_number)}}
+                                            <span *ngIf="row.unit == 1">{{'label-title.km' | translate}}</span>
+                                            <span *ngIf="row.unit == 0">{{'label-title.miles' | translate}}</span>
+                                        </span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.distance_cost?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.total_time?.toFixed(_helper.to_fixed_number)}} {{'label-title.min' |
+                                            translate }}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.time_cost?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL">
+                                        <span>{{row.total_waiting_time?.toFixed(_helper.to_fixed_number)}}
+                                            {{'label-title.min' | translate }}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL">
+                                        <span>{{row.waiting_time_cost?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span>{{row.currency}} {{row.total?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.user_tax_fee?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.tax_fee?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.user_miscellaneous_fee?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.tip_amount?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.toll_amount?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                            <span>{{row.provider_profit_fees?.toFixed(_helper.to_fixed_number)}}</span>       
+                                        </span>
+                                        <span *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                            <span>{{row.provider_service_fees?.toFixed(_helper.to_fixed_number)}}</span>
+                                        </span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.provider_tax_fee?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.provider_miscellaneous_fee?.toFixed(_helper.to_fixed_number)}}</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL">
+                                        <span class=" badge badge-pill badge-secondary w-fit-content"
+                                            *ngIf="row.payment_mode == 0 || row.payment_mode == 2">
+                                            {{'label-title.by-card' | translate}}</span>
+                                        <span class="badge badge-pill badge-primary w-fit-content"
+                                            *ngIf="row.payment_mode == 1">
+                                            {{'label-title.by-cash' |translate}}</span>
+                                        <span class=" d-none d-xl-block c-pointer "
+                                            *ngIf="row.payment_mode != 0 && row.payment_mode != 1 && row.payment_mode != 2">--</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span class="badge badge-pill badge-warning w-fit-content"
+                                            *ngIf="row.payment_status == 0">
+                                            {{'label-title.pending' | translate}}</span>
+                                        <span class="badge badge-pill badge-success w-fit-content"
+                                            *ngIf="row.payment_status == 1">
+                                            {{'label-title.paid' |translate}}</span>
+                                        <span *ngIf="row.payment_status != 0 && row.payment_status != 1">--</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap" *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                        <span *ngIf="row.status != 7">
+                                            <span class="badge badge-pill badge-warning w-fit-content"
+                                                *ngIf="row.payment_status == 0">
+                                                {{'label-title.pending' | translate}}</span>
+                                            <span class="badge badge-pill badge-success w-fit-content"
+                                                *ngIf="row.payment_status == 1">
+                                                {{'label-title.paid' |translate}}</span>
+                                            <span *ngIf="row.payment_status != 0 && row.payment_status != 1">--</span>
+                                        </span>
+                                        <span *ngIf="row.status == 7">--</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span *ngIf="row.user_create_time && timezone_for_display_date">
+                                            {{_helper.moment(row.user_create_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}
+                                            -
+                                            {{_helper.moment(row.user_create_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                        </span>
+                                        <span *ngIf="!row.user_create_time">--</span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                            <span *ngIf="row.provider_trip_start_time && timezone_for_display_date">
+                                                {{_helper.moment(row.provider_trip_start_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}
+                                                -
+                                                {{_helper.moment(row.provider_trip_start_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                            </span>
+                                            <span *ngIf="!row.provider_trip_start_time">--</span>
+                                        </span>
+                                        <span *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                            <span *ngIf="row.schedule_start_time && timezone_for_display_date">
+                                                {{_helper.moment(row.schedule_start_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}
+                                                -
+                                                {{_helper.moment(row.schedule_start_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                            </span>
+                                            <span *ngIf="!row.schedule_start_time">--</span>
+                                        </span>
+                                    </td>
+                                    <td class="pl-4 text-nowrap">
+                                        <span *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                            <span *ngIf="row.provider_trip_end_time && timezone_for_display_date">
+                                                {{_helper.moment(row.provider_trip_end_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}
+                                                -
+                                                {{_helper.moment(row.provider_trip_end_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                            </span>
+                                            <span *ngIf="!row.provider_trip_end_time">--</span>
+                                        </span>
+                                        <span *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                            <span *ngIf="row.schedule_end_time && timezone_for_display_date">
+                                                {{_helper.moment(row.schedule_end_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}}
+                                                -
+                                                {{_helper.moment(row.schedule_end_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}
+                                            </span>
+                                            <span *ngIf="!row.schedule_end_time">--</span>
+                                        </span>
+                                    </td>
+                                    <td class="text-nowrap address-width" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span>{{row.source_address}}</span>
+                                    </td>
+                                    <td class="text-nowrap address-width" *ngIf="requestMainType === RequestMainType.NORMAL || requestMainType === RequestMainType.OPEN_RIDE">
+                                        <span *ngIf="row.destination_address">{{row.destination_address}}</span>
+                                        <span *ngIf="!row.destination_address">{{'label-title.add-destination-later' |
+                                            translate}}</span>
+                                    </td>
+                                    <td class="text-nowrap address-width" *ngIf="requestMainType === RequestMainType.RENTAL_RIDE">
+                                        <span>{{row.address}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="rows?.length==0">
+                                <tr>
+                                    <th id="head" colspan="27" class="">
+                                        <span class="text-center-span">{{ 'label-title.no-record-found' | translate }}</span>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="rows?.length>0">
+        <div class="col-12">
+            <div class="border-top pt-4">
+                <div class="w-100 d-flex justify-content-center">
+                    <pagination-controls (pageChange)="pageChanged($event)"
+                        previousLabel="{{'wizard.previous' | translate}}" nextLabel="{{'wizard.next' | translate}}"
+                        [responsive]="true" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<app-export-history-model #ExportHistotyModel></app-export-history-model>
+<app-trip-details-modal #runningModal></app-trip-details-modal>
+<app-open-ride-trip-details-modal #openRideTripDetailsModal></app-open-ride-trip-details-modal>
+<app-rental-trip-detail-model #rentalTripDetailsModal></app-rental-trip-detail-model>

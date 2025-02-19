@@ -1,0 +1,113 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.firebase_and_gcm_key' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="firebaseGCMForm" class="tooltip-label-center">
+                        <div class="mb-4">
+                            <p class="text-muted text-small mb-2 text-primary font-weight-bold">
+                                {{'heading-title.firebase-key' | translate | uppercase}} </p>
+                            <div class="form-group">
+                                <label for="apikey">{{'label-title.firebase-api-key' | translate }}</label>
+                                <input type="text" name="" id="apikey" class="form-control"
+                                    formControlName="firebase_apiKey">
+                                <div *ngIf="firebaseGCMForm.get('firebase_apiKey').errors?.required && firebaseGCMForm.get('firebase_apiKey').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.firebase-api-key' | translate}}{{'label-title.is-required' |
+                                    translate }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="authdomain">{{'label-title.firebase-auth-domain' | translate }}</label>
+                                <input type="text" name="" id="authdomain" class="form-control"
+                                    formControlName="firebase_authDomain">
+                                <div *ngIf="firebaseGCMForm.get('firebase_authDomain').errors?.required && firebaseGCMForm.get('firebase_authDomain').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.firebase-auth-domain' | translate}}{{'label-title.is-required' |
+                                    translate }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="db-url">{{'label-title.firebase-database-url' | translate }}</label>
+                                <input type="text" name="" id="db-url" class="form-control"
+                                    formControlName="firebase_databaseURL">
+                                <div *ngIf="firebaseGCMForm.get('firebase_databaseURL').errors?.required && firebaseGCMForm.get('firebase_databaseURL').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.firebase-database-url' | translate}}{{'label-title.is-required' |
+                                    translate }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectid">{{'label-title.firebase-project-id' | translate }}</label>
+                                <input type="text" name="" id="projectid" class="form-control"
+                                    formControlName="firebase_projectId">
+                                <div *ngIf="firebaseGCMForm.get('firebase_projectId').errors?.required && firebaseGCMForm.get('firebase_projectId').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.firebase-project-id' | translate}}{{'label-title.is-required' |
+                                    translate }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="storage-bucket">{{'label-title.firebase-storage-bucket' | translate
+                                    }}</label>
+                                <input type="text" name="" id="storage-bucket" class="form-control"
+                                    formControlName="firebase_storageBucket">
+                                <div *ngIf="firebaseGCMForm.get('firebase_storageBucket').errors?.required && firebaseGCMForm.get('firebase_storageBucket').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.firebase-storage-bucket' | translate}}{{'label-title.is-required' |
+                                    translate }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="senderid">{{'label-title.firebase-messaging-sender-id' | translate
+                                    }}</label>
+                                <input type="text" name="" id="senderid" class="form-control"
+                                    formControlName="firebase_messagingSenderId">
+                                <div *ngIf="firebaseGCMForm.get('firebase_messagingSenderId').errors?.required && firebaseGCMForm.get('firebase_messagingSenderId').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.firebase-messaging-sender-id' |
+                                    translate}}{{'label-title.is-required' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <p class="text-muted text-small mb-2 text-primary font-weight-bold">
+                                {{'heading-title.gcm-api-key' | translate | uppercase}} </p>
+                            <div class="form-group">
+                                <label for="user-gcmkey">{{'label-title.android-user-app-gcm-key' | translate }}</label>
+                                <input type="text" name="" id="user-gcmkey" class="form-control"
+                                    formControlName="android_user_app_gcm_key">
+                                <div *ngIf="firebaseGCMForm.get('android_user_app_gcm_key').errors?.required && firebaseGCMForm.get('android_user_app_gcm_key').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.android-user-app-gcm-key' | translate}}{{'label-title.is-required' |
+                                    translate }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="provider-gcmkey">{{'label-title.android-driver-app-gcm-key' | translate
+                                    }}</label>
+                                <input type="text" name="" id="provider-gcmkey" class="form-control"
+                                    formControlName="android_provider_app_gcm_key">
+                                <div *ngIf="firebaseGCMForm.get('android_provider_app_gcm_key').errors?.required && firebaseGCMForm.get('android_provider_app_gcm_key').touched"
+                                    class="invalid-tooltip">
+                                    {{'label-title.android-driver-app-gcm-key' | translate}}{{'label-title.is-required'
+                                    | translate }}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary float-right" (click)="update()">
+                        {{'button-title.update' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

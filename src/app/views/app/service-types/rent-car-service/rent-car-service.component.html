@@ -1,0 +1,180 @@
+<div class="row app-row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero w-fit-content"
+            *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && tab_number == 1" type="button"
+                (click)="opentypeModel(null)" class="top-right-button btn btn-primary btn-lg mr-1">{{'pages.add-new' | translate}}</button>
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && tab_number == 2" type="button"
+                (click)="openbrandModal(null)" class="top-right-button btn btn-primary btn-lg mr-1">{{'pages.add-new' | translate}}</button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <br>
+    </div>
+
+    <div class="w-100" *ngIf="(country && selected_country != null)">
+        <tabset class="card-tabs separator-tabs w-100">
+            <tab heading="{{'label-title.vehicle-type' | translate }}" (selectTab)="onSelectTab(1)">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4"
+                                *ngFor="let rent_car_type of rent_car_type_list | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}; let i=index"
+                                id="rent_car_type{{i}}" [ngClass]="{'order-first': rent_car_type.is_selected}">
+                                <div class="sortable-survey mb-4">
+                                    <div class="card question d-flex">
+                                        <span class="badge badge-pill badge-danger position-absolute badge-top-left"
+                                            *ngIf="!rent_car_type.is_active">
+                                            {{'label-title.business-off' | translate}}
+                                        </span>
+                                        <div class="d-flex flex-grow-1 min-width-zero">
+                                            <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center c-pointer"
+                                                (click)="openAddVehicleModal(rent_car_type)">
+                                                <div class="list-item-heading mb-0 mb-1 mt-1">
+                                                    <span class=" d-inline-block">
+                                                        <div class=" flex-fill">
+                                                            <a class="position-relative">
+                                                                <p class="list-item-heading m-0">{{rent_car_type.name}}</p>
+                                                            </a>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="custom-control custom-checkbox pl-2 align-self-center pr-4 text-nowrap d-flex">
+                                                <div *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                                    <button
+                                                        class="btn text-primary btn-outline-theme-3 icon-button mr-2 ng-star-inserted check"
+                                                        (click)="opentypeModel(rent_car_type)" aria-controls="collapseAnimated"
+                                                        style="font-size: 95%;">
+                                                        <i class="simple-icon-pencil"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12" *ngIf="rent_car_type_list?.length == 0">
+                                <div class=" text-center text-capitalize">
+                                    {{'label-title.no-record-found' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="vehicle_detail?.length > 0">
+                    <div class="col-12">
+                        <div class=" mb-4">
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-center">
+                                    <pagination-controls [ngClass]="darkMode ? 'dark' : ''"
+                                        previousLabel="{{'wizard.previous' | translate}}"
+                                        nextLabel="{{'wizard.next' | translate}}" (pageChange)="pageChanged($event)"
+                                        responsive="true" (pageBoundsCorrection)="pageChanged($event)"></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'heading-title.vehicle-brand-and-model' | translate }}" (selectTab)="onSelectTab(2)">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4"
+                                *ngFor="let brand of rent_car_brand_list; let i=index" id="brand{{i}}">
+                                <div class="sortable-survey mb-4">
+                                    <div class="card question d-flex">
+                                        <div class="d-flex flex-grow-1 min-width-zero">
+                                            <div
+                                                class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                                                <div class="list-item-heading mb-0 mb-1 mt-1">
+                                                    <span class=" d-inline-block">
+                                                        <div class=" flex-fill">
+                                                            <a class="position-relative c-pointer"
+                                                                (click)="openbrandModal(brand)">
+                                                                <p class="list-item-heading m-0">
+                                                                    {{brand.name}}
+                                                                </p>
+                                                            </a>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="custom-control custom-checkbox pl-2 align-self-center pr-4 text-nowrap d-flex">
+                                                <div *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                                    <button
+                                                        class="btn text-primary btn-outline-theme-3 icon-button mr-2 ng-star-inserted check"
+                                                        (click)="openbrandModal(brand)" style="font-size: 95%;">
+                                                        <i class="simple-icon-pencil"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12" *ngIf="rent_car_brand_list?.length == 0">
+                                <div class=" text-center text-capitalize">
+                                    {{'label-title.no-record-found' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>
+<app-application-menu>
+    <div class="card-body h-100">
+        <div class="chat-app-tab-pane-contacts">
+            <div class="pt-2 pb-3 border-bottom">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group d-flex">
+                            <input type="text" class="form-control rounded-100"
+                                placeholder="{{'label-title.search' | translate}}" [(ngModel)]="country_search_text" (keypress)="_helper.space_validation($event);_helper.special_char_validation_and_space_validation($event)"
+                                id="search-box1" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-app-tab-pane-contacts">
+                <perfect-scrollbar class="scroll" [config]="{suppressScrollX: true, wheelPropagation: false}" *ngIf="countries_list && countries_list?.length>0 && (countries_list | searchpipe:country_search_text:['countryname'])?.length > 0">
+                    <div class="w-100 border-bottom d-flex flex-row justify-content-between pr-0 pt-3 pb-3"
+                    [ngClass]="selected_country?(selected_country._id == country._id ? 'text-primary': ''):''"
+                    *ngFor="let country of countries_list|searchpipe:country_search_text:['countryname']" (click)="onSelectCountry(country)">
+                        <a class="d-block position-relative" ng-reflect-router-link="#" href="javascript:">
+                            <img class="list-thumbnail border-0 country_flag" (error)="$event.target.src = _helper.DEFAULT_IMAGE.COUNTRY_FLAG"
+                                [src]="country.alpha2?.toLowerCase() ? (_helper.image_url + 'flags/'+ country.alpha2?.toLowerCase()) + '.png' : _helper.DEFAULT_IMAGE.COUNTRY_FLAG" [alt]="country.countryname">
+                        </a>
+                        <div class="pl-3 flex-grow-1 c-pointer">
+                            <div *ngIf="country.isRentalBusiness == 0" class="businessLabel float-right">
+                                <span class="badge badge-danger rounded">{{'label-title.business-off' | translate}}</span>
+                            </div>
+                            <p class="mb-1 font-weight-bold">{{country.countryname}}</p>
+                            <div class="pr-4">
+                                <p class="text-muted mb-1 text-small"
+                                [ngClass]="selected_country?(selected_country._id == country._id ? 'text-primary': ''):''">
+                                {{'label-title.code' | translate}}: {{country.countryphonecode}}</p>
+                            </div>
+                            <div class="text-small">{{'label-title.currency' | translate}}: {{country.currencysign}}({{country.currencycode}})</div>
+                        </div>
+                    </div>
+                </perfect-scrollbar>
+                <div class="d-flex justify-content-center align-items-center data-center"
+                    *ngIf="(!countries_list || (countries_list && countries_list.length == 0)) || (countries_list | searchpipe:country_search_text:['countryname'])?.length === 0">
+                    <p class="clr-primary">{{'label-title.no-record-found' | translate}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-application-menu>
+
+<app-rent-car-type-model #typeModel (rent_car_type_event)="getCarRentTypeList()"  ></app-rent-car-type-model>
+<app-rent-car-brand-model #brandModal (rent_car_brand_model_event)="getCarRentBrandList()" ></app-rent-car-brand-model>
+
+

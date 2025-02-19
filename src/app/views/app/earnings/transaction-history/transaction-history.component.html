@@ -1,0 +1,191 @@
+<div class="row">
+  <div class="col-12">
+    <app-heading></app-heading>
+    <app-breadcrumb></app-breadcrumb>
+    <div class="display-options-container">
+      <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex flex-wrap mr-2">
+          <div class="position-relative" *ngIf="show_email">
+            <div class="float-md-left mr-1 mb-2" dropdown>
+              <button id="button-basic" dropdownToggle type="button"
+                class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option"
+                aria-controls="dropdown-basic">
+                {{'button-title.search-by' | translate}} : {{itemSearch.label | translate}} <span class="caret"></span>
+              </button>
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+                <li role="menuitem" *ngFor="let item of itemOptionsSearch"><a
+                    [ngClass]="item.value === itemSearch.value ? 'dropdown-item active' : 'dropdown-item'"
+                    (click)="onChangeSearchBy(item)">{{item.label | translate}}</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="" *ngIf="show_email">
+            <div class="search-sm d-inline-block float-md-left mr-1 mb-2 align-top">
+              <input class="form-control" (keypress)="_helper.space_validation($event)" placeholder="{{'label-title.search' | translate }}" [(ngModel)]="search_value">
+            </div>
+          </div>
+          <div class="position-relative dateWidth" *ngIf="created_date">
+            <div class="date-sm float-md-left mr-1 mb-2">
+              <input [hidden]="direction=='rtl'" class="form-control theme_date_picker" placeholder="{{'label-title.select-date' | translate}}"
+                [bsConfig]="{ selectWeekDateRange: true, containerClass: show_email ? 'datetrans' : 'no-email-datetrans' }" #drp="bsDaterangepicker"
+                [(ngModel)]="item_bsRangeValue" bsDaterangepicker [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate">
+              <input [hidden]="direction=='ltr'" class="form-control theme_date_picker" placeholder="{{'label-title.select-date' | translate}}"
+                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatetrans919' }" #drp="bsDaterangepicker"
+                [(ngModel)]="item_bsRangeValue" bsDaterangepicker [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate">
+            </div>
+          </div>
+          <div class="">
+            <div class="d-inline-block float-md-left mr-1 position-relative">
+              <button type="button" class="btn btn-primary btn-xs mr-1 mb-2" (click)="apply()">
+                {{'button-title.apply' | translate}}
+              </button>
+            </div>
+          </div>
+          <div class="">
+            <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-1"
+                (click)="clear()"  [disabled]="search_value == '' && !item_bsRangeValue && is_clear_disabled">
+                {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+            </button>
+        </div>
+        </div>
+
+        <div class="">
+          <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+          <span dropdown class="d-inline-block position-relative">
+            <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+              {{itemsPerPage}}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+              <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                  [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                  (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+            </ul>
+          </span>
+        </div>
+      </div>
+      <div class="separator mb-4"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table aria-describedby="disc" class="table table-hover">
+                <thead class="thead-light">
+                  <tr class="truncate">
+                    <th scope="col">
+                      <span  class="sortIcon c-pointer"  (click)="onSort('unique_id')" >
+                        <span  class="sortIcon1" [ngClass]="sort_item == 'unique_id' &&  sort_order == -1 ?  'active' : ''" ></span>
+                        <span class="sortIcon2" [ngClass]="sort_item == 'unique_id' &&  sort_order == 1 ?  'delative' : ''" ></span>
+                        {{ 'heading-title.id' | translate}}
+                    </span>
+                      </th>
+                    <th scope="col">{{ 'heading-title.type' | translate}}</th>
+                    <th scope="col">
+                      <span  class="sortIcon c-pointer"  (click)="onSort('created_at')" >
+                        <span  class="sortIcon1" [ngClass]="sort_item == 'created_at' &&  sort_order == -1 ?  'active' : ''" ></span>
+                        <span class="sortIcon2" [ngClass]="sort_item == 'created_at' &&  sort_order == 1 ?  'delative' : ''" ></span>
+                        {{ 'heading-title.date' | translate}}
+                    </span>
+                      </th>
+                    <th scope="col">
+                      {{ 'heading-title.email' | translate}}</th>
+                    <th scope="col">{{ 'heading-title.currency' | translate}}</th>
+                    <th scope="col">
+                      <span  class="sortIcon c-pointer"  (click)="onSort('amount')" >
+                        <span  class="sortIcon1" [ngClass]="sort_item == 'amount' &&  sort_order == -1 ?  'active' : ''" ></span>
+                        <span class="sortIcon2" [ngClass]="sort_item == 'amount' &&  sort_order == 1 ?  'delative' : ''" ></span>
+                        {{ 'heading-title.amount' | translate}}
+                    </span>
+                      </th>
+                    <th scope="col">
+                      <span  class="sortIcon c-pointer"  (click)="onSort('transfer_status')" >
+                        <span  class="sortIcon1" [ngClass]="sort_item == 'transfer_status' &&  sort_order == -1 ?  'active' : ''" ></span>
+                        <span class="sortIcon2" [ngClass]="sort_item == 'transfer_status' &&  sort_order == 1 ?  'delative' : ''" ></span>
+                        {{ 'heading-title.status' | translate}}
+                    </span>
+                      </th>
+                    <th scope="col">{{ 'heading-title.transfer-by' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="historyList">
+                  <tr *ngFor="let data of historyList | paginate: { itemsPerPage: itemsPerPage, currentPage:  pagination_current_page, totalItems: total_page * itemsPerPage}">
+                    <td class="pl-4 text-nowrap">{{data.unique_id}}</td>
+                    <td class="text-nowrap">
+                      <span *ngIf="data.user_type == 10">{{'label-title.user' | translate}}</span>
+                      <span *ngIf="data.user_type == 11">{{'label-title.driver' | translate}}</span>
+                      <span *ngIf="data.user_type == 4">{{'label-title.partner' | translate}}</span>
+                      <span *ngIf="data.user_type == 5">{{'menu.corporate' | translate}}</span>
+                    </td>
+                    <td class="pl-4 text-nowrap" *ngIf="timezone_for_display_date">
+                      {{_helper.moment(data.created_at).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.MOMENT_DD_MMM_YYYY)}}
+                    </td>
+                    <td class="text-nowrap">
+                      <span *ngIf="data.user_type == 11">
+                        <span *ngIf="data.provider_detail && data.provider_detail[0]">
+                          {{data.provider_detail[0].email}}
+                        </span>
+                        <span *ngIf="!data.provider_detail || !data.provider_detail[0]">
+                          --
+                        </span>
+                      </span>
+                      <span *ngIf="data.user_type == 10">
+                        <span *ngIf="data.user_detail && data.user_detail[0]">
+                          {{data.user_detail[0].email}}
+                        </span>
+                        <span *ngIf="!data.user_detail || !data.user_detail[0]">
+                          --
+                        </span>
+                      </span>
+                      <span *ngIf="data.user_type == 4">
+                        <span *ngIf="data.partner_detail && data.partner_detail[0]">
+                          {{data.partner_detail[0].email}}
+                        </span>
+                        <span *ngIf="!data.partner_detail || !data.partner_detail[0]">
+                          --
+                        </span>
+                      </span>
+                      <span *ngIf="data.user_type == 5">
+                        <span *ngIf="data.corporate_detail && data.corporate_detail[0]">
+                          {{data.corporate_detail[0].email}}
+                        </span>
+                        <span *ngIf="!data.corporate_detail || !data.corporate_detail[0]">
+                          --
+                        </span>
+                      </span>
+                    </td>
+                    <td class="text-nowrap">{{data.currency_code}}</td>
+                    <td class="pl-4 text-nowrap">{{data.amount.toFixed(_helper.to_fixed_number)}}</td>
+                    <td class="pl-4 text-nowrap">{{data.transfer_status}}</td>
+                    <td class="text-nowrap"> 
+                      <span *ngIf="data.transfered_by == 0">
+                        {{'label-title.admin' | translate}}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="historyList.length == 0">
+                  <tr>
+                    <th id="head" colspan="10" class="text-center">
+                      <span>{{ 'label-title.no-record-found' | translate }}</span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 d-flex justify-content-center" *ngIf="historyList.length > 0">
+    <pagination-controls (pageChange)="onPage($event)" previousLabel="{{'wizard.previous' | translate}}"
+    nextLabel="{{'wizard.next' | translate}}" [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+  </div>
+</div>

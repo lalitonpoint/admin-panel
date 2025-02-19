@@ -1,0 +1,127 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">{{'heading-title.payment_configuration' | translate}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="paymentlConfigurationForm" class="tooltip-label-center">
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="payment_gateway_type">{{'label-title.default_payment_gateway' | translate }}</label>
+                                <ng-select appearance="outline" formControlName="payment_gateway_type"
+                                    [searchable]="true" [clearable]="false" notFoundText="{{'validation-title.no-data-found' | translate}}">
+                                    <ng-option [value]="10">{{ 'label-title.stripe' | translate}}</ng-option>
+                                    <ng-option [value]="11">{{ 'label-title.paystack' | translate}}</ng-option>
+                                    <ng-option [value]="12">{{ 'label-title.payu' | translate}}</ng-option>
+                                    <ng-option [value]="13">{{ 'label-title.paytabs' | translate}}</ng-option>
+                                    <ng-option [value]="14">{{ 'label-title.paypal' | translate}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="stripe_secret_key">{{'label-title.stripe_secret_key' | translate}}</label>
+                                <input type="text" id="stripe_secret_key" class="form-control" name="stripe_secret_key"
+                                    formControlName="stripe_secret_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="stripe_publishable_key">{{'label-title.stripe_publishable_key' |
+                                    translate}}</label>
+                                <input type="text" id="stripe_publishable_key" class="form-control"
+                                    name="stripe_publishable_key" formControlName="stripe_publishable_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paystack_secret_key">{{'label-title.paystack_secret_key' | translate}}</label>
+                                <input type="text" id="paystack_secret_key" class="form-control" name="paystack_secret_key"
+                                    formControlName="paystack_secret_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paystack_public_key">{{'label-title.paystack_public_key' | translate}}</label>
+                                <input type="text" id="paystack_public_key" class="form-control" name="paystack_public_key"
+                                    formControlName="paystack_publishable_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="payu_key">{{'label-title.payu_key' | translate}}</label>
+                                <input type="text" id="payu_key" class="form-control" name="payu_key"
+                                    formControlName="payu_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="payu_salt">{{'label-title.payu_salt' | translate}}</label>
+                                <input type="text" id="payu_salt" class="form-control" name="payu_salt"
+                                    formControlName="payu_salt">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paytabs_server_key">{{'label-title.paytabs_server_key' | translate}}</label>
+                                <input type="text" id="paytabs_server_key" class="form-control" name="paytabs_server_key"
+                                    formControlName="paytabs_server_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paytabs_client_key">{{'label-title.paytabs_client_key' | translate}}</label>
+                                <input type="text" id="paytabs_client_key" class="form-control" name="paytabs_client_key"
+                                    formControlName="paytabs_client_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paytabs_profileId">{{'label-title.paytabs_profileId' | translate}}</label>
+                                <input type="text" id="paytabs_profileId" class="form-control" name="paytabs_profileId"
+                                    formControlName="paytabs_profileId">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paypal_client_id">{{'label-title.paypal_client_id' | translate}}</label>
+                                <input type="text" id="paypal_client_id" class="form-control" name="paypal_client_id"
+                                    formControlName="paypal_client_id">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="paypal_secret_key">{{'label-title.paypal_secret_key' | translate}}</label>
+                                <input type="text" id="paypal_secret_key" class="form-control" name="paypal_secret_key"
+                                    formControlName="paypal_secret_key">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="razorpay_client_id">{{'label-title.razorpay_client_id' | translate}}</label>
+                                <input type="text" id="razorpay_client_id" class="form-control" name="razorpay_client_id"
+                                    formControlName="razorpay_client_id">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label for="razorpay_secret_key">{{'label-title.razorpay_secret_key' | translate}}</label>
+                                <input type="text" id="razorpay_secret_key" class="form-control" name="razorpay_secret_key"
+                                    formControlName="razorpay_secret_key">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" (click)="update()" [disabled]="paymentlConfigurationForm.invalid"
+                        class="btn btn-primary float-right">{{'button-title.update' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

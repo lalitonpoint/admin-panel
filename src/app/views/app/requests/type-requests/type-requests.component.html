@@ -1,0 +1,303 @@
+<div class="row">
+    <div class="col-12">
+        <h1>{{'menu.request' | translate}}</h1>
+        <div class="top-right-button-container text-zero" *ngIf="history_type == _helper.OPEN_HISTORY_TYPE.OPEN_RIDE ? _helper.has_permission(_helper.PERMISSION.EXPORT , 'open_ride_completed_requests') : _helper.has_permission(_helper.PERMISSION.EXPORT , 'completed_requests')">
+            <button id="button-basic" type="button" class="btn btn-lg btn-outline-primary mr-2" (click)="export()">
+                {{'button-title.export' | translate | uppercase}}
+            </button>
+            <button id="button-basic" type="button" class="btn btn-lg btn-outline-primary" (click)="showExportHistoryModal()" *ngIf="history_type == _helper.OPEN_HISTORY_TYPE.OPEN_RIDE ? _helper.has_permission(_helper.PERMISSION.EXPORT , 'open_ride_completed_requests') : _helper.has_permission(_helper.PERMISSION.EXPORT , 'completed_requests')">
+              {{'button-title.export' | translate | uppercase}} {{'button-title.history' | translate | uppercase}}
+            </button>
+        </div>
+        <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+            <ol class="breadcrumb pt-0">
+                <li class="breadcrumb-item">
+                    <a>{{'menu.history' | translate}}</a>
+                </li>
+                <li class="breadcrumb-item" aria-current="page">{{ user_type.type_name }}</li>
+                <li class="breadcrumb-item " aria-current="page">{{ user_type.name | titlecase }}</li>
+            </ol>
+        </nav>
+        
+        <div class="display-options-container">
+            <div class="d-flex justify-content-between mb-2">
+                <div class="d-flex flex-wrap mr-2 align-items-center">
+                    <div class="position-relative">
+                        <div class="float-md-left mr-1 mb-2" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option"
+                                aria-controls="dropdown-basic">
+                                {{'button-title.search-by' | translate}} : {{itemSearch.label | translate}} <span
+                                    class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsSearch"><a
+                                        [ngClass]="item.value === itemSearch.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangeSearchBy(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="search-sm d-inline-block float-md-left mr-1 mb-2 align-top">
+                            <input class="form-control" (keypress)="_helper.space_validation($event)" placeholder="{{'label-title.search' | translate }}"
+                                [(ngModel)]="search_value">
+                        </div>
+                    </div>
+                    <div class="position-relative">
+                        <div class="mr-1 mb-2 float-md-left" dropdown>
+                            <button id="button-basic" dropdownToggle type="button"
+                                class="btn btn-outline-primary btn_display_option btn-xs dropdown-toggle"
+                                aria-controls="dropdown-basic">
+                                {{itemPayment.label | translate}} <span class="caret"></span>
+                            </button>
+                            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu"
+                                aria-labelledby="button-basic">
+                                <li role="menuitem" *ngFor="let item of itemOptionsPayments"><a
+                                        [ngClass]="item.value === itemPayment.value ? 'dropdown-item active' : 'dropdown-item'"
+                                        (click)="onChangePayments(item)">{{item.label | translate}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="position-relative dateWidth" *ngIf="created_date">
+                        <div class="date-sm float-md-left mr-1 mb-2">
+                            <input [hidden]="direction=='rtl'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'datetrans' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate">
+                            <input [hidden]="direction=='ltr'" class="form-control theme_date_picker"
+                                placeholder="{{'label-title.select-dates' | translate}}"
+                                [bsConfig]="{ selectWeekDateRange: true, containerClass: 'rtldatetrans912' }"
+                                #drp="bsDaterangepicker" [(ngModel)]="item_bsRangeValue" bsDaterangepicker
+                                [container]="'html'" #dateValue [readOnly]="true" [minDate]="created_date" [maxDate]="todayDate">
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="d-inline-block float-md-left mr-1 position-relative" dropdown>
+                            <button id="button-basic5" type="button" class="btn btn-primary btn-xs mr-1 mb-2"
+                                (click)="apply()">
+                                {{'button-title.apply' | translate}} <span class="caret"></span>
+                            </button>
+                            <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-2"
+                                (click)="clear()" [disabled]="search_value == '' && is_clear_disabled" [ngClass]="{'btn-disabled':(search_value == '' && is_clear_disabled)}">
+                                {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="" *ngIf="panel_type">
+                        <div class="d-inline-block float-md-left mr-1 position-relative mb-2" dropdown>
+                            <span class="badge badge-pill badge-outline-primary d-flex align-items-center font-weight-medium" style="padding: 0.2em 0.75em"><p class="m-0" style="font-size: 0.75rem;"><span class="font-weight-bold ">{{panel_type}}</span> | <span>{{panel_type_name}}</span></p> <i class="simple-icon-close ml-2 text-danger c-pointer" style="font-size: 16px;" (click)="clear()"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="">
+                    <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+                    <span dropdown class="d-inline-block position-relative">
+                        <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                            {{itemsPerPage}}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                            <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                                    [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                                    (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="separator mb-4"></div>
+        </div>
+    </div>
+</div>
+
+<ng-container>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table aria-describedby="disc" class="table table-hover mb-0 tableScroll">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">
+                      <span class="sortIcon c-pointer" (click)="onSort('unique_id')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'unique_id' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'unique_id' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.trip' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col">
+                      {{'label-title.user' | translate}}
+                    </th>
+                    <th scope="col">{{'label-title.driver' | translate}}</th>
+                    <th scope="col">
+                      <span class="sortIcon c-pointer" (click)="onSort('vehicle_details.typename')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'vehicle_details.typename' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'vehicle_details.typename' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.service' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col"> <span class="sortIcon c-pointer" (click)="onSort('total')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'total' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'total' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.price' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col"> <span class="sortIcon c-pointer" (click)="onSort('is_provider_status')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'is_provider_status' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'is_provider_status' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.status' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col">
+                      <span class="sortIcon c-pointer" (click)="onSort('payment_mode')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'payment_mode' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'payment_mode' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.payment' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col">
+                      <span class="sortIcon c-pointer" (click)="onSort('payment_status')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'payment_status' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'payment_status' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.payment-status' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col">
+                      <span class="sortIcon c-pointer" (click)="onSort('user_create_time')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'user_create_time' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'user_create_time' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.create-time' | translate}}
+                      </span>
+                    </th>
+                    <th scope="col"> <span class="sortIcon c-pointer" (click)="onSort('complete_date_in_city_timezone')">
+                        <span class="sortIcon1"
+                          [ngClass]="sort_item == 'complete_date_in_city_timezone' &&  sort_order == -1 ?  'active' : ''"></span>
+                        <span class="sortIcon2"
+                          [ngClass]="sort_item == 'complete_date_in_city_timezone' &&  sort_order == 1 ?  'delative' : ''"></span>
+                        {{'label-title.end-time' | translate}}
+                      </span>
+                    </th>
+  
+                  </tr>
+                </thead>
+                <tbody *ngIf="rows.length>0">
+                  <tr *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}"
+                    (click)="showAddNewModal(row)">
+                    <td class="pl-4 text-nowrap">{{row.unique_id}}</td>
+                    <td class="text-nowrap">
+                      <span *ngIf="row.user_detail">{{row.user_detail.first_name}} {{row.user_detail.last_name}}</span>
+                      <span *ngIf="!row.user_detail">--</span>
+                    </td>
+                    <td class="text-nowrap">
+                      <span *ngIf="row.provider_details && row.provider_details.first_name">{{row.provider_details.first_name}}
+                        {{row.provider_details.last_name}}</span>
+                      <span *ngIf="!row.provider_details || !row.provider_details.first_name">--</span>
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span *ngIf="row.vehicle_details && row.vehicle_details.typename">{{row.vehicle_details.typename}}</span>
+                      <span *ngIf="(!row.vehicle_details) || !(row.vehicle_details.typename)">--</span>
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span>{{row.total.toFixed(_helper.to_fixed_number)}}</span>
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span class="badge badge-pill badge-info w-fit-content"
+                        *ngIf="row.is_provider_status == PROVIDER_STATUS.ACCEPT && row.is_provider_accepted == PROVIDER_ACCEPTED.ACCEPTED && row.is_trip_cancelled != 1">
+                        {{'label-title.accepted' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger w-fit-content" *ngIf="row.is_trip_cancelled == 1 && row.is_trip_cancelled_by_provider == 0 && row.is_trip_cancelled_by_user == 0">
+                        {{'label-title.cancelled' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger w-fit-content" *ngIf="row.is_trip_cancelled == 1 && row.is_trip_cancelled_by_provider == 1">
+                        {{'label-title.cancel-by-provider' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-danger w-fit-content" *ngIf="row.is_trip_cancelled == 1 && row.is_trip_cancelled_by_user == 1">
+                        {{'label-title.cancel-by-user' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-info w-fit-content" *ngIf="row.is_trip_cancelled != 1 && row.is_provider_status == PROVIDER_STATUS.COMING">
+                        {{'label-title.coming' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-info w-fit-content" *ngIf="row.is_trip_cancelled != 1 && row.is_provider_status == PROVIDER_STATUS.ARRIVED">
+                        {{'label-title.arrived' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-info  w-fit-content" *ngIf="row.is_trip_cancelled != 1 && row.is_provider_status == PROVIDER_STATUS.STARTED">
+                        {{'label-title.started' | translate}}
+                      </span>
+                      <span class="badge badge-pill badge-success w-fit-content"
+                        *ngIf="row.is_trip_cancelled != 1 && row.is_provider_status == PROVIDER_STATUS.COMPLETED">
+                        {{'label-title.completed' | translate}}
+                      </span>
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span class=" badge badge-pill badge-secondary w-fit-content" *ngIf="row.payment_mode == 0">
+                        {{'label-title.by-card' | translate}}</span>
+                      <span class="badge badge-pill badge-primary w-fit-content" *ngIf="row.payment_mode == 1">
+                        {{'label-title.by-cash' |translate}}</span>
+                      <span class=" d-none d-xl-block c-pointer "
+                        *ngIf="row.payment_mode != 0 && row.payment_mode != 1">--</span>
+  
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span class="badge badge-pill badge-warning w-fit-content" *ngIf="row.payment_status == 0">
+                        {{'label-title.pending' | translate}}</span>
+                      <span class="badge badge-pill badge-success w-fit-content" *ngIf="row.payment_status == 1">
+                        {{'label-title.paid' |translate}}</span>
+                      <span *ngIf="row.payment_status != 0 && row.payment_status != 1">--</span>
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span *ngIf="row.user_create_time && timezone_for_display_date">{{_helper.moment(row.user_create_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(row.user_create_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}</span>
+                      <span *ngIf="!row.user_create_time">--</span>
+                    </td>
+                    <td class="pl-4 text-nowrap">
+                      <span *ngIf="row.provider_trip_end_time && timezone_for_display_date">{{_helper.moment(row.provider_trip_end_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.DD_MM_YY)}} - {{_helper.moment(row.provider_trip_end_time).tz(timezone_for_display_date).format(_helper.DATE_FORMAT.HH_MM_A)}}</span>
+                        <span *ngIf="!row.provider_trip_end_time">--</span>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="rows.length==0">
+                  <tr>
+                    <th id="head" colspan="10" class="text-center">
+                      <span>{{ 'label-title.no-record-found' | translate }}</span>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row" *ngIf="rows.length>0">
+      <div class="col-12">
+        <div class="border-top pt-4">
+          <div class="w-100 d-flex justify-content-center">
+            <pagination-controls (pageChange)="pageChanged($event)" previousLabel="{{'wizard.previous' | translate}}"
+            nextLabel="{{'wizard.next' | translate}}" [responsive]="true"
+              [ngClass]="darkMode ? 'dark' : ''"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+</ng-container>
+
+<app-export-history-model #ExportHistotyModel></app-export-history-model>
+<app-trip-details-modal #runningModal></app-trip-details-modal>

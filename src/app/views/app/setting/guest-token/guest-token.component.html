@@ -1,0 +1,153 @@
+<div class="row mb-4">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero" *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)">
+            <button type="button" (click)="showAddNewModal(null)"
+                class="top-right-button btn btn-primary btn-lg mr-1">{{
+                'pages.add-new' | translate}}</button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <tabset class="separator-tabs">
+            <tab heading="{{'heading-title.running' | translate | uppercase }}"
+                (selectTab)="getGuestToken(GUEST_TOKEN.RUNNING)">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table aria-describedby="disc" class="table mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">{{ 'heading-title.name' | translate}}</th>
+                                        <th scope="col">{{ 'label-title.guest_token' | translate}} <span
+                                                class="c-pointer"><i class="simple-icon-info position-relative ml-1"
+                                                    style="top: 2px;"
+                                                    tooltip="{{'tooltip-title.guest-token-for-create-guest-trip' | translate}}"
+                                                    placement="right"></i></span></th>
+                                        <th scope="col">{{ 'label-title.expiry-date' | translate}}</th>
+                                        <th scope="col" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">{{
+                                            'heading-title.action' | translate}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="guestTokenList?.length > 0">
+                                    <tr *ngFor="let token of guestTokenList; let i=index;">
+                                        <th scope="row">{{token.unique_id}}</th>
+                                        <td>{{token.token_name | titlecase}}</td>
+                                        <td>{{token.token_value}}</td>
+                                        <td>{{token.code_expiry | date : _helper.DATE_FORMAT.DD_MM_YYYY}}</td>
+                                        <td *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                            <div class=""><button type="button" class="btn btn-xs btn-outline-primary"
+                                                    (click)="showAddNewModal(token)">{{'button-title.edit' |
+                                                    translate}}</button></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="guestTokenList?.length == 0">
+                                    <tr>
+                                        <th id="head" colspan="10" class="text-center">
+                                            <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'heading-title.inActive' | translate | uppercase }}"
+                (selectTab)="getGuestToken(GUEST_TOKEN.INACTIVE)">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table aria-describedby="disc" class="table mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">{{ 'heading-title.name' | translate}}</th>
+                                        <th scope="col">{{ 'label-title.guest_token' | translate}}</th>
+                                        <th scope="col">{{ 'label-title.expiry-date' | translate}}</th>
+                                        <th scope="col" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">{{
+                                            'heading-title.action' | translate}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="guestTokenList?.length > 0">
+                                    <tr *ngFor="let token of guestTokenList; let i=index;">
+                                        <th scope="row">{{token.unique_id}}</th>
+                                        <td>{{token.token_name | titlecase}}</td>
+                                        <td>{{token.token_value}}</td>
+                                        <td>{{token.code_expiry | date : _helper.DATE_FORMAT.DD_MM_YYYY}}</td>
+                                        <td *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                            <div class=""><button type="button" class="btn btn-xs btn-outline-primary"
+                                                    (click)="showAddNewModal(token)">{{'button-title.edit' |
+                                                    translate}}</button></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="guestTokenList?.length == 0">
+                                    <tr>
+                                        <th id="head" colspan="10" class="text-center">
+                                            <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="{{'heading-title.expired' | translate | uppercase }}"
+                (selectTab)="getGuestToken(GUEST_TOKEN.EXPIRED)">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table aria-describedby="disc" class="table mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">{{ 'heading-title.name' | translate}}</th>
+                                        <th scope="col">{{ 'label-title.guest_token' | translate}}</th>
+                                        <th scope="col">{{ 'label-title.expiry-date' | translate}}</th>
+                                        <th scope="col" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">{{
+                                            'heading-title.action' | translate}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="guestTokenList?.length > 0">
+                                    <tr *ngFor="let token of guestTokenList; let i=index;">
+                                        <th scope="row">{{token.unique_id}}</th>
+                                        <td>{{token.token_name | titlecase}}</td>
+                                        <td>{{token.token_value}}</td>
+                                        <td>{{token.code_expiry | date : _helper.DATE_FORMAT.DD_MM_YYYY}}</td>
+                                        <td *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                                            <div class=""><button type="button" class="btn btn-xs btn-outline-primary"
+                                                    (click)="showAddNewModal(token)">{{'button-title.edit' |
+                                                    translate}}</button></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="guestTokenList?.length == 0">
+                                    <tr>
+                                        <th id="head" colspan="10" class="text-center">
+                                            <span>{{ 'label-title.no-record-found' | translate }}</span>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>
+<ng-template #nextTemplate let-disabled="disabled" let-currentPage="currentPage">
+    <i class='simple-icon-arrow-right'></i>
+</ng-template>
+<ng-template #prevTemplate let-disabled="disabled" let-currentPage="currentPage">
+    <i class='simple-icon-arrow-left'></i>
+</ng-template>
+
+<app-guest-token-modal #GuestTokenModalRef></app-guest-token-modal>

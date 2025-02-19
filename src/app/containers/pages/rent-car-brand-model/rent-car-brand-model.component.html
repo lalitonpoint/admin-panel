@@ -1,0 +1,136 @@
+<ng-template #template>
+    <modal-container role="dialog" tabindex="-1" class="modal fade show" style="display: block;" aria-modal="true">
+        <div role="document" class="modal-dialog modal-right">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!brand_details">{{'heading-title.add-new-brand' | translate}}</h4>
+                    <h4 class="modal-title pull-left" *ngIf="brand_details">{{brand_details.name}}</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 *ngIf="brand_details">{{'label-title.brand' | translate}}</h6>
+                    <form [formGroup]="brandForm" appFocus>
+                        <div class="row align-items-end mb-3">
+                            <div class="col-9">
+                                <div class="form-group mb-0">
+                                    <label for="brand_name"><span>{{'label-title.brand-name' | translate}}</span></label>
+                                    <input type="text" id="brand_name" (keypress)="_helper.special_char_validation($event)" class="form-control mr-2" formControlName="name" maxlength="50">
+                                    <div *ngIf="brandForm.get('name').errors?.required && brandForm.get('name').touched"
+                                        style="white-space: nowrap;" class="invalid-tooltip">
+                                        {{'label-title.name' | translate}} {{'label-title.is-required' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3" *ngIf="!brand_details && _helper.has_permission(_helper.PERMISSION.ADD)">
+                                <button class="btn btn-primary" (click)="saveBrand()">{{'button-title.submit' | translate}}</button>
+                            </div>
+                            <div class="col-3" *ngIf="brand_details && _helper.has_permission(_helper.PERMISSION.EDIT)">
+                                <button class="btn btn-primary" (click)="saveBrand()">{{'button-title.submit' | translate}}</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="" *ngIf="brand_details">
+                        <div class="separator mb-4"></div>
+                        <div class="d-flex justify-content-between">
+                            <h6>{{'label-title.brand-model' | translate}}</h6>
+                            <button type="button" class="btn btn-sm btn-primary mb-3" *ngIf="!addNewModel && _helper.has_permission(this._helper.PERMISSION.ADD)" (click)="newModel('add')">
+                                {{'button-title.add-new' | translate }}</button>
+                            <button type="button" class="btn btn-sm btn-primary mb-3" *ngIf="addNewModel && _helper.has_permission(this._helper.PERMISSION.ADD)" (click)="newModel('back')">
+                                {{'button-title.back' | translate }}</button>
+                        </div>
+                        <div class="" *ngIf="addNewModel">
+                            <form [formGroup]="addbrandModelForm" appFocus>
+                                <div class="row align-items-end mb-3">
+                                    <div class="col-12 mb-3">
+                                        <div class="form-group mb-0">
+                                            <label for="brand_modal_name"><span>{{'label-title.brand-model-name' | translate}}</span></label>
+                                            <input type="text" id="brand_modal_name" formControlName="name" (keypress)="_helper.special_char_validation($event)" class="form-control mr-2" maxlength="50">
+                                            <div *ngIf="addbrandModelForm.get('name').errors?.required && addbrandModelForm.get('name').touched"
+                                                style="white-space: nowrap;" class="invalid-tooltip">
+                                                {{'label-title.name' | translate}} {{'label-title.is-required' | translate }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <div class="form-group mb-0">
+                                            <label for="car_type_id"><span>{{'label-title.type' | translate}}</span></label>
+                                            <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                                                formControlName="car_type_id">
+                                                <ng-option *ngFor="let type of type_list" [value]="type._id">{{type.name}}</ng-option>
+                                            </ng-select>
+                                            <div *ngIf="addbrandModelForm.get('car_type_id').errors?.required && addbrandModelForm.get('car_type_id').touched"
+                                                style="white-space: nowrap;" class="invalid-tooltip">
+                                                {{'label-title.type' | translate}} {{'label-title.is-required' | translate }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="text-center" [ngClass]="addbrandModelForm.get('car_type_id').errors?.required && addbrandModelForm.get('car_type_id').touched ? 'my-5' : 'my-3' ">
+                                <button type="submit" class="btn btn-primary" (click)="saveNewBrandModel()">{{'button-title.save' |translate }}</button>
+                            </div>
+                        </div>
+                        <div class="" *ngIf="!addNewModel">
+                            <div class="card mb-4" *ngFor="let model of brand_modal_list , let i = index">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="mb-4 mt-1 mb-sm-0">{{model.name}}</h5>
+                                        <div class="">
+                                            <button *ngIf="model.is_edit && _helper.has_permission(_helper.PERMISSION.EDIT)" type="button"
+                                                class="btn btn-outline-primary btn-xs mr-2"
+                                                (click)="updateBrandModel(model)">{{'button-title.save'
+                                                | translate}}</button>
+                                            <button  type="button" class="btn btn-circle btn-outline-primary"
+                                                (click)="editModel(model)" [disabled]="isCollapsed && !model.is_edit"
+                                                [attr.aria-expanded]="model.is_edit" aria-controls="collapseAnimated">
+                                                <i class="simple-icon-arrow-down" *ngIf="!model.is_edit" style="padding-top: 8px;display: inline-block;"></i>
+                                                <i class="simple-icon-arrow-up" *ngIf="model.is_edit" style="padding-top: 4px;display: inline-block;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="collapseAnimated" [collapse]="!model.is_edit" [isAnimated]="true">
+                                        <div class="mt-4">
+                                            <form [formGroup]="updatebrandModelForm" appFocus>
+                                                <div class="row align-items-end mb-3">
+                                                    <div class="col-12 mb-3">
+                                                        <div class="form-group mb-0">
+                                                            <label for="brand_modal_name"><span>{{'label-title.brand-model-name' | translate}}</span></label>
+                                                            <input type="text" id="brand_modal_name" formControlName="name" (keypress)="_helper.special_char_validation($event)" class="form-control mr-2" maxlength="50">
+                                                            <div *ngIf="updatebrandModelForm.get('name').errors?.required && updatebrandModelForm.get('name').touched"
+                                                                style="white-space: nowrap;" class="invalid-tooltip">
+                                                                {{'label-title.name' | translate}} {{'label-title.is-required' | translate }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mb-3">
+                                                        <div class="form-group mb-0">
+                                                            <label for="car_type_id"><span>{{'label-title.type' | translate}}</span></label>
+                                                            <ng-select appearance="outline" labelForId="yesno" [searchable]="true" [clearable]="false"
+                                                                formControlName="car_type_id" [readonly]="true">
+                                                                <ng-option *ngFor="let type of type_list" [value]="type._id">{{type.name}}</ng-option>
+                                                            </ng-select>
+                                                            <div *ngIf="updatebrandModelForm.get('car_type_id').errors?.required && updatebrandModelForm.get('car_type_id').touched"
+                                                                style="white-space: nowrap;" class="invalid-tooltip">
+                                                                {{'label-title.type' | translate}} {{'label-title.is-required' | translate }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center"
+                                style="height: calc(100vh - 270px);" *ngIf="(brand_modal_list && brand_modal_list.length == 0) || !brand_modal_list">
+                                {{'label-title.no-record-found' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </modal-container>
+</ng-template>

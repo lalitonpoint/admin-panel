@@ -1,0 +1,130 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="card-title mb-3">{{'heading-title.payment_configuration' | translate }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.stripe-secret-key-tooltip' | translate}}" containerClass="tooltip-xl" placement="right"></i></span></h5>
+            <div class="" *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)">
+                <button id="button-basic" type="button" class="btn btn-outline-primary btn-xs mb-3"
+                    (click)="showpaymentConfigurationModal()">
+                    {{'button-title.edit' | translate }} </button>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.default_payment_gateway' | translate }}</p>
+                    <p class="text-muted mb-1 text-small" *ngIf="setting_detail.payment_gateway_type == 10">{{'label-title.stripe' | translate}}</p>
+                    <p class="text-muted mb-1 text-small" *ngIf="setting_detail.payment_gateway_type == 11">{{'label-title.paystack' | translate}}</p>
+                    <p class="text-muted mb-1 text-small" *ngIf="setting_detail.payment_gateway_type == 12">{{'label-title.payu' | translate}}</p>
+                    <p class="text-muted mb-1 text-small" *ngIf="setting_detail.payment_gateway_type == 13">{{ 'label-title.paytabs' | translate}}</p>
+                    <p class="text-muted mb-1 text-small" *ngIf="setting_detail.payment_gateway_type == 14">{{ 'label-title.paypal' | translate}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.stripe_secret_key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.stripe_secret_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.stripe_publishable_key' | translate }} </p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.stripe_publishable_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paystack_secret_key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paystack_secret_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paystack_public_key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paystack_publishable_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.payu_key' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.payu_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.payu_salt' | translate }}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.payu_salt}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paytabs_server_key' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paytabs_server_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paytabs_client_key' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paytabs_client_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paytabs_profileId' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paytabs_profileId}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paypal_client_id' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paypal_client_id}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.paypal_secret_key' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.paypal_secret_key}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.razorpay_client_id' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.razorpay_client_id}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="border-bottom mb-3 pb-3">
+            <div class="">
+                <a href="javascript:;">
+                    <p class="font-weight-medium mb-0">{{'label-title.razorpay_secret_key' | translate}}</p>
+                    <p class="text-muted mb-1 text-small">{{setting_detail.razorpay_secret_key}}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-payment-configuration-modal #paymentConfigurationModal (payment_data)="getSettingData()"></app-payment-configuration-modal>

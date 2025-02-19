@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-12">
+    <app-heading></app-heading>
+    <app-breadcrumb></app-breadcrumb>
+    <div class="separator mb-5"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="clearfix mb-3">
+          <div class="float-left float-none-xs">
+            <div class="d-flex">
+              <i class="color-theme-1 iconsminds-speach-bubble-dialog mr-2"></i>
+              <h5 class="d-inline color-theme-1 font-weight-bold my-auto">{{'heading-title.sent-sms-from-twilio' |
+                translate }}</h5>
+            </div>
+          </div>
+          <div class="float-right float-none-xs mt-2 ng-star-inserted">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)" id="button-basic2" type="button" class="btn btn-outline-primary btn-xs" (click)="save()"
+              [disabled]="selected_sms._id == null" [ngClass]="{'btn-disabled':selected_sms._id == null}">
+              {{ 'button-title.save' | translate }}</button>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mb-3">
+          <div class="d-flex align-items-end mr-3">
+            <p class="pr-2 mb-0">{{'label-title.send-sms' | translate}}</p>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" id="isSendSMS" class="custom-control-input" [(ngModel)]="selected_sms.isSendSMS" [disabled]="!_helper.has_permission(_helper.PERMISSION.EDIT)">
+              <label for="isSendSMS" class="custom-control-label"></label>
+            </div>
+            <span class="c-pointer"><i class="simple-icon-info position-relative" style="top: 0px;" tooltip="{{'tooltip-title.send-sms-via-sms-tooltip' | translate}}" placement="right"></i></span>
+          </div>
+          <div class="d-flex align-items-end">
+            <p class="pr-2 mb-0">{{'label-title.send-whatsapp-sms' | translate}}</p>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" id="isSendWhatsapp" class="custom-control-input" [(ngModel)]="selected_sms.isSendWhatsapp" [disabled]="!_helper.has_permission(_helper.PERMISSION.EDIT)">
+              <label for="isSendWhatsapp" class="custom-control-label"></label>
+            </div>
+            <span class="c-pointer"><i class="simple-icon-info position-relative" style="top: 0px;" tooltip="{{'tooltip-title.send-sms-via-whatsapp-sms-tooltip' | translate}}" placement="right"></i></span>
+          </div>
+        </div>
+        <div class="d-flex flex-column flex-grow-1 mb-3">
+          <div class="row no-gutters">
+            <div class="col-lg-8 col-12 form-group">
+              <label for="sms" class="font-weight-medium truncate mb-1">{{ 'label-title.select-sms-for' | translate
+                }} <span class="c-pointer"><i class="simple-icon-info position-relative ml-1 mt-1" style="top: 2px;" tooltip="{{'tooltip-title.select-sms-for-tooltip' | translate}}" placement="right"></i></span></label>
+              <ng-select appearance="outline" #emailSelect labelForId="email" [searchable]="true" [clearable]="false"
+                (change)="onSelectSms($event)" [(ngModel)]="selecetedSmsTitle" *ngIf="selecetedSms">
+                <ng-option *ngFor="let sms of sms_details" [value]="sms">{{ sms.smsUniqueTitle }}</ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="row no-gutters mt-3">
+            <div class="col-12 form-group">
+              <textarea class="form-control" rows="10" [(ngModel)]="selected_sms.smsContent"
+                [value]="selected_sms ? selected_sms.smsContent : ''" [readonly]="subadmin_readonly"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-sms-connect-modal #smsConnectModal></app-sms-connect-modal>

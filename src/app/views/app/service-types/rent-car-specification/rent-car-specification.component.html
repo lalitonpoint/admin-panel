@@ -1,0 +1,158 @@
+<div class="row">
+    <div class="col-12">
+        <app-heading></app-heading>
+        <div class="top-right-button-container text-zero w-fit-content"
+            *ngIf="_helper.has_permission(_helper.PERMISSION.ADD)">
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && tab_number == 1" type="button"
+                (click)="openAddFeatureModal()" class="top-right-button btn btn-primary btn-lg mr-1">{{'pages.add-new'
+                | translate}}</button>
+            <button *ngIf="_helper.has_permission(_helper.PERMISSION.ADD) && tab_number == 2" type="button"
+                (click)="openAddSpecificationModal()" class="top-right-button btn btn-primary btn-lg mr-1">{{ 'pages.add-new' 
+                | translate}}</button>
+        </div>
+        <app-breadcrumb></app-breadcrumb>
+        <br>
+    </div>
+    <div class="col-12 mb-2">
+        <div class="display-options-container">
+          <div class="d-flex justify-content-between mb-2">
+            <div class="d-flex flex-wrap mr-2">
+              <div class="">
+                <div class="search-sm d-inline-block float-md-left mr-1 mb-2 align-top">
+                  <input class="form-control" (keypress)="_helper.special_char_validation($event)"
+                    placeholder="{{'label-title.search' | translate }}" [(ngModel)]="search_value">
+                </div>
+              </div>
+              <div class="">
+                <div class="d-inline-block float-md-left mr-1 position-relative" dropdown>
+                  <button id="button-basic5" type="button" class="btn btn-primary btn-xs mr-1 mb-2" (click)="apply()">
+                    {{'button-title.apply' | translate}} <span class="caret"></span>
+                  </button>
+                  <button id="button-basic4" type="button" class="btn btn-outline-primary btn-xs mr-1 mb-2"
+                    (click)="clear()" [disabled]="search_value == '' && is_clear_disabled"
+                    [ngClass]="{'btn-disabled':(search_value == '' && is_clear_disabled)}">
+                    {{'button-title.clear-filter' | translate}} <span class="caret"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+    
+            <div class="float-right" id="displayOptions">
+              <span class="text-muted text-small">{{'label-title.per-page' | translate}} </span>
+              <span dropdown class="d-inline-block position-relative">
+                <button class="btn btn-outline-primary btn-xs dropdown-toggle btn_display_option" type="button"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+                  {{itemsPerPage}}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right dropdown-menu-sm text-right" *dropdownMenu>
+                  <li role="menuitem" *ngFor="let item of itemOptionsPerPage"><a
+                      [ngClass]="item === itemsPerPage ? 'dropdown-item active' : 'dropdown-item'"
+                      (click)="onChangeItemsPerPage(item)">{{item | translate}}</a></li>
+                </ul>
+              </span>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="w-100">
+    <tabset class="card-tabs separator-tabs w-100">
+        <tab heading="{{'label-title.features' | translate }}" (selectTab)="onSelectTab(1)">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-4 col-xl-3 col-12 mb-4"
+                            *ngFor="let item of feature_listData | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}; let i=index">
+                            <div class="card">
+                                <div class="position-relative">
+                                    <span class="badge badge-pill badge-danger position-absolute badge-top-left"
+                                        *ngIf="!item.is_active">{{'label-title.off' | translate}}</span>
+                                    <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"
+                                        class="btn btn-outline-primary icon-button position-absolute editIcon"
+                                        (click)="editFeature(item)">
+                                        <i class="simple-icon-pencil"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body mt-2">
+                                    <a class="cursor-default">
+                                        <h6 class="ellipsis d-flex justify-content-between align-items-center font-weight-semibold"> {{item.title}} </h6>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 text-center" *ngIf="(!feature_listData || feature_listData.length == 0)">
+                            {{'validation-title.no-data-found' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="feature_listData?.length > 0">
+                <div class="col-12">
+                    <div class=" mb-4">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-center">
+                                <pagination-controls [ngClass]="darkMode ? 'dark' : ''"
+                                    previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" (pageChange)="pageChanged($event)"
+                                    responsive="true" (pageBoundsCorrection)="pageChanged($event)"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tab>
+        <!-- this code is commented because we are not using dynamic specification -->
+        <!-- <tab heading="{{'label-title.specification' | translate }}" (selectTab)="onSelectTab(2)">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-4 col-xl-3 col-12 mb-4"
+                            *ngFor="let item of specification_listData | paginate: { itemsPerPage: itemsPerPage, currentPage:  current_page, totalItems: total_page * itemsPerPage}; let i=index">
+                            <div class="card">
+                                <div class="position-relative">
+                                    <span class="badge badge-pill badge-danger position-absolute badge-top-left"
+                                        *ngIf="!item.is_active">{{'label-title.off' | translate}}</span>
+                                    <button *ngIf="_helper.has_permission(_helper.PERMISSION.EDIT)"
+                                        class="btn btn-outline-primary icon-button position-absolute editIcon"
+                                        (click)="editSpecification(item)">
+                                        <i class="simple-icon-pencil"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body mt-2">
+                                    <a class="cursor-default">
+                                        <h6 class="ellipsis d-flex justify-content-between align-items-center font-weight-semibold"> {{item.title}} </h6>
+                                        <p class="text-muted mb-0 text-medium">
+                                            <span *ngFor="let option of item.options; let last = last">
+                                                {{ option }}<span *ngIf="!last"> | </span>
+                                            </span>
+                                        </p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 text-center" *ngIf="(!specification_listData || specification_listData.length == 0)">
+                            {{'validation-title.no-data-found' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="specification_listData?.length > 0">
+                <div class="col-12">
+                    <div class=" mb-4">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-center">
+                                <pagination-controls [ngClass]="darkMode ? 'dark' : ''"
+                                    previousLabel="{{'wizard.previous' | translate}}"
+                                    nextLabel="{{'wizard.next' | translate}}" (pageChange)="pageChanged($event)"
+                                    responsive="true" (pageBoundsCorrection)="pageChanged($event)"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tab> -->
+    </tabset>
+</div>
+<app-rent-car-feature-model #addNewFeature (featureHandler)="Init()"></app-rent-car-feature-model>
+<app-rent-car-specification-model #addNewSpecification (specificationHandler)="Init()"></app-rent-car-specification-model>

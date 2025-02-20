@@ -15,14 +15,14 @@ export const environment = {
   // MASS_NOTIFICATION_API_URL: '',
 
 
-  API_URL: 'http://localhost:5000/admin',
-  IMAGE_URL: 'http://localhost:5000/',
-  BASE_URL: 'http://localhost:5000/',
-  SOCKET_URL: 'http://localhost:5000/',
-  LANGUAGE_URL: 'http://localhost:5000/',
-  HISTORY_API_URL: 'http://localhost:5001',
-  WHATSAPP_API_URL: 'http://localhost:5004',
-  MASS_NOTIFICATION_API_URL: 'http://localhost:5003',
+  API_URL: 'http://13.203.141.238:5000/admin',
+  IMAGE_URL: 'http://13.203.141.238:5000/',
+  BASE_URL: 'http://13.203.141.238:5000/',
+  SOCKET_URL: 'http://13.203.141.238:5000/',
+  LANGUAGE_URL: 'http://13.203.141.238:5000/',
+  HISTORY_API_URL: 'http://13.203.141.238:5001',
+  WHATSAPP_API_URL: 'http://13.203.141.238:5004',
+  MASS_NOTIFICATION_API_URL: 'http://13.203.141.238:5003',
 
   api_encryption_decryption: false,
   production: false,

@@ -27,14 +27,14 @@ export const environment = {
   // SOCKET_URL: '',
   // WHATSAPP_API_URL: '',
 
-  API_URL: 'http://wow.codesquadz.com:5000/admin',
-  IMAGE_URL: 'http://wow.codesquadz.com:5000/',
-  BASE_URL: 'http://wow.codesquadz.com:5000/',
-  SOCKET_URL: 'http://wow.codesquadz.com:5000/',
-  LANGUAGE_URL: 'http://wow.codesquadz.com:5000/',
-  HISTORY_API_URL: 'http://wow.codesquadz.com:5001',
-  WHATSAPP_API_URL: 'http://wow.codesquadz.com:5004',
-  MASS_NOTIFICATION_API_URL: 'http://wow.codesquadz.com:5003',
+  API_URL: 'http://api.womenonwheel.com/admin',
+  IMAGE_URL: 'http://api.womenonwheel.com/',
+  BASE_URL: 'http://api.womenonwheel.com/',
+  SOCKET_URL: 'http://api.womenonwheel.com/',
+  LANGUAGE_URL: 'http://api.womenonwheel.com/',
+  HISTORY_API_URL: 'http://history.womenonwheel.com',
+  WHATSAPP_API_URL: 'http://whatsapp.womenonwheel.com',
+  MASS_NOTIFICATION_API_URL: 'http://notification.womenonwheel.com',
 
 
   /*

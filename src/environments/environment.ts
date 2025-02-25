@@ -15,15 +15,26 @@ export const environment = {
   // MASS_NOTIFICATION_API_URL: '',
 
 
-  API_URL: 'http://13.203.141.238:5000/admin',
-  IMAGE_URL: 'http://13.203.141.238:5000/',
-  BASE_URL: 'http://13.203.141.238:5000/',
-  SOCKET_URL: 'http://13.203.141.238:5000/',
-  LANGUAGE_URL: 'http://13.203.141.238:5000/',
-  HISTORY_API_URL: 'http://13.203.141.238:5001',
-  WHATSAPP_API_URL: 'http://13.203.141.238:5004',
-  MASS_NOTIFICATION_API_URL: 'http://13.203.141.238:5003',
+  // API_URL: 'http://13.203.141.238:5000/admin',
+  // IMAGE_URL: 'http://13.203.141.238:5000/',
+  // BASE_URL: 'http://13.203.141.238:5000/',
+  // SOCKET_URL: 'http://13.203.141.238:5000/',
+  // LANGUAGE_URL: 'http://13.203.141.238:5000/',
+  // HISTORY_API_URL: 'http://13.203.141.238:5001',
+  // WHATSAPP_API_URL: 'http://13.203.141.238:5004',
+  // MASS_NOTIFICATION_API_URL: 'http://13.203.141.238:5003',
 
+
+  API_URL: 'http://api.womenonwheel.com/admin',
+  IMAGE_URL: 'http://api.womenonwheel.com/',
+  BASE_URL: 'http://api.womenonwheel.com/',
+  SOCKET_URL: 'http://api.womenonwheel.com/',
+  LANGUAGE_URL: 'http://api.womenonwheel.com/',
+  HISTORY_API_URL: 'http://history.womenonwheel.com',
+  WHATSAPP_API_URL: 'http://whatsapp.womenonwheel.com',
+  MASS_NOTIFICATION_API_URL: 'http://notification.womenonwheel.com',
+
+  
   api_encryption_decryption: false,
   production: false,
   isJivoChat: false,

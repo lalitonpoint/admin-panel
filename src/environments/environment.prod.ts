@@ -27,7 +27,7 @@ export const environment = {
   // SOCKET_URL: '',
   // WHATSAPP_API_URL: '',
 
-  API_URL: 'http://api.womenonwheel.com/admin',
+  API_URL: 'http://api.womenonwheel.com',
   IMAGE_URL: 'http://api.womenonwheel.com/',
   BASE_URL: 'http://api.womenonwheel.com/',
   SOCKET_URL: 'http://api.womenonwheel.com/',

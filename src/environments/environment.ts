@@ -25,7 +25,7 @@ export const environment = {
   // MASS_NOTIFICATION_API_URL: 'http://13.203.141.238:5003',
 
 
-  API_URL: 'http://api.womenonwheel.com/admin',
+  API_URL: 'http://api.womenonwheel.com',
   IMAGE_URL: 'http://api.womenonwheel.com/',
   BASE_URL: 'http://api.womenonwheel.com/',
   SOCKET_URL: 'http://api.womenonwheel.com/',

@@ -27,14 +27,14 @@ export const environment = {
   // SOCKET_URL: '',
   // WHATSAPP_API_URL: '',
 
-  API_URL: 'http://api.womenonwheel.com',
-  IMAGE_URL: 'http://api.womenonwheel.com/',
-  BASE_URL: 'http://api.womenonwheel.com/',
-  SOCKET_URL: 'http://api.womenonwheel.com/',
-  LANGUAGE_URL: 'http://api.womenonwheel.com/',
-  HISTORY_API_URL: 'http://history.womenonwheel.com',
-  WHATSAPP_API_URL: 'http://whatsapp.womenonwheel.com',
-  MASS_NOTIFICATION_API_URL: 'http://notification.womenonwheel.com',
+  API_URL: 'https://api.womenonwheel.com',
+  IMAGE_URL: 'https://api.womenonwheel.com/',
+  BASE_URL: 'https://api.womenonwheel.com/',
+  SOCKET_URL: 'https://api.womenonwheel.com/',
+  LANGUAGE_URL: 'https://api.womenonwheel.com/',
+  HISTORY_API_URL: 'https://history.womenonwheel.com',
+  WHATSAPP_API_URL: 'https://whatsapp.womenonwheel.com',
+  MASS_NOTIFICATION_API_URL: 'https://notification.womenonwheel.com',
 
 
   /*

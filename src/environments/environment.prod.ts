@@ -27,7 +27,7 @@ export const environment = {
   // SOCKET_URL: '',
   // WHATSAPP_API_URL: '',
 
-  API_URL: 'https://api.onpointlogistics.in',
+  API_URL: 'https://api.onpointlogistics.in/admin',
   IMAGE_URL: 'https://api.onpointlogistics.in/',
   BASE_URL: 'https://api.onpointlogistics.in/',
   SOCKET_URL: 'https://api.onpointlogistics.in/',

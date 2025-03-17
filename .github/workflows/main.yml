@@ -1,0 +1,53 @@
+name: Deploy Admin Panel to Wow Server
+
+on:
+  workflow_dispatch:  # Manually trigger only
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+
+      - name: Deploy Admin Panel on Server
+        run: |
+          ssh ubuntu@$SERVER_IP << 'EOF'
+            cd /var/www/html/onpoint/admin-panel
+
+            # Pull latest code
+            echo "Pulling latest code for admin-panel"
+            git fetch origin main
+            git reset --hard origin/main
+            git pull origin main
+
+            # Install dependencies
+            echo "Installing dependencies for admin-panel"
+            npm install --legacy-peer-deps 
+
+            # Check if it's a frontend repo (by checking angular.json or src/app)
+            if [ -f "angular.json" ] || [ -d "src/app" ]; then
+              echo "Building frontend for admin-panel"
+              npm run build-prod
+            else
+              echo "Skipping build (probably backend)"
+            fi
+
+            # Restart admin PM2 process
+            echo "Restarting admin in PM2"
+            pm2 restart onadmin
+
+          EOF
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}

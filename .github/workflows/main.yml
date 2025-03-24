@@ -1,4 +1,4 @@
-name: Deploy Admin Panel to Wow Server
+name: Deploy Admin Panel
 
 on:
   workflow_dispatch:  # Manually trigger only
